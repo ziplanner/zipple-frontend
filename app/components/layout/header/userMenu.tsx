@@ -33,7 +33,7 @@ const UserMenu = () => {
           alt="User avatar"
           width={32}
           height={32}
-          className="rounded-full"
+          className="rounded-full md:w-8 md:h-8"
         />
         <span className="text-text-primary">홍길동님</span>
         <Image

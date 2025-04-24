@@ -12,11 +12,11 @@ const Header = () => {
   const displayCount = count > 99 ? "99+" : count.toString();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 py-4 px-[80px] shadow-sm bg-white">
+    <header className="fixed top-0 left-0 right-0 z-50 py-4 px-20 shadow-sm bg-white">
       <div className="max-w-screen-xl2 mx-auto flex items-center justify-between px-4">
         {/* Left */}
         <div className="flex items-center space-x-[60px]">
-          <Image src={logo} alt="ZIPPLE logo" width={128} height={28} />
+          <Image src={logo} alt="ZIPPLE" width={128} height={28} />
           <NavMenu />
         </div>
 
