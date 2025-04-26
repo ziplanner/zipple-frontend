@@ -42,7 +42,22 @@ export default {
         lg: "1024px",
         lx: "1288px",
       },
-      fontSize: {},
+      fontSize: {
+        "24b": ["24px", { fontWeight: "700" }],
+
+        "20s": ["20px", { fontWeight: "600" }],
+        "18s": ["18px", { fontWeight: "600" }],
+        "16s": ["16px", { fontWeight: "600" }],
+
+        "20m": ["20px", { fontWeight: "500" }],
+        "18m": ["18px", { fontWeight: "500" }],
+        "16m": ["16px", { fontWeight: "500" }],
+
+        "20r": ["20px", { fontWeight: "400" }],
+        "18r": ["18px", { fontWeight: "400" }],
+        "16r": ["16px", { fontWeight: "400" }],
+        "14r": ["14px", { fontWeight: "400" }],
+      },
     },
   },
   plugins: [],

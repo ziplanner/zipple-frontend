@@ -22,9 +22,9 @@ const Header = () => {
 
         {/* Right */}
         <div className="flex items-center space-x-6">
-          <div className="text-sm text-text-primary flex items-center space-x-1">
-            <span>받은 견적</span>
-            <span className="flex bg-main text-white text-xs items-center justify-center w-[30px] h-[30px] rounded-full">
+          <div className="text-text-primary flex items-center space-x-1">
+            <span className="16m">받은 견적</span>
+            <span className="flex bg-main text-white text-14r items-center justify-center w-[30px] h-[30px] rounded-full">
               {displayCount}
             </span>
           </div>

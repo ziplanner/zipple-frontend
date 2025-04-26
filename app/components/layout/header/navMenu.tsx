@@ -12,7 +12,7 @@ const NavMenu = () => {
       {menus.map((menu) => (
         <span
           key={menu}
-          className={`cursor-pointer text-text-primary hover:text-main`}
+          className={`cursor-pointer text-text-primary hover:text-main text-18m`}
         >
           {menu}
         </span>

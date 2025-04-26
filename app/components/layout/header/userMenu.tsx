@@ -35,7 +35,7 @@ const UserMenu = () => {
           height={32}
           className="rounded-full md:w-8 md:h-8"
         />
-        <span className="text-text-primary">홍길동님</span>
+        <span className="text-text-primary text-16m">홍길동님</span>
         <Image
           src={vector}
           alt="Chevron icon"
@@ -50,7 +50,7 @@ const UserMenu = () => {
       {open && (
         <div
           className="absolute border border-background-light right-0 mt-2 w-40
-          bg-white shadow-md rounded-md p-2 text-sm z-50 text-text-menu"
+          bg-white shadow-md rounded-md p-2 text-sm z-50 text-text-menu text-16r"
         >
           <Link
             href="#"
