@@ -6,9 +6,13 @@ import NavMenu from "./navMenu";
 import UserMenu from "./userMenu";
 import logo from "@/app/images/main_logo.svg";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
+  const router = useRouter();
+
   const [count, setCount] = useState<number>(0);
+
   const displayCount = count > 99 ? "99+" : count.toString();
 
   return (
@@ -16,7 +20,15 @@ const Header = () => {
       <div className="max-w-screen-xl2 mx-auto flex items-center justify-between px-4">
         {/* Left */}
         <div className="flex items-center space-x-[60px]">
-          <Image src={logo} alt="ZIPPLE" width={128} height={28} />
+          <Image
+            src={logo}
+            alt="ZIPPLE"
+            width={128}
+            height={28}
+            onClick={() => {
+              router.push("/");
+            }}
+          />
           <NavMenu />
         </div>
 

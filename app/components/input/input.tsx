@@ -9,7 +9,7 @@ type InputBoxProps = {
   errorMessage?: string;
   disabled?: boolean;
 };
-
+ 
 const Input: React.FC<InputBoxProps> = ({
   value,
   onChange,
@@ -19,7 +19,7 @@ const Input: React.FC<InputBoxProps> = ({
   disabled = false,
 }) => {
   return (
-    <div className="flex flex-col space-y-1">
+    <div className="flex flex-col space-y-1 text-18r">
       <input
         type="text"
         value={value}
@@ -27,7 +27,7 @@ const Input: React.FC<InputBoxProps> = ({
         placeholder={placeholder}
         disabled={disabled}
         className={clsx(
-          "w-full px-4 py-3 text-text-secondary rounded-md text-sm outline-none transition border border-background-light",
+          "w-full px-4 py-3 text-text-secondary rounded-md outline-none transition border border-background-light",
           {
             "bg-background-soft text-text-light": disabled,
             " hover:border-black focus:border-main": !disabled && !error,
@@ -35,9 +35,7 @@ const Input: React.FC<InputBoxProps> = ({
           }
         )}
       />
-      {error && errorMessage && (
-        <p className="text-xs text-error">{errorMessage}</p>
-      )}
+      {error && errorMessage && <p className="text-error">{errorMessage}</p>}
     </div>
   );
 };
