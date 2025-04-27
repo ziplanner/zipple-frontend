@@ -2,12 +2,14 @@ import React from "react";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  onClick: () => void;
   text: string;
   className?: string;
 }
 
-export const PrimaryBtn = ({ text, className = "" }: ButtonProps) => (
+export const PrimaryBtn = ({ text, className = "", onClick }: ButtonProps) => (
   <button
+    onClick={onClick}
     className={`w-[154px] h-[60px] rounded-[12px] border border-main text-main
       text-18s ${className}`}
   >
