@@ -17,6 +17,7 @@ export default {
         skyblue: "#AFC8FF",
         error: "#FF4D00",
         btn: "#353535",
+        hover: "#F0F4FF",
         text: {
           primary: "#222222",
           secondary: "#767676",

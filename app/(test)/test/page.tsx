@@ -8,6 +8,7 @@ import { PrimaryBtn } from "@/app/components/button/primaryBtn";
 import { MultiSelectBox } from "@/app/components/selectBox/multiSelectBox";
 import { SelectBox } from "@/app/components/selectBox/selectBox";
 import { CustomSelectBox } from "@/app/components/selectBox/customSelectBox";
+import { LargeBtn } from "@/app/components/button/largeBtn";
 
 const Test = () => {
   const [selectValue, setSelectValue] = useState<string>("선택 1");
@@ -20,10 +21,11 @@ const Test = () => {
   return (
     <div className="p-20">
       <div>
-        <PrimaryBtn text={"Button"} />
-        <BlackBtn text={"Button"} />
-        <BlueBtn text={"Button"} />
-        <BasicBtn text={"Button"} />
+        <PrimaryBtn text={"Button"} onClick={() => {}} />
+        <BlackBtn text={"Button"} onClick={() => {}} />
+        <BlueBtn text={"Button"} onClick={() => {}} />
+        <BasicBtn text={"Button"} onClick={() => {}} />
+        <LargeBtn text={"Button"} onClick={() => {}} color="black" />
       </div>
       <div className="flex flex-col gap-8 p-8">
         <div>

@@ -14,7 +14,7 @@ export const CustomSelectBox = ({
   onChange,
   disabled = false,
 }: CustomSelectBoxProps) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   return (
     <div className="relative w-full">
@@ -22,24 +22,25 @@ export const CustomSelectBox = ({
         type="button"
         disabled={disabled}
         onClick={() => !disabled && setOpen((prev) => !prev)}
-        className={`w-full h-[48px] px-4 rounded-[8px] border flex items-center justify-between text-[16px] ${
-          disabled
-            ? "bg-[#F5F5F5] text-[#BDBDBD] cursor-not-allowed"
-            : "border-[#DDDDDD] text-[#333]"
-        }`}
+        className={`w-full h-[48px] px-4 border flex items-center justify-between text-[16px] border-background-light
+           ${
+             disabled
+               ? "bg-background-soft text-text-light cursor-not-allowed"
+               : "text-text-light"
+           } ${open ? "rounded-t-[8px]" : "rounded-[8px]"}`}
       >
         {value || "선택해주세요"}
         <ChevronDown
           className={`w-4 h-4 ml-2 transition-transform duration-200 ${
             open ? "rotate-180" : "rotate-0"
-          } ${disabled ? "text-[#BDBDBD]" : "text-[#666]"}`}
+          } text-text-secondary`}
         />
       </button>
 
       {open && (
         <div
-          className="absolute top-full mt-1 w-full bg-white border border-[#DDDDDD]
-        rounded-[8px] shadow-md z-10 overflow-hidden"
+          className="absolute top-full w-full bg-white border border-background-light border-t-0
+        rounded-b-[8px] shadow-md z-10 overflow-hidden"
         >
           {options.map((option) => (
             <div
@@ -49,8 +50,8 @@ export const CustomSelectBox = ({
                 setOpen(false);
               }}
               className={`px-4 py-3 text-[15px] cursor-pointer ${
-                value === option ? "text-blue-600 bg-[#F0F4FF]" : "text-[#333]"
-              } hover:bg-[#F0F4FF]`}
+                value === option ? "text-blue-600" : "text-text-light"
+              } hover:bg-hover`}
             >
               {option}
             </div>
