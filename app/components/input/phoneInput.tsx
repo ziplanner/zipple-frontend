@@ -43,7 +43,7 @@ export const PhoneInput = ({ onChange }: PhoneInputProps) => {
       <input
         type="text"
         className="w-[138px] h-[60px] border rounded-[10px] px-4 
-             focus:outline-none focus:border-main"
+            focus:outline-none focus:border-main"
         value={middle}
         maxLength={4}
         onChange={(e) =>
