@@ -17,7 +17,9 @@ export const LargeBtn = ({
               : "bg-main40"
             : color === "black"
             ? "bg-btn"
-            : "bg-main"
+            : color === "blue"
+            ? "bg-main"
+            : "bg-white border border-black text-black"
         } ${className}
 `}
   >

@@ -30,14 +30,29 @@ const Test = () => {
         <BlueBtn text={"Button"} onClick={() => {}} />
         <BasicBtn text={"Button"} onClick={() => {}} />
       </div>
-      <div className="flex gap-2 mt-3">
-        <div className="flex flex-col gap-2">
-          <LargeBtn text={"Button"} onClick={() => {}} color="black" />
-          <LargeBtn text={"Button"} onClick={() => {}} color="black" disabled />
+      <div className="flex flex-col gap-2 mt-3">
+        <div className="flex gap-2">
+          <div className="flex flex-col gap-2">
+            <LargeBtn text={"Button"} onClick={() => {}} color="black" />
+            <LargeBtn
+              text={"Button"}
+              onClick={() => {}}
+              color="black"
+              disabled
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <LargeBtn text={"Button"} onClick={() => {}} color="blue" />
+            <LargeBtn
+              text={"Button"}
+              onClick={() => {}}
+              color="blue"
+              disabled
+            />
+          </div>
         </div>
         <div className="flex flex-col gap-2">
-          <LargeBtn text={"Button"} onClick={() => {}} color="blue" />
-          <LargeBtn text={"Button"} onClick={() => {}} color="blue" disabled />
+          <LargeBtn text={"Button"} onClick={() => {}} color="" />
         </div>
       </div>
       <div className="flex gap-8 mt-10">
