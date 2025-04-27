@@ -28,13 +28,14 @@ const Header = () => {
             onClick={() => {
               router.push("/");
             }}
+            className="cursor-pointer"
           />
           <NavMenu />
         </div>
 
         {/* Right */}
         <div className="flex items-center space-x-6">
-          <div className="text-text-primary flex items-center space-x-1">
+          <div className="text-text-primary flex items-center space-x-2">
             <span className="16m">받은 견적</span>
             <span className="flex bg-main text-white text-14r items-center justify-center w-[30px] h-[30px] rounded-full">
               {displayCount}
