@@ -53,6 +53,7 @@ const Test = () => {
         </div>
         <div className="flex flex-col gap-2">
           <LargeBtn text={"Button"} onClick={() => {}} color="" />
+          <LargeBtn text={"Button"} onClick={() => {}} color="white" />
         </div>
       </div>
       <div className="flex gap-8 mt-10">
