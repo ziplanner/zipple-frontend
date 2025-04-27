@@ -13,10 +13,12 @@ export default {
       },
       colors: {
         main: "#3772F7",
+        main40: "#3772F799",
         sub: "#FFE100",
         skyblue: "#AFC8FF",
         error: "#FF4D00",
         btn: "#353535",
+        btn40: "#35353566",
         hover: "#F0F4FF",
         text: {
           primary: "#222222",
