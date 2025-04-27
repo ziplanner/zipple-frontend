@@ -11,7 +11,6 @@ import { CustomSelectBox } from "@/app/components/selectBox/customSelectBox";
 import { LargeBtn } from "@/app/components/button/largeBtn";
 
 const Test = () => {
-  const [selectValue, setSelectValue] = useState<string>("선택 1");
   const [checkedValues, setCheckedValues] = useState<string[]>([
     "원룸/소형 이사",
     "사무실 이사",
@@ -19,32 +18,18 @@ const Test = () => {
   const [customSelect, setCustomSelect] = useState<string>("선택 1");
 
   return (
-    <div className="p-20">
-      <div>
+    <div className="p-20 text-text-primary">
+      <div className="flex gap-3">
         <PrimaryBtn text={"Button"} onClick={() => {}} />
         <BlackBtn text={"Button"} onClick={() => {}} />
         <BlueBtn text={"Button"} onClick={() => {}} />
         <BasicBtn text={"Button"} onClick={() => {}} />
-        <LargeBtn text={"Button"} onClick={() => {}} color="black" />
+        <div className="flex flex-col gap-2">
+          <LargeBtn text={"Button"} onClick={() => {}} color="black" />
+          <LargeBtn text={"Button"} onClick={() => {}} color="blue" />
+        </div>
       </div>
       <div className="flex flex-col gap-8 p-8">
-        <div>
-          <h2 className="font-bold text-xl mb-2">Select Box</h2>
-          <SelectBox
-            options={["선택 1", "선택 2", "선택 3"]}
-            value={selectValue}
-            onChange={setSelectValue}
-          />
-          <div className="mt-4">
-            <SelectBox
-              options={["비활성화된 경우"]}
-              value={"비활성화된 경우"}
-              onChange={() => {}}
-              disabled
-            />
-          </div>
-        </div>
-
         <div>
           <h2 className="font-bold text-xl mb-2">Check Box (복수 선택)</h2>
           <MultiSelectBox
@@ -57,20 +42,27 @@ const Test = () => {
               { label: "원룸/소형 이사", value: "원룸/소형 이사" },
               { label: "사무실 이사", value: "사무실 이사" },
               { label: "해외 이사", value: "해외 이사", disabled: true },
-              { label: "용달/화물 운송", value: "용달/화물 운송" },
             ]}
-            selectedValues={checkedValues}
+            value={checkedValues}
             onChange={setCheckedValues}
           />
         </div>
       </div>
       <div className="p-8">
         <h2 className="font-bold text-xl mb-4">커스텀 드롭다운</h2>
-        <CustomSelectBox
-          options={["선택 1", "선택 2", "선택 3"]}
-          value={customSelect}
-          onChange={setCustomSelect}
-        />
+        <div className="flex flex-col gap-2">
+          <CustomSelectBox
+            options={["선택 1", "선택 2", "선택 3"]}
+            value={customSelect}
+            onChange={setCustomSelect}
+          />
+          <CustomSelectBox
+            options={["선택 1", "선택 2", "선택 3"]}
+            value={customSelect}
+            onChange={setCustomSelect}
+            disabled
+          />
+        </div>
       </div>
     </div>
   );

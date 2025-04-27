@@ -1,56 +1,115 @@
-import React from "react";
+import { useState, useEffect, useRef } from "react";
+import { ChevronDown } from "lucide-react";
+
+interface Option {
+  label: string;
+  value: string;
+  disabled?: boolean;
+}
 
 interface MultiSelectBoxProps {
-  options: {
-    label: string;
-    value: string;
-    disabled?: boolean;
-  }[];
-  selectedValues: string[];
-  onChange: (selected: string[]) => void;
+  options: Option[];
+  value: string[];
+  onChange: (value: string[]) => void;
+  disabled?: boolean;
 }
 
 export const MultiSelectBox = ({
   options,
-  selectedValues,
+  value,
   onChange,
+  disabled = false,
 }: MultiSelectBoxProps) => {
-  const toggleValue = (value: string) => {
-    if (selectedValues.includes(value)) {
-      onChange(selectedValues.filter((v) => v !== value));
+  const [open, setOpen] = useState<boolean>(false);
+  const boxRef = useRef<HTMLDivElement>(null);
+
+  const handleSelect = (optionValue: string) => {
+    if (value.includes(optionValue)) {
+      onChange(value.filter((item) => item !== optionValue));
     } else {
-      onChange([...selectedValues, value]);
+      onChange([...value, optionValue]);
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (boxRef.current && !boxRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    if (open) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
+
   return (
-    <div className="w-full border border-[#DDDDDD] rounded-[12px] p-4 flex flex-col gap-2">
-      {options.map((option) => (
-        <label
-          key={option.value}
-          className={`flex items-center gap-2 ${
-            option.disabled ? "text-[#BDBDBD]" : "text-text-primary"
-          }`}
+    <div ref={boxRef} className="relative w-[520px]">
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => !disabled && setOpen((prev) => !prev)}
+        className={`w-full h-[48px] px-4 border flex items-center justify-between text-18r border-background-light
+          ${
+            disabled
+              ? "bg-background-soft text-text-light cursor-not-allowed"
+              : "text-text-light"
+          }
+          ${open ? "rounded-t-[8px]" : "rounded-[8px]"}`}
+      >
+        {/* 선택된 옵션들의 label을 ,로 이어서 표시 */}
+        {value.length > 0
+          ? options
+              .filter((opt) => value.includes(opt.value))
+              .map((opt) => opt.label)
+              .join(", ")
+          : "선택해주세요"}
+        <ChevronDown
+          className={`w-4 h-4 ml-2 transition-transform duration-200 ${
+            open ? "rotate-180" : "rotate-0"
+          } text-text-secondary`}
+        />
+      </button>
+
+      {open && (
+        <div
+          className="absolute top-full w-full bg-white border border-background-light border-t-0
+          rounded-b-[8px] shadow-md z-10 overflow-auto max-h-[300px]"
         >
-          <input
-            type="checkbox"
-            value={option.value}
-            checked={selectedValues.includes(option.value)}
-            onChange={() => toggleValue(option.value)}
-            disabled={option.disabled}
-            className="w-[20px] h-[20px] accent-main"
-          />
-          <span
-            className={`${
-              selectedValues.includes(option.value)
-                ? "text-main font-semibold"
-                : ""
-            } ${option.disabled ? "text-[#BDBDBD]" : ""} text-[16px]`}
-          >
-            {option.label}
-          </span>
-        </label>
-      ))}
+          {options.map((option) => (
+            <div
+              key={option.value}
+              onClick={() => !option.disabled && handleSelect(option.value)}
+              className={`px-4 py-3 flex items-center gap-2 cursor-pointer ${
+                option.disabled
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-hover"
+              }`}
+            >
+              <input
+                type="checkbox"
+                disabled={option.disabled}
+                checked={value.includes(option.value)}
+                onChange={() => handleSelect(option.value)}
+                className="accent-main"
+              />
+              <span
+                className={`text-18r ${
+                  value.includes(option.value) ? "text-main" : "text-text-light"
+                }`}
+              >
+                {option.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

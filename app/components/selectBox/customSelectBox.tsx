@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 
 interface CustomSelectBoxProps {
@@ -15,14 +15,33 @@ export const CustomSelectBox = ({
   disabled = false,
 }: CustomSelectBoxProps) => {
   const [open, setOpen] = useState<boolean>(false);
+  const boxRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (boxRef.current && !boxRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    if (open) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
 
   return (
-    <div className="relative w-full">
+    <div ref={boxRef} className="relative w-[520px]">
       <button
         type="button"
         disabled={disabled}
         onClick={() => !disabled && setOpen((prev) => !prev)}
-        className={`w-full h-[48px] px-4 border flex items-center justify-between text-[16px] border-background-light
+        className={`w-full h-[48px] px-4 border flex items-center justify-between text-18r border-background-light
            ${
              disabled
                ? "bg-background-soft text-text-light cursor-not-allowed"
@@ -49,7 +68,7 @@ export const CustomSelectBox = ({
                 onChange(option);
                 setOpen(false);
               }}
-              className={`px-4 py-3 text-[15px] cursor-pointer ${
+              className={`px-4 py-3 text-18r cursor-pointer ${
                 value === option ? "text-blue-600" : "text-text-light"
               } hover:bg-hover`}
             >
