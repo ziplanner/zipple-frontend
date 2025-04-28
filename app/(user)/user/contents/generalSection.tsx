@@ -104,7 +104,10 @@ const GeneralSection = () => {
             />
           </div>
         </div>
-        <PrimaryBtn onClick={handleEditMode} text={"수정"} />
+        <PrimaryBtn
+          onClick={handleEditMode}
+          text={`${isEditMode ? "저장" : "수정"}`}
+        />
       </div>
       <div className="border-b border-background-light w-full mt-10" />
       <p
