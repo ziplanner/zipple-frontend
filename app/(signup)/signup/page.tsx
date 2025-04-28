@@ -13,20 +13,20 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center mt-20 mb-[124px] gap-[70px]">
+    <div className="flex flex-col justify-self-center items-center mt-10 md:mt-20 mb-[60px] md:mb-[124px] gap-[70px]">
       {/* 상단 텍스트 영역 */}
       <div className="flex flex-col gap-5 text-center">
-        <h1 className="text-text-primary text-36m">
-          <span className="text-main text-36eb">ZIPPLE</span>과 어떤 경험을 함께
-          하실 건가요?
+        <h1 className="text-text-primary text-22m md:text-36m">
+          <span className="text-main text-22eb md:text-36eb">ZIPPLE</span>과
+          어떤 경험을 함께 하실 건가요?
         </h1>
-        <p className="text-text-secondary text-18r">
+        <p className="text-text-secondary text-14r md:text-18r">
           집플회원이 되어 다양한 서비스를 제공 받아보고, <br />
           집플과 함께 성장할 파트너를 모집합니다!
         </p>
       </div>
       {/* 하단 박스 영역 */}
-      <div className="flex gap-[30px]">
+      <div className="w-full justify-center flex flex-col md:flex-row gap-2.5 md:gap-2.5 lg:gap-[30px]">
         <SignupBox
           type="일반"
           isSelected={selectedType === "일반"}
