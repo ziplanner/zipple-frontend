@@ -3,9 +3,10 @@ import { useState, useEffect } from "react";
 interface EmailInputProps {
   value?: string;
   onChange?: (fullEmail: string) => void;
+  disabled?: boolean;
 }
 
-export const EmailInput = ({ value, onChange }: EmailInputProps) => {
+export const EmailInput = ({ value, onChange, disabled }: EmailInputProps) => {
   const [emailId, setEmailId] = useState<string>("");
   const [domain, setDomain] = useState<string>("naver.com");
 
@@ -35,16 +36,20 @@ export const EmailInput = ({ value, onChange }: EmailInputProps) => {
                 focus:outline-none focus:border-main"
         value={emailId}
         onChange={(e) => handleChange("emailId", e.target.value)}
+        disabled={disabled}
       />
 
       <span>@</span>
 
       {/* 이메일 도메인 선택 */}
       <select
-        className="w-full h-[60px] border rounded-[10px] px-4
-                focus:outline-none focus:border-main"
+        className={`w-full h-[60px] border border-background-light rounded-[10px] px-4
+                focus:outline-none focus:border-main ${
+                  disabled ? " bg-background-soft" : ""
+                }`}
         value={domain}
         onChange={(e) => handleChange("domain", e.target.value)}
+        disabled={disabled}
       >
         <option value="naver.com">naver.com</option>
         <option value="gmail.com">gmail.com</option>

@@ -3,9 +3,10 @@ import { useState, useEffect } from "react";
 interface PhoneInputProps {
   value?: string;
   onChange?: (fullPhone: string) => void;
+  disabled?: boolean;
 }
 
-export const PhoneInput = ({ value, onChange }: PhoneInputProps) => {
+export const PhoneInput = ({ value, onChange, disabled }: PhoneInputProps) => {
   const [first, setFirst] = useState("010");
   const [middle, setMiddle] = useState("");
   const [last, setLast] = useState("");
@@ -29,13 +30,16 @@ export const PhoneInput = ({ value, onChange }: PhoneInputProps) => {
   };
 
   return (
-    <div className="flex items-center gap-2.5 w-full">
+    <div className="flex items-center gap-2.5 w-full text-text-secondary">
       {/* 앞 번호 선택 */}
       <select
-        className="flex-1 w-full h-[60px] border rounded-[10px] px-4
-                focus:outline-none focus:border-main"
+        className={`flex-1 w-full h-[60px] border border-background-light rounded-[10px] px-4
+        focus:outline-none focus:border-main
+        ${disabled ? " bg-background-soft" : ""}
+      `}
         value={first}
         onChange={(e) => handleChange("first", e.target.value)}
+        disabled={disabled}
       >
         <option value="010">010</option>
         <option value="011">011</option>
@@ -57,6 +61,7 @@ export const PhoneInput = ({ value, onChange }: PhoneInputProps) => {
         onChange={(e) =>
           handleChange("middle", e.target.value.replace(/\D/g, ""))
         }
+        disabled={disabled}
       />
 
       <span>-</span>
@@ -71,6 +76,7 @@ export const PhoneInput = ({ value, onChange }: PhoneInputProps) => {
         onChange={(e) =>
           handleChange("last", e.target.value.replace(/\D/g, ""))
         }
+        disabled={disabled}
       />
     </div>
   );

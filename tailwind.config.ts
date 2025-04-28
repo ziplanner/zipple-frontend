@@ -59,6 +59,7 @@ export default {
         "14b": ["14px", { fontWeight: "700" }],
 
         "36s": ["36px", { fontWeight: "600" }],
+        "30s": ["30px", { fontWeight: "600" }],
         "24s": ["24px", { fontWeight: "600" }],
         "22s": ["22px", { fontWeight: "600" }],
         "20s": ["20px", { fontWeight: "600" }],
