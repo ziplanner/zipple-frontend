@@ -8,11 +8,12 @@ const NavMenu = () => {
   ];
 
   return (
-    <nav className="flex space-x-12">
+    <nav className="flex lg:space-x-10 md:space-x-5">
       {menus.map((menu) => (
         <span
           key={menu}
-          className={`cursor-pointer text-text-primary hover:text-main text-18m`}
+          className={`cursor-pointer text-text-primary hover:text-main 
+            lg:text-18m md:text-14m`}
         >
           {menu}
         </span>
