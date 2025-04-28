@@ -1,20 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface EmailInputProps {
+  value?: string;
   onChange?: (fullEmail: string) => void;
 }
 
-export const EmailInput = ({ onChange }: EmailInputProps) => {
-  const [emailId, setEmailId] = useState("");
-  const [domain, setDomain] = useState("naver.com");
+export const EmailInput = ({ value, onChange }: EmailInputProps) => {
+  const [emailId, setEmailId] = useState<string>("");
+  const [domain, setDomain] = useState<string>("naver.com");
+
+  // 부모 컴포넌트에서 전달된 email 값을 반영
+  useEffect(() => {
+    if (value) {
+      const [emailIdPart, domainPart] = value.split("@");
+      setEmailId(emailIdPart || "");
+      setDomain(domainPart || "naver.com");
+    }
+  }, [value]);
 
   const handleChange = (type: "emailId" | "domain", value: string) => {
     if (type === "emailId") setEmailId(value);
     if (type === "domain") setDomain(value);
 
-    const fullEmail = `${type === "emailId" ? value : emailId}@${
-      type === "domain" ? value : domain
-    }`;
+    const fullEmail = `${emailId}@${domain}`;
     onChange?.(fullEmail);
   };
 
@@ -23,7 +31,7 @@ export const EmailInput = ({ onChange }: EmailInputProps) => {
       {/* 이메일 아이디 입력 */}
       <input
         type="text"
-        className="w-[226px] h-[60px] border rounded-[10px] px-4
+        className="w-full h-[60px] border rounded-[10px] px-4
                 focus:outline-none focus:border-main"
         value={emailId}
         onChange={(e) => handleChange("emailId", e.target.value)}
@@ -33,7 +41,7 @@ export const EmailInput = ({ onChange }: EmailInputProps) => {
 
       {/* 이메일 도메인 선택 */}
       <select
-        className="w-[226px] h-[60px] border rounded-[10px] px-4
+        className="w-full h-[60px] border rounded-[10px] px-4
                 focus:outline-none focus:border-main"
         value={domain}
         onChange={(e) => handleChange("domain", e.target.value)}
