@@ -1,30 +1,38 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface PhoneInputProps {
+  value?: string;
   onChange?: (fullPhone: string) => void;
 }
 
-export const PhoneInput = ({ onChange }: PhoneInputProps) => {
+export const PhoneInput = ({ value, onChange }: PhoneInputProps) => {
   const [first, setFirst] = useState("010");
   const [middle, setMiddle] = useState("");
   const [last, setLast] = useState("");
+
+  useEffect(() => {
+    if (value) {
+      const [firstPart, middlePart, lastPart] = value.split("-");
+      setFirst(firstPart);
+      setMiddle(middlePart);
+      setLast(lastPart);
+    }
+  }, [value]);
 
   const handleChange = (type: "first" | "middle" | "last", value: string) => {
     if (type === "first") setFirst(value);
     if (type === "middle") setMiddle(value);
     if (type === "last") setLast(value);
 
-    const fullPhone = `${type === "first" ? value : first}-${
-      type === "middle" ? value : middle
-    }-${type === "last" ? value : last}`;
-    onChange?.(fullPhone);
+    const fullPhone = `${first}-${middle}-${last}`;
+    onChange?.(fullPhone.replace(/-/g, "")); // 하이픈 없이 보내기
   };
 
   return (
-    <div className="flex items-center gap-2.5 text-text-light text-18r">
+    <div className="flex items-center gap-2.5 w-full">
       {/* 앞 번호 선택 */}
       <select
-        className="w-[138px] h-[60px] border rounded-[10px] px-4
+        className="flex-1 w-full h-[60px] border rounded-[10px] px-4
                 focus:outline-none focus:border-main"
         value={first}
         onChange={(e) => handleChange("first", e.target.value)}
@@ -42,7 +50,7 @@ export const PhoneInput = ({ onChange }: PhoneInputProps) => {
       {/* 중간 번호 입력 */}
       <input
         type="text"
-        className="w-[138px] h-[60px] border rounded-[10px] px-4 
+        className="flex-1 w-full h-[60px] border rounded-[10px] px-4 
             focus:outline-none focus:border-main"
         value={middle}
         maxLength={4}
@@ -56,7 +64,7 @@ export const PhoneInput = ({ onChange }: PhoneInputProps) => {
       {/* 끝 번호 입력 */}
       <input
         type="text"
-        className="w-[138px] h-[60px] border rounded-[10px] px-4
+        className="flex-1 w-full h-[60px] border rounded-[10px] px-4
                 focus:outline-none focus:border-main"
         value={last}
         maxLength={4}
