@@ -55,7 +55,7 @@ const UserMenu = () => {
           bg-white shadow-md rounded-md p-2 text-sm z-50 text-text-menu text-16r"
         >
           <Link
-            href="#"
+            href="/user"
             className="block px-2.5 py-2 hover:bg-background-extraSoft rounded-md"
           >
             <div className="flex gap-2.5 items-center">
