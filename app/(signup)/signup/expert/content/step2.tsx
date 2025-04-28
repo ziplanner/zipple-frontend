@@ -7,6 +7,7 @@ import Input from "@/app/components/input/input";
 import { PhoneInput } from "@/app/components/input/phoneInput";
 import Image from "next/image";
 import { useExpertSignup } from "@/app/context/expertSignupProvider";
+import { DateInput } from "@/app/components/input/dateInput";
 
 const Step2 = () => {
   const {
@@ -14,6 +15,8 @@ const Step2 = () => {
     setCurrentStep,
     name,
     setName,
+    birth,
+    setBirth,
     email,
     setEmail,
     phone,
@@ -27,6 +30,11 @@ const Step2 = () => {
   // 전화번호 입력 값 업데이트
   const handlePhoneChange = (value: string) => {
     setPhone(value);
+  };
+
+  // 생년월일 입력 값 업데이트
+  const handleBirthChange = (date: string) => {
+    setBirth(date);
   };
 
   // 이메일 입력 값 업데이트
@@ -127,14 +135,19 @@ const Step2 = () => {
           placeholder="이름을 입력해주세요."
         />
       </div>
-
+      <div className="flex flex-col gap-2.5">
+        <h3 className="text-text-primary text-14m md:text-16m">
+          생년월일 <span className="text-error">*</span>
+        </h3>
+        <DateInput onChange={handleBirthChange} />
+      </div>
       <div className="flex flex-col gap-2.5">
         <h3 className="text-text-primary text-14m md:text-16m">이메일</h3>
         <EmailInput value={email} onChange={handleEmailChange} />
       </div>
 
       <div className="flex flex-col gap-2.5">
-        <h3 className="text-text-primary text-14m md:text-16m">
+        <h3 className="text-text-primary text-14m md:t ext-16m">
           내외국인 <span className="text-error">*</span>
         </h3>
         <Chips

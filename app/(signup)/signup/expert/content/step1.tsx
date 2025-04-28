@@ -82,7 +82,12 @@ const Step1 = () => {
           onChange={setCheckedValues}
         />
       </div>
-
+      <div className="flex flex-col gap-2.5">
+        <h3 className="text-text-primary text-14m md:text-16m">
+          개업일자 <span className="text-error">*</span>
+        </h3>
+        <DateInput onChange={handleOpeningDateChange} />
+      </div>
       <div className="flex flex-col gap-2.5">
         <h3 className="text-text-primary text-14m md:text-16m">
           사업자등록번호 <span className="text-error">*</span>

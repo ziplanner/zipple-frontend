@@ -39,6 +39,9 @@ interface SignupContextType {
   name: string;
   setName: (value: string) => void;
 
+  birth: string;
+  setBirth: (value: string) => void;
+
   email: string;
   setEmail: (value: string) => void;
 
@@ -88,6 +91,7 @@ export const ExpertSignupProvider: React.FC<SignupProviderProps> = ({
   const [openingDate, setOpeningDate] = useState<string>(""); // 개업일자 값
 
   const [name, setName] = useState<string>(""); // 이름
+  const [birth, setBirth] = useState<string>(""); // 생년월일
   const [email, setEmail] = useState<string>(""); // 이메일
   const [phone, setPhone] = useState<string>(""); // 전화번호
   const [nationality, setNationality] = useState<string>("내국인"); // 국적
@@ -121,6 +125,8 @@ export const ExpertSignupProvider: React.FC<SignupProviderProps> = ({
         setOpeningDate,
         name,
         setName,
+        birth,
+        setBirth,
         email,
         setEmail,
         phone,
