@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 
@@ -41,12 +43,12 @@ export const CustomSelectBox = ({
         type="button"
         disabled={disabled}
         onClick={() => !disabled && setOpen((prev) => !prev)}
-        className={`w-full h-[48px] px-4 border flex items-center justify-between text-18r border-background-light
-           ${
-             disabled
-               ? "bg-background-soft text-text-light cursor-not-allowed"
-               : "text-text-light"
-           } ${open ? "rounded-t-[8px]" : "rounded-[8px]"}`}
+        className={`w-full h-[60px] px-4 border flex items-center justify-between text-18r border-background-light
+          ${
+            disabled
+              ? "bg-background-soft text-text-light cursor-not-allowed"
+              : "text-text-light"
+          } ${open ? "rounded-t-[8px]" : "rounded-[8px]"}`}
       >
         {value || "선택해주세요"}
         <ChevronDown
