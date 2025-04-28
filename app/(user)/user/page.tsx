@@ -1,11 +1,13 @@
 "use client";
 
-import ProfileSection from "./components/profileSection";
+import GeneralSection from "./contents/generalSection";
+import ProfileSection from "./contents/profileSection";
 
 const UserPage = () => {
   return (
-    <div>
+    <div className="flex w-full">
       <ProfileSection />
+      <GeneralSection />
     </div>
   );
 };

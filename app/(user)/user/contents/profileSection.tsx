@@ -16,7 +16,7 @@ const ProfileSection = () => {
   const [role, setRole] = useState<
     "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE"
   >("GENERAL");
-  const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(avatar); // 기본 이미지로 avatar를 설정
+  const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(avatar);
 
   const roleDesc: Record<RoleTokenProps["role"], string> = {
     GENERAL: "생활 전문가로 전환",
@@ -47,10 +47,10 @@ const ProfileSection = () => {
       const reader = new FileReader();
 
       reader.onloadend = () => {
-        setAvatarSrc(reader.result as string); // 이미지 경로를 state로 설정
+        setAvatarSrc(reader.result as string);
       };
 
-      reader.readAsDataURL(file); // 파일을 data URL로 읽어오기
+      reader.readAsDataURL(file);
     }
   };
 
@@ -83,6 +83,7 @@ const ProfileSection = () => {
         </div>
         <p className="text-text-primary text-24m mb-[6px] mt-5">{name}</p>
         <RoleToken role={role} />
+        {/* 전환 버튼 */}
         <button
           className="flex w-full flex-row items-center justify-center py-2.5 gap-1.5 rounded-md bg-main mt-[60px]"
           onClick={handleRoleChange}
@@ -97,19 +98,22 @@ const ProfileSection = () => {
           <p className="text-white text-18s">{roleDesc[role]}</p>
         </button>
         <div className="bg-border h-[1px] mt-[60px] w-[260px] mb-[42px]" />
-        <button
-          className="flex w-full justify-between mb-11
+        {role !== "GENERAL" && (
+          <button
+            className="flex w-full justify-between mb-11
       items-center text-main text-18s"
-        >
-          프로필 미리보기
-          <Image
-            src={vector}
-            alt={"vector"}
-            width={10}
-            height={10}
-            className="w-2.5 h-2.5"
-          />
-        </button>
+          >
+            프로필 미리보기
+            <Image
+              src={vector}
+              alt={"vector"}
+              width={10}
+              height={10}
+              className="w-2.5 h-2.5"
+            />
+          </button>
+        )}
+        {/* 사용자 role에 따라 변하는 좌측 menu */}
         <UserMenu />
       </div>
     </div>
