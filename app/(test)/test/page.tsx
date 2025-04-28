@@ -13,6 +13,7 @@ import { Chips } from "@/app/components/chips/chips";
 import { PhoneInput } from "@/app/components/input/phoneInput";
 import { EmailInput } from "@/app/components/input/emailInput";
 import { DateInput } from "@/app/components/input/dateInput";
+import { InputWithBtn } from "@/app/components/input/inputWithBtn";
 
 const Test = () => {
   const [checkedValues, setCheckedValues] = useState<string[]>([
@@ -20,6 +21,19 @@ const Test = () => {
     "사무실 이사",
   ]);
   const [customSelect, setCustomSelect] = useState<string>("선택 1");
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [fileName, setFileName] = useState<string>("");
+
+  const handleFileSelect = (file: File | null) => {
+    if (file) {
+      setFileName(file.name);
+      console.log("Selected file:", file);
+    }
+  };
+
+  const handleSearch = () => {
+    console.log("Searching for:", searchValue);
+  };
 
   return (
     <div className="p-20 text-text-primary">
@@ -112,6 +126,26 @@ const Test = () => {
       <div>
         <h2 className="font-bold text-xl mt-10 mb-4">Date</h2>
         <DateInput onChange={(val) => console.log("입력한 날짜:", val)} />
+      </div>
+      <div>
+        <h2 className="font-bold text-xl mt-10 mb-4">Input with Button</h2>
+        <div className="flex flex-col gap-2">
+          {/* 검색 인풋 + 검색 버튼 */}
+          <InputWithBtn
+            type="search"
+            searchValue={searchValue}
+            onSearchChange={setSearchValue}
+            onSearchClick={handleSearch}
+          />
+
+          {/* 검색 인풋 + 파일 버튼 */}
+          <InputWithBtn
+            type="file"
+            searchValue={fileName}
+            onSearchChange={setFileName}
+            onFileSelect={handleFileSelect}
+          />
+        </div>
       </div>
     </div>
   );
