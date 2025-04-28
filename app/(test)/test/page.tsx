@@ -14,6 +14,7 @@ import { PhoneInput } from "@/app/components/input/phoneInput";
 import { EmailInput } from "@/app/components/input/emailInput";
 import { DateInput } from "@/app/components/input/dateInput";
 import { InputWithBtn } from "@/app/components/input/inputWithBtn";
+import NoticeBar from "@/app/components/bar/noticeBar";
 
 const Test = () => {
   const [checkedValues, setCheckedValues] = useState<string[]>([
@@ -36,7 +37,16 @@ const Test = () => {
   };
 
   return (
-    <div className="p-20 text-text-primary">
+    <div className="p-10 text-text-primary w-full">
+      <div className="mb-10">
+        <h2 className="font-bold text-xl mb-4">NoticeBar</h2>
+        <div className="flex flex-col gap-2">
+          <NoticeBar type={"wait"} />
+          <NoticeBar type={"request"} />
+          <NoticeBar type={"retrial"} />
+          <NoticeBar type={"complete"} />
+        </div>
+      </div>
       <h2 className="font-bold text-xl mb-4">Buttons</h2>
       <div className="flex gap-3">
         <PrimaryBtn text={"Button"} onClick={() => {}} />
@@ -44,8 +54,8 @@ const Test = () => {
         <BlueBtn text={"Button"} onClick={() => {}} />
         <BasicBtn text={"Button"} onClick={() => {}} />
       </div>
-      <div className="flex flex-col gap-2 mt-3">
-        <div className="flex gap-2">
+      <div className="flex w-[360px] md:w-[600px] flex-col gap-2 mt-3">
+        <div className="flex flex-col gap-2">
           <div className="flex flex-col gap-2">
             <LargeBtn text={"Button"} onClick={() => {}} color="black" />
             <LargeBtn
@@ -70,7 +80,7 @@ const Test = () => {
           <LargeBtn text={"Button"} onClick={() => {}} color="white" />
         </div>
       </div>
-      <div className="flex gap-8 mt-10">
+      <div className="flex flex-col gap-8 mt-10 w-[360px] md:w-[600px]">
         <div>
           <h2 className="font-bold text-xl mb-4">Check Box (복수 선택)</h2>
           <MultiSelectBox
@@ -105,7 +115,7 @@ const Test = () => {
           </div>
         </div>
       </div>
-      <div>
+      <div className="w-[360px] md:w-[600px]">
         <h2 className="font-bold text-xl mt-10 mb-4">Chips</h2>
         <Chips
           options={[
@@ -115,19 +125,19 @@ const Test = () => {
           onChange={(val) => console.log("선택한 값:", val)}
         />
       </div>
-      <div>
+      <div className="w-[360px] md:w-[600px]">
         <h2 className="font-bold text-xl mt-10 mb-4">Phone</h2>
         <PhoneInput onChange={(val) => console.log("입력한 번호:", val)} />
       </div>
-      <div>
+      <div className="w-[360px] md:w-[600px]">
         <h2 className="font-bold text-xl mt-10 mb-4">Email</h2>
         <EmailInput onChange={(val) => console.log("입력한 이메일:", val)} />
       </div>
-      <div>
+      <div className="w-[360px] md:w-[600px]">
         <h2 className="font-bold text-xl mt-10 mb-4">Date</h2>
         <DateInput onChange={(val) => console.log("입력한 날짜:", val)} />
       </div>
-      <div>
+      <div className="w-[360px] md:w-[600px]">
         <h2 className="font-bold text-xl mt-10 mb-4">Input with Button</h2>
         <div className="flex flex-col gap-2">
           {/* 검색 인풋 + 검색 버튼 */}
