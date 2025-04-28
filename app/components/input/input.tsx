@@ -9,7 +9,7 @@ type InputBoxProps = {
   errorMessage?: string;
   disabled?: boolean;
 };
- 
+
 const Input: React.FC<InputBoxProps> = ({
   value,
   onChange,
@@ -27,10 +27,10 @@ const Input: React.FC<InputBoxProps> = ({
         placeholder={placeholder}
         disabled={disabled}
         className={clsx(
-          "w-full px-4 py-3 text-text-secondary rounded-md outline-none transition border border-background-light",
+          "w-full h-[60px] px-4 text-text-secondary rounded-[10px] outline-none transition border border-background-light",
           {
             "bg-background-soft text-text-light": disabled,
-            " hover:border-black focus:border-main": !disabled && !error,
+            " focus:border-main": !disabled && !error,
             "border-error text-error": error,
           }
         )}
