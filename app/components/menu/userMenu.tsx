@@ -42,7 +42,9 @@ const UserMenu = () => {
           <li
             key={index}
             className={`text-18m ${
-              selectedMenu === menuItem ? "text-primary" : "text-text-secondary"
+              selectedMenu === menuItem
+                ? "text-text-primary"
+                : "text-text-secondary"
             } relative cursor-pointer`}
             onClick={() => handleMenuClick(menuItem)}
           >

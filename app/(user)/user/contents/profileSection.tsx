@@ -6,6 +6,7 @@ import edit from "@/app/images/icon/mypage/edit.svg";
 import vector from "@/app/images/icon/mypage/vector.svg";
 import RoleToken from "@/app/components/token/roleToken";
 import UserMenu from "@/app/components/menu/userMenu";
+import useResponsive from "@/app/hook/useResponsive";
 
 interface RoleTokenProps {
   role: "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE";
