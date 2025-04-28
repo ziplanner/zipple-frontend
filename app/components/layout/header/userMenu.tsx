@@ -26,16 +26,18 @@ const UserMenu = () => {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setOpen(!open)}
-        className="flex gap-2.5 items-center space-x-2"
+        className="flex gap-2.5 items-center lg:space-x-2 md:space-x-1"
       >
         <Image
           src={avatar}
           alt="User avatar"
-          width={32}
-          height={32}
-          className="rounded-full md:w-8 md:h-8"
+          width={28}
+          height={28}
+          className="rounded-full lg:w-8 lg:h-8"
         />
-        <span className="text-text-primary text-16m">홍길동님</span>
+        <span className="text-text-primary lg:text-16m md:text-14m">
+          홍길동님
+        </span>
         <Image
           src={vector}
           alt="Chevron icon"
