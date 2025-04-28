@@ -7,11 +7,15 @@ import UserMenu from "./userMenu";
 import logo from "@/app/images/main_logo.svg";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { BlueBtn } from "../../button/blueBtn";
+import SignupModal from "../../modal/kakao/signupModal";
 
 const Header = () => {
   const router = useRouter();
 
   const [count, setCount] = useState<number>(0);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   const displayCount = count > 99 ? "99+" : count.toString();
 
@@ -34,17 +38,35 @@ const Header = () => {
         </div>
 
         {/* Right */}
-        <div className="flex items-center space-x-6">
-          <div className="text-text-primary flex items-center space-x-2">
-            <span className="16m">받은 견적</span>
-            <span className="flex bg-main text-white text-14r items-center justify-center w-[30px] h-[30px] rounded-full">
-              {displayCount}
-            </span>
+        {!isLoggedIn ? (
+          // 미로그인 상태
+          <BlueBtn
+            text={"로그인 / 회원가입"}
+            onClick={() => {
+              setOpenModal(true);
+            }}
+          />
+        ) : (
+          // 로그인 상태
+          <div className="flex items-center space-x-6">
+            <div className="text-text-primary flex items-center space-x-2">
+              <span className="16m">받은 견적</span>
+              <span className="flex bg-main text-white text-14r items-center justify-center w-[30px] h-[30px] rounded-full">
+                {displayCount}
+              </span>
+            </div>
+            <NotificationIcon count={5} />
+            <UserMenu />
           </div>
-          <NotificationIcon count={5} />
-          <UserMenu />
-        </div>
+        )}
       </div>
+      {openModal && (
+        <SignupModal
+          onClose={() => {
+            setOpenModal(false);
+          }}
+        />
+      )}
     </header>
   );
 };
