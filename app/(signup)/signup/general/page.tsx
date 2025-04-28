@@ -7,9 +7,11 @@ import Input from "@/app/components/input/input";
 import { InputWithBtn } from "@/app/components/input/inputWithBtn";
 import { PhoneInput } from "@/app/components/input/phoneInput";
 import { CustomSelectBox } from "@/app/components/selectBox/customSelectBox";
+import checkOn from "@/app/images/icon/check_on.svg";
+import checkOff from "@/app/images/icon/check_off.svg";
+import Image from "next/image";
 
 const GeneralSignupPage = () => {
-  // 상태 관리 변수들
   const [name, setName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [address, setAddress] = useState<string>("");
@@ -41,12 +43,14 @@ const GeneralSignupPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-20 mt-20 mb-[120px]">
-      <h1 className="text-text-primary text-36s">일반 회원 인증</h1>
-      <div className="flex flex-col gap-5 p-10 border border-border w-[600px] rounded-[20px]">
-        <h2 className="text-text-primary text-24s mb-5">회원정보</h2>
-        <div className="flex flex-col gap-2.5">
-          <h3 className="text-text-primary text-16m">
+    <div className="flex flex-col items-center gap-20 mt-10 md:mt-20 mb-[60px] md:mb-[120px]">
+      <h1 className="text-text-primary text-22s md:text-36s">일반 회원 인증</h1>
+      <div className="flex flex-col gap-5 px-5 py-[30px] md:p-10 border border-border md:w-[600px] rounded-[20px]">
+        <h2 className="text-text-primary text-18s md:text-24s mb-5">
+          회원정보
+        </h2>
+        <div className="flex flex-col gap-2.5"> 
+          <h3 className="text-text-primary text-14m md:text-16m">
             이름 <span className="text-error">*</span>
           </h3>
           <Input
@@ -56,14 +60,14 @@ const GeneralSignupPage = () => {
           />
         </div>
         <div className="flex flex-col gap-2.5">
-          <h3 className="text-text-primary text-16m">
+          <h3 className="text-text-primary text-14m md:text-16m">
             전화번호 <span className="text-error">*</span>
           </h3>
           <PhoneInput value={phone} onChange={handlePhoneChange} />
           <LargeBtn onClick={() => {}} text={"인증받기"} color="" />
         </div>
         <div className="flex flex-col gap-2.5">
-          <h3 className="text-text-primary text-16m">
+          <h3 className="text-text-primary text-14m md:text-16m">
             주소 <span className="text-error">*</span>
           </h3>
           <InputWithBtn
@@ -79,7 +83,7 @@ const GeneralSignupPage = () => {
           />
         </div>
         <div className="flex flex-col gap-2.5">
-          <h3 className="text-text-primary text-16m">
+          <h3 className="text-text-primary text-14m md:text-16m">
             주거형태 <span className="text-error">*</span>
           </h3>
           <CustomSelectBox
@@ -89,16 +93,18 @@ const GeneralSignupPage = () => {
           />
         </div>
         <div className="flex flex-col gap-2.5">
-          <h3 className="text-text-primary text-16m">이메일</h3>
+          <h3 className="text-text-primary text-14m md:text-16m">이메일</h3>
           <EmailInput value={email} onChange={handleEmailChange} />
         </div>
-        <div className="border-b border-background-light border-dotted w-full my-10" />
-        <div className="flex gap-2">
-          <input
-            type="checkbox"
-            checked={marketingConsent}
-            onChange={handleMarketingConsentChange}
-            className="accent-main cursor-pointer"
+        <div className="border-b border-background-light border-dotted w-full my-[30px] md:my-10" />
+        <div className="flex gap-2 items-center">
+          <Image
+            src={marketingConsent ? checkOn : checkOff}
+            alt="checkbox"
+            width={16}
+            height={16}
+            className="w-[16px] h-[16px] cursor-pointer"
+            onClick={handleMarketingConsentChange}
           />
           <p className="text-text-secondary text-16r">
             (선택) 마케팅 알림 수신에 동의합니다.
