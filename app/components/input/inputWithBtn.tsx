@@ -3,7 +3,7 @@ import { ChangeEvent, KeyboardEvent } from "react";
 import searchIcon from "@/app/images/icon/search.svg";
 import uploadIcon from "@/app/images/icon/upload.svg";
 
-type InputType = "search" | "file";
+type InputType = "search" | "file" | "text";
 
 interface InputWithBtnProps {
   type: InputType;
@@ -11,6 +11,10 @@ interface InputWithBtnProps {
   onSearchChange: (value: string) => void;
   onSearchClick?: () => void;
   onFileSelect?: (file: File | null) => void;
+  placeholder?: string;
+  label?: string;
+  onBtnClick?: () => void;
+  accept?: string;
 }
 
 export const InputWithBtn = ({
@@ -19,6 +23,10 @@ export const InputWithBtn = ({
   onSearchChange,
   onSearchClick,
   onFileSelect,
+  placeholder,
+  label,
+  onBtnClick,
+  accept,
 }: InputWithBtnProps) => {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -32,10 +40,11 @@ export const InputWithBtn = ({
   };
 
   return (
-    <div className="flex items-center gap-2.5 w-full">
+    <div className="flex md:flex-row flex-col items-center gap-2.5 w-full">
       {/* 검색 인풋 */}
       <input
         type="text"
+        placeholder={placeholder || ""}
         value={searchValue}
         onChange={(e) => onSearchChange(e.target.value)}
         onKeyDown={handleKeyDown}
@@ -47,8 +56,8 @@ export const InputWithBtn = ({
       {type === "search" && (
         <button
           onClick={onSearchClick}
-          className="w-[154px] h-[60px] border border-btn rounded-[10px] flex items-center
-            justify-center gap-1 transition text-btn text-18s flex-shrink-0"
+          className="w-full md:w-[154px] h-[60px] border border-btn rounded-[10px] flex items-center
+            justify-center gap-1 transition active:scale-95 text-btn text-18s flex-shrink-0"
         >
           <Image src={searchIcon} alt="search" className="w-6 h-6" /> 검색
         </button>
@@ -58,8 +67,8 @@ export const InputWithBtn = ({
         <>
           <label
             htmlFor="file-upload"
-            className="w-[154px] h-[60px] border border-btn rounded-[10px] flex items-center justify-center gap-1
-                    cursor-pointer text-btn text-18s flex-shrink-0"
+            className="w-full md:w-[154px] h-[60px] border border-btn rounded-[10px] flex items-center justify-center gap-1
+                    cursor-pointer transition active:scale-95 text-btn text-18s flex-shrink-0"
           >
             <Image src={uploadIcon} alt="upload" className="w-6 h-6" /> 파일선택
           </label>
@@ -67,9 +76,20 @@ export const InputWithBtn = ({
             id="file-upload"
             type="file"
             className="hidden"
+            accept={accept}
             onChange={handleFileChange}
           />
         </>
+      )}
+
+      {type === "text" && label && onBtnClick && (
+        <button
+          onClick={onBtnClick}
+          className="w-full md:w-[154px] h-[60px] border border-btn rounded-[10px] flex items-center
+            justify-center gap-1 transition active:scale-95 text-btn text-18s flex-shrink-0"
+        >
+          {label}
+        </button>
       )}
     </div>
   );
