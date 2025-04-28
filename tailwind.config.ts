@@ -20,6 +20,7 @@ export default {
         btn: "#353535",
         btn40: "#35353566",
         hover: "#F0F4FF",
+        border: "#EEE",
         text: {
           primary: "#222222",
           secondary: "#767676",
@@ -47,12 +48,17 @@ export default {
         lx: "1288px",
       },
       fontSize: {
+        "36eb": ["36px", { fontWeight: "800" }],
+
         "24b": ["24px", { fontWeight: "700" }],
 
+        "36s": ["36px", { fontWeight: "600" }],
+        "24s": ["24px", { fontWeight: "600" }],
         "20s": ["20px", { fontWeight: "600" }],
         "18s": ["18px", { fontWeight: "600" }],
         "16s": ["16px", { fontWeight: "600" }],
 
+        "36m": ["36px", { fontWeight: "500" }],
         "20m": ["20px", { fontWeight: "500" }],
         "18m": ["18px", { fontWeight: "500" }],
         "16m": ["16px", { fontWeight: "500" }],
