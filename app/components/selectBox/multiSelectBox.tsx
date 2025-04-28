@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { ChevronDown } from "lucide-react";
+import checkOn from "@/app/images/icon/check_on.svg";
+import checkOff from "@/app/images/icon/check_off.svg";
+import Image from "next/image";
 
 interface Option {
   label: string;
@@ -50,12 +53,12 @@ export const MultiSelectBox = ({
   }, [open]);
 
   return (
-    <div ref={boxRef} className="relative w-[520px]">
+    <div ref={boxRef} className="relative w-full">
       <button
         type="button"
         disabled={disabled}
         onClick={() => !disabled && setOpen((prev) => !prev)}
-        className={`w-full h-[48px] px-4 border flex items-center justify-between text-18r border-background-light
+        className={`w-full h-[60px] px-4 border flex items-center justify-between text-18r border-background-light
           ${
             disabled
               ? "bg-background-soft text-text-light cursor-not-allowed"
@@ -92,12 +95,12 @@ export const MultiSelectBox = ({
                   : "hover:bg-hover"
               }`}
             >
-              <input
-                type="checkbox"
-                disabled={option.disabled}
-                checked={value.includes(option.value)}
-                onChange={() => handleSelect(option.value)}
-                className="accent-main"
+              <Image
+                src={value.includes(option.value) ? checkOn : checkOff}
+                alt="checkbox"
+                width={16}
+                height={16}
+                className="cursor-pointer"
               />
               <span
                 className={`text-18r ${
