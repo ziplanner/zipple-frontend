@@ -38,7 +38,7 @@ export const CustomSelectBox = ({
   }, [open]);
 
   return (
-    <div ref={boxRef} className="relative w-[520px]">
+    <div ref={boxRef} className="relative w-full">
       <button
         type="button"
         disabled={disabled}
