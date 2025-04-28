@@ -9,7 +9,7 @@ export const LargeBtn = ({
 }: ButtonProps) => (
   <button
     onClick={onClick}
-    className={`h-[60px] w-[520px] rounded-[10px] text-18s
+    className={`h-[60px] w-full rounded-[10px] text-18s
         ${
           disabled
             ? color === "black"
