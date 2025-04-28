@@ -7,21 +7,34 @@ interface ChipOption {
 
 interface ChipsProps {
   options: ChipOption[];
+  value?: string; // ✅ 추가
   onChange?: (value: string) => void;
   disabled?: boolean;
 }
 
-export const Chips = ({ options, onChange, disabled = false }: ChipsProps) => {
-  const [selected, setSelected] = useState<string>(options[0]?.value || "");
+export const Chips = ({
+  options,
+  value,
+  onChange,
+  disabled = false,
+}: ChipsProps) => {
+  const [internalSelected, setInternalSelected] = useState<string>(
+    options[0]?.value || ""
+  );
 
-  const handleSelect = (value: string) => {
+  const selected = value !== undefined ? value : internalSelected;
+
+  const handleSelect = (newValue: string) => {
     if (disabled) return;
-    setSelected(value);
-    onChange?.(value);
+    if (onChange) {
+      onChange(newValue);
+    } else {
+      setInternalSelected(newValue);
+    }
   };
 
   return (
-    <div className="flex gap-2.5">
+    <div className="flex flex-col md:flex-row gap-2.5">
       {options.map((option) => {
         const isSelected = selected === option.value;
         return (
@@ -30,7 +43,7 @@ export const Chips = ({ options, onChange, disabled = false }: ChipsProps) => {
             type="button"
             onClick={() => handleSelect(option.value)}
             disabled={disabled}
-            className={`min-w-[255px] h-[60px] flex items-center justify-center border rounded-[10px] text-18m
+            className={`w-full h-[60px] flex items-center justify-center border rounded-[10px] text-18m
               ${
                 isSelected
                   ? "border-main text-main"
