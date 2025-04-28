@@ -13,7 +13,7 @@ const roleNames: Record<RoleTokenProps["role"], string> = {
 const RoleToken = ({ role }: RoleTokenProps) => {
   return (
     <div
-      className="inline-flex justify-center items-center text-14b
+      className="inline-flex justify-center items-center text-12b md:text-14b
     border border-main px-3 py-[1px] text-main rounded-full"
     >
       {roleNames[role]}
