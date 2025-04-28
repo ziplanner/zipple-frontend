@@ -7,13 +7,13 @@ const NotificationIcon = ({ count }: { count: number }) => {
   const icon = count > 0 ? bell_active : bell_inactive;
 
   return (
-    <div className="relative w-[30px] h-[30px]">
+    <div className="relative w-6 h-6 lg:w-[30px] lg:h-[30px] md:w-7 md:h-7">
       <Image
         src={icon}
         alt="알림 아이콘"
-        width={30}
-        height={30}
-        className="w-[30px] h-[30px]"
+        width={24}
+        height={24}
+        className="lg:w-[30px] lg:h-[30px] md:w-7 md:h-7"
       />
       {/* {count > 0 && (
         <span className="absolute -top-1 -right-1 bg-main text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center">
