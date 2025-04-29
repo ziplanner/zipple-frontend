@@ -1,3 +1,5 @@
+"use client";
+
 import { AgentSignupProvider } from "@/app/context/agentSignupProvider";
 import AgentSignupMainContent from "./content/main";
 
