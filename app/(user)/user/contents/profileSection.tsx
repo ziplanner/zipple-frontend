@@ -56,15 +56,15 @@ const ProfileSection = () => {
   };
 
   return (
-    <div className="w-[260px] pt-20 px-20 border-r border-r-border box-content">
+    <div className="md:w-[220px] lx:w-[260px] md:pt-10 md:px-10 lx:pt-20 lx:px-20 border-r border-r-border box-content">
       <div className="flex flex-col w-full items-center">
-        <div className="relative w-[220px] h-[220px]">
+        <div className="relative md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px]">
           <Image
             src={avatarSrc}
             alt="User"
-            width={220}
-            height={220}
-            className="rounded-full w-[220px] h-[220px]"
+            width={180}
+            height={180}
+            className="rounded-full md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px]"
           />
           <label className="absolute bottom-0 right-0 cursor-pointer">
             <input
@@ -76,9 +76,9 @@ const ProfileSection = () => {
             <Image
               src={edit}
               alt="edit"
-              width={60}
-              height={60}
-              className="cursor-pointer"
+              width={40}
+              height={40}
+              className="cursor-pointer md:w-[40px] md:h-[40px] lx:w-[60px] lx:h-[60px]"
             />
           </label>
         </div>
@@ -98,7 +98,7 @@ const ProfileSection = () => {
           />
           <p className="text-white text-18s">{roleDesc[role]}</p>
         </button>
-        <div className="bg-border h-[1px] mt-[60px] w-[260px] mb-[42px]" />
+        <div className="bg-border h-[1px] mt-[60px] md:w-[220px] lx:w-[260px] mb-[42px]" />
         {role !== "GENERAL" && (
           <button
             className="flex w-full justify-between mb-11
