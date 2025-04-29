@@ -35,7 +35,7 @@ export const PhoneInput = ({ value, onChange, disabled }: PhoneInputProps) => {
       <select
         className={`flex-1 w-full h-[60px] border border-background-light rounded-[10px] px-4
         focus:outline-none focus:border-main
-        ${disabled ? " bg-background-soft" : ""}
+        ${disabled ? "bg-background-soft" : ""}
       `}
         value={first}
         onChange={(e) => handleChange("first", e.target.value)}
@@ -54,8 +54,10 @@ export const PhoneInput = ({ value, onChange, disabled }: PhoneInputProps) => {
       {/* 중간 번호 입력 */}
       <input
         type="text"
-        className="flex-1 w-full h-[60px] border rounded-[10px] px-4 
-            focus:outline-none focus:border-main"
+        className={`flex-1 w-full h-[60px] border rounded-[10px] px-4 
+            focus:outline-none focus:border-main ${
+              disabled ? "bg-background-soft" : ""
+            }`}
         value={middle}
         maxLength={4}
         onChange={(e) =>
@@ -69,8 +71,10 @@ export const PhoneInput = ({ value, onChange, disabled }: PhoneInputProps) => {
       {/* 끝 번호 입력 */}
       <input
         type="text"
-        className="flex-1 w-full h-[60px] border rounded-[10px] px-4
-                focus:outline-none focus:border-main"
+        className={`flex-1 w-full h-[60px] border rounded-[10px] px-4
+                focus:outline-none focus:border-main ${
+                  disabled ? "bg-background-soft" : ""
+                }`}
         value={last}
         maxLength={4}
         onChange={(e) =>
