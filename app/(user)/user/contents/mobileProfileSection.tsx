@@ -7,6 +7,7 @@ import vector from "@/app/images/icon/mypage/vector.svg";
 import RoleToken from "@/app/components/token/roleToken";
 import MobileUserMenu from "@/app/components/menu/mobileUserMenu";
 import vector_black from "@/app/images/icon/vector.svg";
+import { motion, AnimatePresence } from "framer-motion"; // 추가!
 
 interface RoleTokenProps {
   role: "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE";
@@ -43,7 +44,6 @@ const MobileProfileSection = () => {
       EXPERT: "GENERAL",
       NONE: "GENERAL",
     };
-
     setRole(nextRole[role]);
   };
 
@@ -51,11 +51,9 @@ const MobileProfileSection = () => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const reader = new FileReader();
-
       reader.onloadend = () => {
         setAvatarSrc(reader.result as string);
       };
-
       reader.readAsDataURL(file);
     }
   };
@@ -73,16 +71,30 @@ const MobileProfileSection = () => {
           }`}
         />
       </button>
+
       {isOpen ? (
         <div className="flex flex-col w-full items-center">
+          {/* 아바타 + 변경 버튼 */}
           <div className="relative w-20 h-20">
-            <Image
-              src={avatarSrc}
-              alt="User"
-              width={80}
-              height={80}
-              className="rounded-full w-20 h-20"
-            />
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={String(avatarSrc)} // avatarSrc 변하면 다시 렌더
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.3 }}
+                className="w-20 h-20 rounded-full overflow-hidden"
+              >
+                <Image
+                  src={avatarSrc}
+                  alt="User"
+                  width={80}
+                  height={80}
+                  className="rounded-full w-20 h-20 object-cover"
+                />
+              </motion.div>
+            </AnimatePresence>
+
             <label className="absolute bottom-0 right-0 cursor-pointer">
               <input
                 type="file"
@@ -99,8 +111,34 @@ const MobileProfileSection = () => {
               />
             </label>
           </div>
-          <p className="text-text-primary text-18m mb-1 mt-3">{name}</p>
-          <RoleToken role={role} />
+
+          {/* 이름 */}
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={role + "-name"}
+              className="text-text-primary text-18m mb-1 mt-3"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              {name}
+            </motion.p>
+          </AnimatePresence>
+
+          {/* RoleToken */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={role + "-role"}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <RoleToken role={role} />
+            </motion.div>
+          </AnimatePresence>
+
           {/* 전환 버튼 */}
           <button
             className="flex flex-row items-center justify-center px-10 py-2.5 gap-1.5 rounded-md bg-main mt-[30px]"
@@ -115,6 +153,7 @@ const MobileProfileSection = () => {
             />
             <p className="text-white text-16s">{roleDesc[role]}</p>
           </button>
+
           {role !== "GENERAL" && (
             <button className="flex gap-[6px] mt-5 items-center text-main text-16s">
               프로필 미리보기
@@ -135,7 +174,7 @@ const MobileProfileSection = () => {
             alt="User"
             width={40}
             height={40}
-            className="rounded-full w-10 h-10"
+            className="rounded-full w-10 h-10 object-cover"
           />
           <p className="text-text-primary text-18m ml-1">{name}</p>
           <RoleToken role={role} />
