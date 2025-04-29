@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { PluginAPI } from "tailwindcss/types/config";
 
 export default {
   content: [
@@ -86,5 +87,38 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function (pluginAPI: PluginAPI) {
+      pluginAPI.addUtilities({
+        ".custom-scrollbar": {
+          position: "relative", // 부모 요소에 position 추가
+          overflowY: "scroll", // 세로 스크롤이 항상 보이도록 설정
+        },
+        ".custom-scrollbar::-webkit-scrollbar": {
+          width: "4px", // 스크롤바 너비
+          height: "4px", // 스크롤바 높이
+          marginRight: "10px",
+          marginLeft: "10px",
+        },
+        ".custom-scrollbar::-webkit-scrollbar-thumb": {
+          backgroundColor: "#DDD",
+          borderRadius: "20px",
+        },
+        ".custom-scrollbar::-webkit-scrollbar-thumb:hover": {
+          backgroundColor: "#DDD",
+        },
+        ".custom-scrollbar::-webkit-scrollbar-track": {
+          backgroundColor: "#fff",
+          borderRadius: "20px",
+        },
+        ".no-scrollbar": {
+          "-ms-overflow-style": "none",
+          "scrollbar-width": "none",
+        },
+        ".no-scrollbar::-webkit-scrollbar": {
+          display: "none",
+        },
+      });
+    },
+  ],
 } satisfies Config;
