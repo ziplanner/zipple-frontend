@@ -15,6 +15,8 @@ import { EmailInput } from "@/app/components/input/emailInput";
 import { DateInput } from "@/app/components/input/dateInput";
 import { InputWithBtn } from "@/app/components/input/inputWithBtn";
 import NoticeBar from "@/app/components/bar/noticeBar";
+import FilterInput from "@/app/components/input/filterInput";
+import RegionModal from "@/app/components/modal/regionSelectModal";
 
 const Test = () => {
   const [checkedValues, setCheckedValues] = useState<string[]>([
@@ -24,6 +26,14 @@ const Test = () => {
   const [customSelect, setCustomSelect] = useState<string>("선택 1");
   const [searchValue, setSearchValue] = useState<string>("");
   const [fileName, setFileName] = useState<string>("");
+  const [primaryRegion, setPrimaryRegion] = useState<string>("");
+  const [isOpenPrimary, setIsOpenPrimary] = useState<boolean>(false);
+
+  const handlePrimaryRegionChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPrimaryRegion(e.target.value);
+  };
 
   const handleFileSelect = (file: File | null) => {
     if (file) {
@@ -78,6 +88,18 @@ const Test = () => {
         <div className="flex flex-col gap-2">
           <LargeBtn text={"Button"} onClick={() => {}} color="" />
           <LargeBtn text={"Button"} onClick={() => {}} color="white" />
+        </div>
+      </div>
+      <div className="flex flex-col gap-8 mt-10 w-[360px] md:w-[600px]">
+        <div>
+          <h2 className="font-bold text-xl mb-4">
+            활동 지역 선택 (스크롤바 수정 예정)
+          </h2>
+          <FilterInput
+            value={primaryRegion}
+            onChange={handlePrimaryRegionChange}
+            onClick={() => setIsOpenPrimary(true)}
+          />
         </div>
       </div>
       <div className="flex flex-col gap-8 mt-10 w-[360px] md:w-[600px]">
@@ -157,6 +179,13 @@ const Test = () => {
           />
         </div>
       </div>
+      {isOpenPrimary && (
+        <RegionModal
+          onClose={() => {
+            setIsOpenPrimary(false);
+          }}
+        />
+      )}
     </div>
   );
 };
