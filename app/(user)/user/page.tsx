@@ -1,20 +1,31 @@
 "use client";
 
-import useResponsive from "@/app/hook/useResponsive";
+import { useState } from "react";
 import GeneralSection from "./contents/generalSection";
-import ProfileSection from "./contents/profileSection";
-import MobileProfileSection from "./contents/mobileProfileSection";
+import AgentSection from "./contents/agentSection";
+import ExpertSection from "./contents/expertSection";
 
 const UserPage = () => {
-  const isMd = useResponsive("md");
+  const [role, setRole] = useState<
+    "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE"
+  >("REPRESENTATION");
 
-  return (
-    <div className="flex w-full gap-10 md:gap-0 flex-col md:flex-row">
-      {isMd ? <ProfileSection /> : <MobileProfileSection />}
+  const renderSection = () => {
+    switch (role) {
+      case "GENERAL":
+        return <GeneralSection />;
+      case "REPRESENTATION":
+        return <AgentSection />;
+      case "ASSOCIATE":
+        return <AgentSection />;
+      case "EXPERT":
+        return <ExpertSection />;
+      default:
+        return <div>로그인이 필요한 서비스입니다.</div>;
+    }
+  };
 
-      <GeneralSection />
-    </div>
-  );
+  return <>{renderSection()}</>;
 };
 
 export default UserPage;
