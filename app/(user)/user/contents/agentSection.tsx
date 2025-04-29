@@ -10,6 +10,8 @@ import bar from "@/app/images/icon/footer/bar.svg";
 import Textarea from "@/app/components/textarea/textarea";
 import { CustomSelectBox } from "@/app/components/selectBox/customSelectBox";
 import { MultiSelectBox } from "@/app/components/selectBox/multiSelectBox";
+import FilterInput from "@/app/components/input/filterInput";
+import RegionModal from "@/app/components/modal/regionSelectModal";
 
 const AgentSection = () => {
   const [phone, setPhone] = useState<string>("");
@@ -21,7 +23,11 @@ const AgentSection = () => {
   const [selectedDetailSpecialty, setSelectedDetailSpecialty] = useState<
     string[]
   >([]);
+  const [primaryRegion, setPrimaryRegion] = useState<string>("");
+  const [additionalRegion, setAdditionalRegion] = useState<string>("");
 
+  const [isOpenPrimary, setIsOpenPrimary] = useState<boolean>(false);
+  const [isOpenAdditional, setIsOpenAdditional] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isSpecialtyEditMode, setIsSpecialtyEditMode] =
     useState<boolean>(false);
@@ -42,12 +48,24 @@ const AgentSection = () => {
     setIsSpecialtyEditMode(!isSpecialtyEditMode);
   };
 
+  const handlePrimaryRegionChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPrimaryRegion(e.target.value);
+  };
+
+  const handleAdditionalRegionChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setAdditionalRegion(e.target.value);
+  };
+
   return (
     <div className="flex w-full flex-col md:p-[60px]">
       <h1 className="text-text-primary text-22s md:text-30s">나의 정보</h1>
       <div className="border-b border-text-primary w-full mt-5 mb-[30px] md:mt-[30px] md:mb-10" />
-      <div className="flex flex-col gap-[30px] items-center md:items-baseline lg:flex-row md:gap-[130px]">
-        <div className="flex flex-col gap-[30px] md:gap-10">
+      <div className="flex w-full flex-col gap-[30px] items-center md:items-start lg:flex-row lg:items-start lg:justify-between lg:gap-[130px]">
+        <div className="flex flex-col gap-[30px] md:gap-10 flex-1">
           <div className="flex flex-col gap-2.5 w-1/2 pr-5">
             <h3 className="text-text-primary text-14m md:text-16m">전화번호</h3>
             <PhoneInput
@@ -75,25 +93,27 @@ const AgentSection = () => {
               disabled={!isEditMode}
             />
           </div>
-          <div className="flex flex-col gap-[30px] md:grid md:grid-cols-1 lg:grid-cols-2 md:gap-10">
+          <div className="flex flex-row gap-[30px] md:grid md:grid-cols-1 lg:grid-cols-2 md:gap-10">
             <div className="flex flex-col gap-2.5">
               <h3 className="text-text-primary text-14m md:text-16m">
                 대표 활동지역
               </h3>
-              <PhoneInput
-                value={phone}
-                onChange={handlePhoneChange}
+              <FilterInput
+                value={primaryRegion}
+                onChange={handlePrimaryRegionChange}
                 disabled={!isEditMode}
+                onClick={() => setIsOpenPrimary(true)}
               />
             </div>
             <div className="flex flex-col gap-2.5">
               <h3 className="text-text-primary text-14m md:text-16m">
                 추가 활동지역
               </h3>
-              <EmailInput
-                value={email}
-                onChange={handleEmailChange}
+              <FilterInput
+                value={additionalRegion}
+                onChange={handleAdditionalRegionChange}
                 disabled={!isEditMode}
+                onClick={() => setIsOpenAdditional(true)}
               />
             </div>
           </div>
@@ -140,8 +160,8 @@ const AgentSection = () => {
               disabled={!isSpecialtyEditMode}
             />
             <p className="text-text-secondary text-14r mt-1">
-              ※ 전문분야 및 상세분야는 최초 설정 또는 변경 후, 7일이 지나야 바꿀
-              수 있어요. (최근 변경일: 2024.05.05)
+              ※ 전문 분야는 최초 설정 또는 변경 후, 7일이 지나야 바꿀 수 있어요.
+              (최근 변경일: 2024.05.05)
             </p>
           </div>
         </div>
@@ -167,6 +187,20 @@ const AgentSection = () => {
           회원탈퇴
         </p>
       </div>
+      {isOpenPrimary && (
+        <RegionModal
+          onClose={() => {
+            setIsOpenPrimary(false);
+          }}
+        />
+      )}
+      {isOpenAdditional && (
+        <RegionModal
+          onClose={() => {
+            setIsOpenAdditional(false);
+          }}
+        />
+      )}
     </div>
   );
 };
