@@ -45,7 +45,7 @@ const ExpertSection = () => {
     <div className="flex w-full flex-col md:p-[60px]">
       <h1 className="text-text-primary text-22s md:text-30s">나의 정보</h1>
       <div className="border-b border-text-primary w-full mt-5 mb-[30px] md:mt-[30px] md:mb-10" />
-      <div className="flex flex-col gap-[30px] items-center md:items-baseline lg:flex-row md:gap-[130px]">
+      <div className="flex w-full flex-col gap-[30px] items-center md:items-start lg:flex-row lg:items-start lg:justify-between lg:gap-[130px]">
         <div className="flex flex-col gap-[30px] md:gap-10">
           <div className="flex flex-col gap-[30px] md:grid md:grid-cols-1 lg:grid-cols-2 md:gap-10">
             <div className="flex flex-col gap-2.5">
@@ -111,7 +111,7 @@ const ExpertSection = () => {
               onChange={setSelectedSpecialty}
               disabled={!isSpecialtyEditMode}
             />
-            <p className="text-text-secondary text-14r mt-1">
+            <p className="text-text-secondary text-14r mt-1 whitespace-nowrap">
               ※ 전문분야 및 상세분야는 최초 설정 또는 변경 후, 7일이 지나야 바꿀
               수 있어요. (최근 변경일: 2024.05.05)
             </p>
