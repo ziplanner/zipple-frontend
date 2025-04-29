@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import close from "@/app/images/icon/close.svg";
 import checkOn from "@/app/images/icon/check_on.svg";
@@ -100,11 +100,18 @@ const RegionModal = ({
 
   const districts = getDistricts(selectedCity);
 
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
       <div
         className="relative bg-white rounded-[20px] pt-10 w-[480px]
-      flex flex-col shadow-lg h-4/5"
+      flex flex-col shadow-lg h-3/4"
       >
         {/* 닫기 버튼 */}
         <button onClick={onClose} className="absolute top-4 right-4 p-1">
