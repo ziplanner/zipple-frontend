@@ -41,7 +41,7 @@ const GeneralSection = () => {
     <div className="flex w-full flex-col md:p-[60px]">
       <h1 className="text-text-primary text-22s md:text-30s">나의 정보</h1>
       <div className="border-b border-text-primary w-full mt-5 mb-[30px] md:mt-[30px] md:mb-10" />
-      <div className="flex flex-col gap-[30px] items-center md:items-baseline lg:flex-row md:gap-[130px]">
+      <div className="flex w-full flex-col gap-[30px] items-center md:items-start lg:flex-row lg:items-start lg:justify-between lg:gap-[130px]">
         <div className="flex flex-col gap-[30px] md:grid md:grid-cols-1 lg:grid-cols-2 md:gap-10">
           <div className="flex flex-col gap-2.5">
             <h3 className="text-text-primary text-14m md:text-16m">닉네임</h3>
