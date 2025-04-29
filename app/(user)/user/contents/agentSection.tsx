@@ -66,7 +66,7 @@ const AgentSection = () => {
       <div className="border-b border-text-primary w-full mt-5 mb-[30px] md:mt-[30px] md:mb-10" />
       <div className="flex w-full flex-col gap-[30px] items-center md:items-start lg:flex-row lg:items-start lg:justify-between lg:gap-[130px]">
         <div className="flex flex-col gap-[30px] md:gap-10 flex-1">
-          <div className="flex flex-col gap-2.5 w-1/2 pr-5">
+          <div className="flex flex-col gap-2.5 lx:w-1/2 lx:pr-5">
             <h3 className="text-text-primary text-14m md:text-16m">전화번호</h3>
             <PhoneInput
               value={phone}
@@ -74,7 +74,7 @@ const AgentSection = () => {
               disabled={!isEditMode}
             />
           </div>
-          <div className="flex flex-col gap-2.5 w-1/2 pr-5">
+          <div className="flex flex-col gap-2.5 lx:w-1/2 lx:pr-5">
             <h3 className="text-text-primary text-14m md:text-16m">이메일</h3>
             <EmailInput
               value={email}
