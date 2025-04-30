@@ -1,59 +1,52 @@
-import { useRole } from "@/app/context/roleContextProvider";
-import { useState } from "react";
+"use client";
 
-const GENERAL_USER_MENU = ["나의 정보", "집플래너 서비스", "커뮤니티"];
-const AGENT_USER_MENU = [
-  "나의 정보",
-  "부동산 정보",
-  "포토폴리오 관리",
-  "후기 보기",
-  "집플래너 서비스",
-  "커뮤니티",
-];
-const EXPERT_USER_MENU = [
-  "나의 정보",
-  "사업자 정보",
-  "포토폴리오 관리",
-  "후기 보기",
-  "집플래너 서비스",
-  "커뮤니티",
-];
+import { useMemo } from "react";
+import { useRole } from "@/app/context/roleContextProvider";
+import { usePathname, useRouter } from "next/navigation";
+import { MENU_BY_ROLE } from "@/app/data/menu";
 
 const UserMenu = () => {
   const { role } = useRole();
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const [selectedMenu, setSelectedMenu] = useState<string>("");
+  // 역할별 메뉴 목록 가져오기
+  const menuList = useMemo(() => {
+    return MENU_BY_ROLE[role] ?? [];
+  }, [role]);
 
-  // role에 따라 보여줄 메뉴를 선택
-  const getMenu = () => {
-    if (role === "REPRESENTATION" || role === "ASSOCIATE")
-      return AGENT_USER_MENU;
-    if (role === "EXPERT") return EXPERT_USER_MENU;
-    return GENERAL_USER_MENU;
-  };
+  // 현재 URL과 가장 잘 맞는 메뉴 path 찾기
+  const currentMenuPath = useMemo(() => {
+    const exactMatch = menuList.find((item) => pathname === item.path);
+    if (exactMatch) return exactMatch.path;
 
-  // 메뉴 항목 클릭 시 선택된 메뉴로 업데이트
-  const handleMenuClick = (menuItem: string) => {
-    setSelectedMenu(menuItem);
+    const partialMatch = menuList
+      .sort((a, b) => b.path.length - a.path.length)
+      .find((item) => pathname.startsWith(item.path));
+
+    return partialMatch?.path ?? "";
+  }, [pathname, menuList]);
+
+  const handleMenuClick = (path: string) => {
+    router.push(path);
   };
 
   return (
     <div className="w-full">
-      {/* role에 맞는 메뉴 항목을 표시 */}
       <ul className="flex flex-col gap-6 justify-start">
-        {getMenu().map((menuItem, index) => (
+        {menuList.map((menuItem, index) => (
           <li
             key={index}
             className={`text-18m ${
-              selectedMenu === menuItem
+              currentMenuPath === menuItem.path
                 ? "text-text-primary"
                 : "text-text-secondary"
             } relative cursor-pointer`}
-            onClick={() => handleMenuClick(menuItem)}
+            onClick={() => handleMenuClick(menuItem.path)}
           >
             <div className="relative inline-flex items-center">
-              {menuItem}
-              {selectedMenu === menuItem && (
+              {menuItem.label}
+              {currentMenuPath === menuItem.path && (
                 <span className="absolute top-0 right-[-10px] w-[6px] h-[6px] bg-sub rounded-full" />
               )}
             </div>
