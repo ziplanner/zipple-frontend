@@ -3,24 +3,37 @@ import Image from "next/image";
 import close from "@/app/images/icon/close.svg";
 import checkOn from "@/app/images/icon/check_on.svg";
 import checkOff from "@/app/images/icon/check_off.svg";
+import checkNone from "@/app/images/icon/check_none.svg";
 import gt from "@/app/images/icon/gt.svg";
 import close_blue from "@/app/images/icon/close_blue.svg";
 import vector_black from "@/app/images/icon/vector.svg";
+import { LargeBtn } from "../button/largeBtn";
+
+interface Region {
+  city: string;
+  district: string;
+}
 
 interface RegionModalProps {
   onClose: () => void;
-  onSave?: (selectedRegions: { city: string; district: string }[]) => void;
-  initialRegions?: { city: string; district: string }[];
+  onSave?: (selectedRegions: Region[]) => void;
+  initialRegions?: Region[];
+  disabledRegions?: Region[];
+  modalTitle?: string;
+  maxSelectable?: number;
 }
 
 const RegionModal = ({
   onClose,
   onSave,
   initialRegions = [],
+  disabledRegions = [],
+  modalTitle = "활동지역",
+  maxSelectable = 3,
 }: RegionModalProps) => {
   const [selectedCity, setSelectedCity] = useState<string>("서울");
   const [selectedRegions, setSelectedRegions] =
-    useState<{ city: string; district: string }[]>(initialRegions);
+    useState<Region[]>(initialRegions);
 
   const cities = [
     "전국",
@@ -35,66 +48,81 @@ const RegionModal = ({
     "전남",
   ];
 
-  const getDistricts = (city: string) => {
-    switch (city) {
-      case "서울":
-        return [
-          "서울 전체",
-          "강남구",
-          "강동구",
-          "강북구",
-          "강서구",
-          "관악구",
-          "광진구",
-          "구로구",
-          "금천구",
-          "노원구",
-        ];
-      case "경기":
-        return ["경기 전체", "가평군", "고양시", "과천시", "광명시", "광주시"];
-      case "인천":
-        return ["인천 전체", "강화군", "계양구", "남동구", "동구", "미추홀구"];
-      default:
-        return [`${city} 전체`];
-    }
+  const districtMap: Record<string, string[]> = {
+    서울: [
+      "서울 전체",
+      "강남구",
+      "강동구",
+      "강북구",
+      "강서구",
+      "관악구",
+      "광진구",
+      "구로구",
+      "금천구",
+      "노원구",
+    ],
+    경기: [
+      "경기 전체",
+      "가평군",
+      "고양시",
+      "과천시",
+      "광명시",
+      "광주시",
+      "구리시",
+      "군포시",
+      "김포시",
+      "남양주시",
+    ],
+    인천: [
+      "인천 전체",
+      "강화군",
+      "계양구",
+      "남동구",
+      "동구",
+      "미추홀구",
+      "부평구",
+      "서구",
+      "연수구",
+    ],
+    대전: ["대전 전체", "동구", "서구", "유성구"],
+    세종: ["세종 전체", "조치원읍", "한솔동"],
+    충남: ["충남 전체", "천안시", "공주시"],
+    충북: ["충북 전체", "청주시", "충주시"],
+    광주: ["광주 전체", "동구", "서구", "남구", "북구"],
+    전남: ["전남 전체", "목포시", "여수시", "순천시"],
   };
 
-  const toggleRegion = (city: string, district: string) => {
-    const isSelected = selectedRegions.some(
-      (region) => region.city === city && region.district === district
-    );
+  const getDistricts = (city: string): string[] => {
+    return districtMap[city] || [`${city} 전체`];
+  };
 
-    if (isSelected) {
-      setSelectedRegions(
-        selectedRegions.filter(
-          (region) => !(region.city === city && region.district === district)
-        )
+  const isRegionSelected = (city: string, district: string) =>
+    selectedRegions.some((r) => r.city === city && r.district === district);
+
+  const isRegionDisabled = (city: string, district: string) =>
+    disabledRegions.some((r) => r.city === city && r.district === district);
+
+  const toggleRegion = (city: string, district: string) => {
+    if (isRegionDisabled(city, district)) return;
+
+    const alreadySelected = isRegionSelected(city, district);
+    if (alreadySelected) {
+      setSelectedRegions((prev) =>
+        prev.filter((r) => !(r.city === city && r.district === district))
       );
-    } else {
-      if (selectedRegions.length < 3) {
-        setSelectedRegions([...selectedRegions, { city, district }]);
-      }
+    } else if (selectedRegions.length < maxSelectable) {
+      setSelectedRegions((prev) => [...prev, { city, district }]);
     }
   };
 
   const removeRegion = (city: string, district: string) => {
-    setSelectedRegions(
-      selectedRegions.filter(
-        (region) => !(region.city === city && region.district === district)
-      )
-    );
-  };
-
-  const isRegionSelected = (city: string, district: string) => {
-    return selectedRegions.some(
-      (region) => region.city === city && region.district === district
+    setSelectedRegions((prev) =>
+      prev.filter((r) => !(r.city === city && r.district === district))
     );
   };
 
   const handleSave = () => {
-    if (onSave) {
-      onSave(selectedRegions);
-    }
+    onSave?.(selectedRegions);
     onClose();
   };
 
@@ -109,10 +137,7 @@ const RegionModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
-      <div
-        className="relative bg-white rounded-[20px] pt-10 w-[480px]
-      flex flex-col shadow-lg h-3/4"
-      >
+      <div className="relative bg-white rounded-[20px] pt-10 w-[480px] flex flex-col shadow-lg h-4/5">
         {/* 닫기 버튼 */}
         <button onClick={onClose} className="absolute top-4 right-4 p-1">
           <Image src={close} alt="close" width={20} height={20} />
@@ -121,42 +146,39 @@ const RegionModal = ({
         {/* Header */}
         <div className="mb-5 px-10">
           <h1 className="text-text-primary text-20s">
-            대표 활동지역
+            {modalTitle}
             <span className="text-text-secondary text-16r ml-2">
-              (최대 3개)
+              (최대 {maxSelectable}개)
             </span>
           </h1>
         </div>
 
-        {/* Selected regions tags */}
-        <div className="flex flex-wrap gap-2.5 mb-5 px-5">
+        {/* 선택된 지역 태그 */}
+        <div className="flex flex-nowrap no-scrollbar gap-2.5 mb-5 mx-5 overflow-x-auto overflow-y-hidden h-14">
           {selectedRegions.map((region, index) => (
             <div
               key={index}
-              className="flex items-center bg-main_bg rounded-md px-2.5 py-2 text-main"
+              className="flex text-14m items-center px-3 py-2.5 bg-main_bg rounded-md text-main min-w-max"
             >
               <span className="flex gap-1">
                 {region.city}
-                <Image src={gt} alt={">"} width={10} height={10} />
+                <Image src={gt} alt=">" width={10} height={10} />
                 {region.district}
               </span>
               <button
                 onClick={() => removeRegion(region.city, region.district)}
                 className="ml-2"
               >
-                <Image src={close_blue} alt={"x"} width={10} height={10} />
+                <Image src={close_blue} alt="x" width={10} height={10} />
               </button>
             </div>
           ))}
         </div>
 
-        {/* Region selection area */}
+        {/* 지역 선택 영역 */}
         <div className="flex h-full overflow-y-auto">
-          {/* Cities column */}
-          <div
-            className="w-1/3 bg-background-soft overflow-y-auto custom-scrollbar
-           rounded-bl-[20px]"
-          >
+          {/* 시도 선택 */}
+          <div className="w-1/3 bg-background-soft overflow-y-auto custom-scrollbar">
             {cities.map((city, index) => (
               <div
                 key={index}
@@ -181,50 +203,44 @@ const RegionModal = ({
             ))}
           </div>
 
-          {/* Districts column */}
-          <div className="w-2/3 overflow-y-auto custom-scrollbar rounded-br-[20px]">
-            {districts.map((district, index) => (
-              <div
-                key={index}
-                onClick={() => toggleRegion(selectedCity, district)}
-                className={`px-5 py-3 text-16r cursor-pointer flex justify-between items-center
+          {/* 구군 선택 */}
+          <div className="w-2/3 overflow-y-auto custom-scrollbar">
+            {districts.map((district, index) => {
+              const disabled = isRegionDisabled(selectedCity, district);
+              const selected = isRegionSelected(selectedCity, district);
+
+              return (
+                <div
+                  key={index}
+                  onClick={() =>
+                    !disabled && toggleRegion(selectedCity, district)
+                  }
+                  className={`px-5 py-3 text-16r cursor-pointer flex justify-between items-center
                     ${
-                      isRegionSelected(selectedCity, district)
+                      disabled
+                        ? "text-text-light bg-border cursor-not-allowed"
+                        : selected
                         ? "text-main"
                         : "text-text-light"
                     }`}
-              >
-                <span>{district}</span>
-                <Image
-                  src={
-                    isRegionSelected(selectedCity, district)
-                      ? checkOn
-                      : checkOff
-                  }
-                  alt="checkbox"
-                  width={20}
-                  height={20}
-                />
-              </div>
-            ))}
+                >
+                  <span>{district}</span>
+                  <Image
+                    src={disabled ? checkNone : selected ? checkOn : checkOff}
+                    alt="checkbox"
+                    width={20}
+                    height={20}
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* Action buttons */}
-        {/* <div className="flex justify-center mt-5 gap-2">
-          <button
-            onClick={onClose}
-            className="px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
-          >
-            취소
-          </button>
-          <button
-            onClick={handleSave}
-            className="px-6 py-2 bg-main text-white rounded-md hover:bg-blue-700"
-          >
-            선택 완료
-          </button>
-        </div> */}
+        {/* 적용 버튼 */}
+        <div className="flex justify-center p-10">
+          <LargeBtn onClick={handleSave} text="적용" color="blue" />
+        </div>
       </div>
     </div>
   );
