@@ -6,17 +6,16 @@ import edit from "@/app/images/icon/mypage/edit.svg";
 import vector from "@/app/images/icon/mypage/vector.svg";
 import RoleToken from "@/app/components/token/roleToken";
 import UserMenu from "@/app/components/menu/userMenu";
-import useResponsive from "@/app/hook/useResponsive";
+import { useRole } from "@/app/context/roleContextProvider";
 
 interface RoleTokenProps {
   role: "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE";
 }
 
 const ProfileSection = () => {
+  const { role, setRole } = useRole();
+
   const [name, setName] = useState<string>("권수연");
-  const [role, setRole] = useState<
-    "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE"
-  >("GENERAL");
   const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(avatar);
 
   const roleDesc: Record<RoleTokenProps["role"], string> = {
