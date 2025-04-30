@@ -1,3 +1,4 @@
+import { useRole } from "@/app/context/roleContextProvider";
 import { useState } from "react";
 
 const GENERAL_USER_MENU = ["나의 정보", "집플래너 서비스", "커뮤니티"];
@@ -19,12 +20,14 @@ const EXPERT_USER_MENU = [
 ];
 
 const UserMenu = () => {
-  const [role, setRole] = useState<"GENERAL" | "AGENT" | "EXPERT">("GENERAL");
+  const { role } = useRole();
+
   const [selectedMenu, setSelectedMenu] = useState<string>("");
 
   // role에 따라 보여줄 메뉴를 선택
   const getMenu = () => {
-    if (role === "AGENT") return AGENT_USER_MENU;
+    if (role === "REPRESENTATION" || role === "ASSOCIATE")
+      return AGENT_USER_MENU;
     if (role === "EXPERT") return EXPERT_USER_MENU;
     return GENERAL_USER_MENU;
   };
