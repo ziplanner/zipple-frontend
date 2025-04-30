@@ -14,6 +14,7 @@ export default {
       },
       colors: {
         main: "#3772F7",
+        secondary: "#2032A7",
         main_bg: "#ECF3FF",
         main40: "#3772F799",
         sub: "#FFE100",
