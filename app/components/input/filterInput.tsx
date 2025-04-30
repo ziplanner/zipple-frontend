@@ -44,7 +44,9 @@ const FilterInput: React.FC<InputBoxProps> = ({
         width={20}
         height={20}
         className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
-        onClick={onClick}
+        onClick={() => {
+          if (!disabled) onClick();
+        }}
       />
     </div>
   );
