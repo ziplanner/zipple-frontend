@@ -23,7 +23,7 @@ const Textarea: React.FC<TextareaProps> = ({
         onChange={onChange}
         placeholder={placeholder}
         disabled={disabled}
-        maxLength={maxLength}
+        {...(maxLength > 0 ? { maxLength } : {})}
         className={clsx(
           "w-full h-[240px] px-4 py-3 text-text-secondary rounded-[10px] outline-none transition border border-background-light resize-none",
           {
@@ -32,9 +32,12 @@ const Textarea: React.FC<TextareaProps> = ({
           }
         )}
       />
-      <div className="flex justify-end text-18r text-text-light">
-        {value.length} / {maxLength}
-      </div>
+
+      {maxLength > 0 && (
+        <div className="flex justify-end text-18r text-text-light">
+          {value.length} / {maxLength}
+        </div>
+      )}
     </div>
   );
 };
