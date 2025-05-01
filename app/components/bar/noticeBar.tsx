@@ -5,6 +5,7 @@ import retrial from "@/app/images/icon/mypage/resubmission.svg";
 
 interface NoticeBarProps {
   type: "wait" | "request" | "retrial" | "complete";
+  clssName?: string;
 }
 
 const typeToDesc = {
@@ -26,7 +27,7 @@ const typeToDesc = {
   },
 };
 
-const NoticeBar = ({ type }: NoticeBarProps) => {
+const NoticeBar = ({ type, clssName }: NoticeBarProps) => {
   const imageSrc =
     type === "wait" || type === "request"
       ? time
@@ -36,7 +37,7 @@ const NoticeBar = ({ type }: NoticeBarProps) => {
 
   return (
     <div
-      className={`flex rounded-[10px] w-full border py-6 px-5 gap-2.5 items-center justify-start ${
+      className={`${clssName} flex rounded-[10px] w-full border py-6 px-5 gap-2.5 items-center justify-start ${
         type === "wait" || type === "request"
           ? "border-sub bg-sub_bg"
           : type === "retrial"

@@ -36,7 +36,7 @@ const UserMenu = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full min-h-[420px]">
       <ul className="flex flex-col gap-6 justify-start">
         {menuList.map((menuItem, index) => (
           <li

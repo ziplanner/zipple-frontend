@@ -83,6 +83,7 @@ export default {
         "18r": ["18px", { fontWeight: "400" }],
         "16r": ["16px", { fontWeight: "400" }],
         "14r": ["14px", { fontWeight: "400" }],
+        "12r": ["12px", { fontWeight: "400" }],
 
         "24l": ["24px", { fontWeight: "300" }],
       },
