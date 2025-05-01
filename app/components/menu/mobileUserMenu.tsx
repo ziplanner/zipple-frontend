@@ -36,26 +36,31 @@ const MobileUserMenu = () => {
 
   return (
     <div className="w-full">
-      <ul className="flex gap-5 justify-start items-center">
-        {menuList.map((menuItem, index) => (
-          <li
-            key={index}
-            className={`${
-              currentMenuPath === menuItem.path
-                ? "text-text-primary text-16s"
-                : "text-text-secondary text-14m"
-            } relative cursor-pointer`}
-            onClick={() => handleMenuClick(menuItem.path)}
-          >
-            <div className="relative inline-flex items-center">
-              {menuItem.label}
-              {currentMenuPath === menuItem.path && (
-                <span className="absolute top-0 right-[-10px] w-[6px] h-[6px] bg-sub rounded-full" />
-              )}
-            </div>
-          </li>
-        ))}
-      </ul>
+      {/* 메뉴 스크롤 영역 */}
+      <div className="overflow-x-auto no-scrollbar">
+        <ul className="flex gap-5 justify-start items-center whitespace-nowrap min-w-max">
+          {menuList.map((menuItem, index) => (
+            <li
+              key={index}
+              className={`${
+                currentMenuPath === menuItem.path
+                  ? "text-text-primary text-16s"
+                  : "text-text-secondary text-14m"
+              } relative cursor-pointer`}
+              onClick={() => handleMenuClick(menuItem.path)}
+            >
+              <div className="relative inline-flex items-center">
+                {menuItem.label}
+                {currentMenuPath === menuItem.path && (
+                  <span className="absolute top-0 right-[-10px] w-[6px] h-[6px] bg-sub rounded-full" />
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* 하단 고정 바 */}
       <div className="border-b border-background-light w-full mt-[14px]" />
     </div>
   );

@@ -15,6 +15,7 @@ interface InputWithBtnProps {
   label?: string;
   onBtnClick?: () => void;
   accept?: string;
+  direction?: "row" | "col" | "responsive";
 }
 
 export const InputWithBtn = ({
@@ -27,6 +28,7 @@ export const InputWithBtn = ({
   label,
   onBtnClick,
   accept,
+  direction = "responsive",
 }: InputWithBtnProps) => {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -39,8 +41,30 @@ export const InputWithBtn = ({
     }
   };
 
+  const getDirectionClass = () => {
+    switch (direction) {
+      case "row":
+        return "flex-row";
+      case "col":
+        return "flex-col";
+      default:
+        return "md:flex-row flex-col";
+    }
+  };
+
+  const getDirectionWidthClass = () => {
+    switch (direction) {
+      case "row":
+        return "w-full";
+      case "col":
+        return "w-full";
+      default:
+        return "md:w-[154px] w-full";
+    }
+  };
+
   return (
-    <div className="flex md:flex-row flex-col items-center gap-2.5 w-full">
+    <div className={`flex items-center gap-2.5 w-full ${getDirectionClass()}`}>
       {/* 검색 인풋 */}
       <input
         type="text"
@@ -48,16 +72,16 @@ export const InputWithBtn = ({
         value={searchValue}
         onChange={(e) => onSearchChange(e.target.value)}
         onKeyDown={handleKeyDown}
-        className="flex-grow w-full h-[60px] border rounded-[10px] px-2 md:px-4
-                focus:outline-none focus:border-main"
+        className="flex-grow w-full h-[60px] border rounded-[10px] px-2 md:px-4 text-18r
+                focus:outline-none focus:border-main text-text-secondary"
       />
 
       {/* 타입별 버튼 */}
       {type === "search" && (
         <button
           onClick={onSearchClick}
-          className="w-full md:w-[154px] h-[60px] border border-btn rounded-[10px] flex items-center
-            justify-center gap-1 transition active:scale-95 text-btn text-18s flex-shrink-0"
+          className={`${getDirectionWidthClass()} h-[60px] border border-btn rounded-[10px] flex items-center
+            justify-center gap-1 transition active:scale-95 text-btn text-18s flex-shrink-0`}
         >
           <Image src={searchIcon} alt="search" className="w-6 h-6" /> 검색
         </button>
@@ -67,8 +91,8 @@ export const InputWithBtn = ({
         <>
           <label
             htmlFor="file-upload"
-            className="w-full md:w-[154px] h-[60px] border border-btn rounded-[10px] flex items-center justify-center gap-1
-                    cursor-pointer transition active:scale-95 text-btn text-18s flex-shrink-0"
+            className={`${getDirectionWidthClass()} h-[60px] border border-btn rounded-[10px] flex items-center justify-center gap-1
+                    cursor-pointer transition active:scale-95 text-btn text-18s flex-shrink-0`}
           >
             <Image src={uploadIcon} alt="upload" className="w-6 h-6" /> 파일선택
           </label>
@@ -85,8 +109,8 @@ export const InputWithBtn = ({
       {type === "text" && label && onBtnClick && (
         <button
           onClick={onBtnClick}
-          className="w-full md:w-[154px] h-[60px] border border-btn rounded-[10px] flex items-center
-            justify-center gap-1 transition active:scale-95 text-btn text-18s flex-shrink-0"
+          className={`${getDirectionWidthClass()} h-[60px] border border-btn rounded-[10px] flex items-center
+            justify-center gap-1 transition active:scale-95 text-btn text-18s flex-shrink-0`}
         >
           {label}
         </button>
