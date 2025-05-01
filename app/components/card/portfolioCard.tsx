@@ -15,7 +15,7 @@ export const PortfolioCard = ({
   return (
     <div className="relative bg-white">
       {/* 썸네일 영역 */}
-      <div className="relative w-full aspect-[1/1] border border-border rounded-xl bg-gradient-to-b to-gray-100 from-gray-200">
+      <div className="relative w-full aspect-[1/1] border border-border rounded-xl bg-gradient-to-b to-gray-50 from-gray-200">
         {/* 썸네일 이미지가 있을 경우 */}
         {thumbnail && (
           <img

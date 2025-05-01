@@ -4,6 +4,8 @@ import { useState } from "react";
 import { PortfolioCard } from "@/app/components/card/portfolioCard";
 import Pagination from "@/app/components/pagination/pagination";
 import PortfolioBtn from "@/app/components/button/portfolioBtn";
+import PortfolioModal from "@/app/components/modal/portfolioModal";
+import AlertMessage from "@/app/components/alert/alertMessage";
 
 const DUMMY_DATA = Array(30)
   .fill(0)
@@ -18,7 +20,9 @@ const DUMMY_DATA = Array(30)
 const ITEMS_PER_PAGE = 12;
 
 const UserPortfolioPage = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [open, setOpen] = useState<boolean>(false);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
 
   const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIdx = startIdx + ITEMS_PER_PAGE;
@@ -46,7 +50,30 @@ const UserPortfolioPage = () => {
         onPageChange={setCurrentPage}
         className="mb-24 md:mb-[120px]"
       />
-      <PortfolioBtn onClick={() => console.log("등록 버튼 클릭됨")} />
+      <PortfolioBtn
+        onClick={() => {
+          setOpen(true);
+        }}
+      />
+      {open && (
+        <PortfolioModal
+          onClose={() => {
+            setOpen(false);
+          }}
+          onSubmit={() => {
+            setOpen(false);
+            setShowAlert(true);
+          }}
+        />
+      )}
+      {showAlert && (
+        <AlertMessage
+          text="포토폴리오가 등록되었습니다!"
+          onClose={() => {
+            setShowAlert(false);
+          }}
+        />
+      )}
     </div>
   );
 };
