@@ -34,7 +34,9 @@ const AlertMessage = ({ text, duration = 1500, onClose }: AlertMsgProps) => {
         rounded-[10px] bg-main/90 px-10 py-3 shadow-xl"
         >
           <Image src={check} alt="check" width={20} height={20} />
-          <p className="text-white text-18m whitespace-nowrap">{text}</p>
+          <p className="text-white text-16m md:text-18m whitespace-nowrap">
+            {text}
+          </p>
         </div>
       </motion.div>
     </AnimatePresence>
