@@ -9,7 +9,6 @@ import { PrimaryBtn } from "@/app/components/button/primaryBtn";
 import bar from "@/app/images/icon/footer/bar.svg";
 import Textarea from "@/app/components/textarea/textarea";
 import { CustomSelectBox } from "@/app/components/selectBox/customSelectBox";
-import RegionModal from "@/app/components/modal/regionSelectModal";
 import AlertMessage from "@/app/components/alert/alertMessage";
 
 const AssociateSection = () => {
@@ -161,6 +160,14 @@ const AssociateSection = () => {
           회원탈퇴
         </p>
       </div>
+      {showAlert && (
+        <AlertMessage
+          text="저장되었습니다!"
+          onClose={() => {
+            setShowAlert(false);
+          }}
+        />
+      )}
     </div>
   );
 };

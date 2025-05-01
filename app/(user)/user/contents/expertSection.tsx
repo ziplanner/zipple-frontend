@@ -174,14 +174,12 @@ const ExpertSection = () => {
         </p>
       </div>
       {showAlert && (
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50">
-          <AlertMessage
-            text="저장되었습니다!"
-            onClose={() => {
-              setShowAlert(false);
-            }}
-          />
-        </div>
+        <AlertMessage
+          text="저장되었습니다!"
+          onClose={() => {
+            setShowAlert(false);
+          }}
+        />
       )}
     </div>
   );
