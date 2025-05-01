@@ -31,7 +31,7 @@ const FilterInput: React.FC<InputBoxProps> = ({
         placeholder={placeholder}
         disabled={disabled}
         className={clsx(
-          "w-full h-[60px] pl-4 pr-12 text-text-secondary rounded-[10px] outline-none transition border border-background-light", // pr-12로 아이콘 공간 확보
+          "w-full h-[60px] pl-2 md:pl-4 pr-12 text-text-secondary rounded-[10px] outline-none transition border border-background-light", // pr-12로 아이콘 공간 확보
           {
             "bg-background-soft text-text-light": disabled,
             "focus:border-main": !disabled && !error,
@@ -44,7 +44,9 @@ const FilterInput: React.FC<InputBoxProps> = ({
         width={20}
         height={20}
         className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
-        onClick={onClick}
+        onClick={() => {
+          if (!disabled) onClick();
+        }}
       />
     </div>
   );

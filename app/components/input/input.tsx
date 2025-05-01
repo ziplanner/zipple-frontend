@@ -27,7 +27,7 @@ const Input: React.FC<InputBoxProps> = ({
         placeholder={placeholder}
         disabled={disabled}
         className={clsx(
-          "w-full h-[60px] px-4 text-text-secondary rounded-[10px] outline-none transition border border-background-light",
+          "w-full h-[60px] px-2 md:px-4 text-text-secondary rounded-[10px] outline-none transition border border-background-light",
           {
             "bg-background-soft text-text-light": disabled,
             " focus:border-main": !disabled && !error,

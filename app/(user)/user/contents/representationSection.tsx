@@ -9,28 +9,35 @@ import { PrimaryBtn } from "@/app/components/button/primaryBtn";
 import bar from "@/app/images/icon/footer/bar.svg";
 import Textarea from "@/app/components/textarea/textarea";
 import { CustomSelectBox } from "@/app/components/selectBox/customSelectBox";
-import { MultiSelectBox } from "@/app/components/selectBox/multiSelectBox";
 import FilterInput from "@/app/components/input/filterInput";
 import RegionModal from "@/app/components/modal/regionSelectModal";
+import AlertMessage from "@/app/components/alert/alertMessage";
 
-const AgentSection = () => {
+const RepresentationSection = () => {
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+
   const [phone, setPhone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [url, setUrl] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>("");
-  const [selectedDetailSpecialty, setSelectedDetailSpecialty] = useState<
-    string[]
+  const [primaryRegions, setPrimaryRegions] = useState<
+    { city: string; district: string }[]
   >([]);
-  const [primaryRegion, setPrimaryRegion] = useState<string>("");
-  const [additionalRegion, setAdditionalRegion] = useState<string>("");
+
+  const [additionalRegions, setAdditionalRegions] = useState<
+    { city: string; district: string }[]
+  >([]);
 
   const [isOpenPrimary, setIsOpenPrimary] = useState<boolean>(false);
   const [isOpenAdditional, setIsOpenAdditional] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isSpecialtyEditMode, setIsSpecialtyEditMode] =
     useState<boolean>(false);
+
+  const formatRegions = (regions: { city: string; district: string }[]) =>
+    regions.map((r) => `${r.city} > ${r.district}`).join(", ");
 
   const handlePhoneChange = (fullPhone: string) => {
     setPhone(fullPhone);
@@ -41,27 +48,23 @@ const AgentSection = () => {
   };
 
   const handleEditMode = () => {
+    if (isEditMode) {
+      // 저장 시 알림 표시
+      setShowAlert(true);
+    }
     setIsEditMode(!isEditMode);
   };
 
   const handleSpecialtyEditMode = () => {
+    if (isSpecialtyEditMode) {
+      // 저장 시 알림 표시
+      setShowAlert(true);
+    }
     setIsSpecialtyEditMode(!isSpecialtyEditMode);
   };
 
-  const handlePrimaryRegionChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setPrimaryRegion(e.target.value);
-  };
-
-  const handleAdditionalRegionChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setAdditionalRegion(e.target.value);
-  };
-
   return (
-    <div className="flex w-full flex-col md:p-[60px]">
+    <div className="flex w-full flex-col md:px-8 md:py-10 lg:p-[60px]">
       <h1 className="text-text-primary text-22s md:text-30s">나의 정보</h1>
       <div className="border-b border-text-primary w-full mt-5 mb-[30px] md:mt-[30px] md:mb-10" />
       <div className="flex w-full flex-col gap-[30px] items-center md:items-start lg:flex-row lg:items-start lg:justify-between lg:gap-[130px]">
@@ -99,8 +102,8 @@ const AgentSection = () => {
                 대표 활동지역
               </h3>
               <FilterInput
-                value={primaryRegion}
-                onChange={handlePrimaryRegionChange}
+                value={formatRegions(primaryRegions)}
+                onChange={() => {}}
                 disabled={!isEditMode}
                 onClick={() => setIsOpenPrimary(true)}
               />
@@ -109,9 +112,10 @@ const AgentSection = () => {
               <h3 className="text-text-primary text-14m md:text-16m">
                 추가 활동지역
               </h3>
+
               <FilterInput
-                value={additionalRegion}
-                onChange={handleAdditionalRegionChange}
+                value={formatRegions(additionalRegions)}
+                onChange={() => {}}
                 disabled={!isEditMode}
                 onClick={() => setIsOpenAdditional(true)}
               />
@@ -149,9 +153,12 @@ const AgentSection = () => {
       </div>
       <div className="border-b border-background-light w-full my-10" />
       {/* 분야 영역 */}
-      <div className="flex w-full flex-col gap-[30px] items-center md:items-baseline lg:flex-row md:gap-[130px]">
-        <div className="flex w-full flex-col gap-[30px] md:grid md:grid-cols-1 lg:grid-cols-2 md:gap-10">
-          <div className="flex flex-col gap-2.5">
+      <div
+        className="flex w-full flex-col gap-[30px] items-center md:items-start
+      lg:flex-row lg:items-start lg:justify-between lg:gap-[130px]"
+      >
+        <div className="flex flex-col gap-[30px] md:gap-10 flex-1">
+          <div className="flex flex-col gap-2.5 lx:w-1/2 lx:pr-5">
             <h3 className="text-text-primary text-14m md:text-16m">전문분야</h3>
             <CustomSelectBox
               options={["주거", "상업", "토지", "기타"]}
@@ -159,7 +166,7 @@ const AgentSection = () => {
               onChange={setSelectedSpecialty}
               disabled={!isSpecialtyEditMode}
             />
-            <p className="text-text-secondary text-14r mt-1">
+            <p className="text-text-secondary text-14r mt-1 whitespace-nowrap">
               ※ 전문 분야는 최초 설정 또는 변경 후, 7일이 지나야 바꿀 수 있어요.
               (최근 변경일: 2024.05.05)
             </p>
@@ -189,15 +196,35 @@ const AgentSection = () => {
       </div>
       {isOpenPrimary && (
         <RegionModal
-          onClose={() => {
+          modalTitle="대표 활동지역"
+          onClose={() => setIsOpenPrimary(false)}
+          onSave={(regions) => {
+            setPrimaryRegions(regions);
             setIsOpenPrimary(false);
           }}
+          initialRegions={primaryRegions}
+          maxSelectable={3}
         />
       )}
+
       {isOpenAdditional && (
         <RegionModal
-          onClose={() => {
+          modalTitle="추가 활동지역"
+          onClose={() => setIsOpenAdditional(false)}
+          onSave={(regions) => {
+            setAdditionalRegions(regions);
             setIsOpenAdditional(false);
+          }}
+          initialRegions={additionalRegions}
+          disabledRegions={primaryRegions} // 대표지역은 선택 불가
+          maxSelectable={5}
+        />
+      )}
+      {showAlert && (
+        <AlertMessage
+          text="저장되었습니다!"
+          onClose={() => {
+            setShowAlert(false);
           }}
         />
       )}
@@ -205,4 +232,4 @@ const AgentSection = () => {
   );
 };
 
-export default AgentSection;
+export default RepresentationSection;

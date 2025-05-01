@@ -1,23 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useRole } from "@/app/context/roleContextProvider";
 import GeneralSection from "./contents/generalSection";
-import AgentSection from "./contents/agentSection";
 import ExpertSection from "./contents/expertSection";
+import RepresentationSection from "./contents/representationSection";
+import AssociateSection from "./contents/associateSection";
 
 const UserPage = () => {
-  const [role, setRole] = useState<
-    "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE"
-  >("REPRESENTATION");
+  const { role } = useRole();
 
   const renderSection = () => {
     switch (role) {
       case "GENERAL":
         return <GeneralSection />;
       case "REPRESENTATION":
-        return <AgentSection />;
+        return <RepresentationSection />;
       case "ASSOCIATE":
-        return <AgentSection />;
+        return <AssociateSection />;
       case "EXPERT":
         return <ExpertSection />;
       default:

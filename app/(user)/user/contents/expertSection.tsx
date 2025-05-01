@@ -10,8 +10,11 @@ import bar from "@/app/images/icon/footer/bar.svg";
 import Textarea from "@/app/components/textarea/textarea";
 import { CustomSelectBox } from "@/app/components/selectBox/customSelectBox";
 import { MultiSelectBox } from "@/app/components/selectBox/multiSelectBox";
+import AlertMessage from "@/app/components/alert/alertMessage";
 
 const ExpertSection = () => {
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+
   const [phone, setPhone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [title, setTitle] = useState<string>("");
@@ -34,15 +37,23 @@ const ExpertSection = () => {
   };
 
   const handleEditMode = () => {
+    if (isEditMode) {
+      // 저장 시 알림 표시
+      setShowAlert(true);
+    }
     setIsEditMode(!isEditMode);
   };
 
   const handleSpecialtyEditMode = () => {
+    if (isSpecialtyEditMode) {
+      // 저장 시 알림 표시
+      setShowAlert(true);
+    }
     setIsSpecialtyEditMode(!isSpecialtyEditMode);
   };
 
   return (
-    <div className="flex w-full flex-col md:p-[60px]">
+    <div className="flex w-full flex-col md:px-8 md:py-10 lg:p-[60px]">
       <h1 className="text-text-primary text-22s md:text-30s">나의 정보</h1>
       <div className="border-b border-text-primary w-full mt-5 mb-[30px] md:mt-[30px] md:mb-10" />
       <div className="flex w-full flex-col gap-[30px] items-center md:items-start lg:flex-row lg:items-start lg:justify-between lg:gap-[130px]">
@@ -162,6 +173,14 @@ const ExpertSection = () => {
           회원탈퇴
         </p>
       </div>
+      {showAlert && (
+        <AlertMessage
+          text="저장되었습니다!"
+          onClose={() => {
+            setShowAlert(false);
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -48,7 +48,7 @@ export const InputWithBtn = ({
         value={searchValue}
         onChange={(e) => onSearchChange(e.target.value)}
         onKeyDown={handleKeyDown}
-        className="flex-grow w-full h-[60px] border rounded-[10px] px-4
+        className="flex-grow w-full h-[60px] border rounded-[10px] px-2 md:px-4
                 focus:outline-none focus:border-main"
       />
 

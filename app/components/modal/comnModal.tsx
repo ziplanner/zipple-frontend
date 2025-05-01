@@ -9,14 +9,19 @@ const ComnModal = ({ onClose }: ComnModalProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
       <div
-        className="relative bg-white rounded-[20px] p-5 w-[480px]
+        className="relative bg-white rounded-[20px] p-5 max-w-[480px] mx-5
       flex flex-col items-center shadow-lg"
       >
         {/* 닫기 버튼 */}
         <button onClick={onClose} className="absolute top-4 right-4 p-1">
           <Image src={close} alt="close" width={20} height={20} />
         </button>
-        <div></div>
+        <div className="flex flex-col w-full py-2 md:p-5">
+          {/* Header */}
+          <h1 className="text-text-primary text-18s md:text-20s mb-5">
+            Header
+          </h1>
+        </div>
       </div>
     </div>
   );

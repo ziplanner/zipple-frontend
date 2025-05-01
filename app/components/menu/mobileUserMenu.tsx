@@ -1,56 +1,55 @@
-import { useState } from "react";
+"use client";
 
-const GENERAL_USER_MENU = ["나의 정보", "집플래너 서비스", "커뮤니티"];
-const AGENT_USER_MENU = [
-  "나의 정보",
-  "부동산 정보",
-  "포토폴리오 관리",
-  "후기 보기",
-  "집플래너 서비스",
-  "커뮤니티",
-];
-const EXPERT_USER_MENU = [
-  "나의 정보",
-  "사업자 정보",
-  "포토폴리오 관리",
-  "후기 보기",
-  "집플래너 서비스",
-  "커뮤니티",
-];
+import { useMemo } from "react";
+import { useRole } from "@/app/context/roleContextProvider";
+import { usePathname, useRouter } from "next/navigation";
+import { MENU_BY_ROLE } from "@/app/data/menu";
 
 const MobileUserMenu = () => {
-  const [role, setRole] = useState<"GENERAL" | "AGENT" | "EXPERT">("GENERAL");
-  const [selectedMenu, setSelectedMenu] = useState<string>("");
+  const { role } = useRole();
+  const pathname = usePathname();
+  const router = useRouter();
 
-  // role에 따라 보여줄 메뉴를 선택
-  const getMenu = () => {
-    if (role === "AGENT") return AGENT_USER_MENU;
-    if (role === "EXPERT") return EXPERT_USER_MENU;
-    return GENERAL_USER_MENU;
-  };
+  const menuList = useMemo(() => {
+    return MENU_BY_ROLE[role] ?? [];
+  }, [role]);
 
-  // 메뉴 항목 클릭 시 선택된 메뉴로 업데이트
-  const handleMenuClick = (menuItem: string) => {
-    setSelectedMenu(menuItem);
+  // 현재 URL에 가장 잘 맞는 path 선택 (정확 일치 > 포함 > fallback)
+  const currentMenuPath = useMemo(() => {
+    return menuList.find((item) => pathname === item.path)?.path ?? "";
+  }, [pathname, menuList]);
+
+  // const currentMenuPath = useMemo(() => {
+  //   const exactMatch = menuList.find((menu) => pathname === menu.path);
+  //   if (exactMatch) return exactMatch.path;
+
+  //   const partialMatch = menuList
+  //     .sort((a, b) => b.path.length - a.path.length) // 긴 path 우선
+  //     .find((menu) => pathname.startsWith(menu.path));
+
+  //   return partialMatch?.path ?? "";
+  // }, [pathname, menuList]);
+
+  const handleMenuClick = (path: string) => {
+    router.push(path);
   };
 
   return (
     <div className="w-full">
-      {/* role에 맞는 메뉴 항목을 표시 */}
       <ul className="flex gap-5 justify-start items-center">
-        {getMenu().map((menuItem, index) => (
+        {menuList.map((menuItem, index) => (
           <li
             key={index}
             className={`${
-              selectedMenu === menuItem
+              currentMenuPath === menuItem.path
                 ? "text-text-primary text-16s"
                 : "text-text-secondary text-14m"
             } relative cursor-pointer`}
-            onClick={() => handleMenuClick(menuItem)}
+            onClick={() => handleMenuClick(menuItem.path)}
           >
             <div className="relative inline-flex items-center">
-              {menuItem}
-              {selectedMenu === menuItem && (
+              {menuItem.label}
+              {currentMenuPath === menuItem.path && (
                 <span className="absolute top-0 right-[-10px] w-[6px] h-[6px] bg-sub rounded-full" />
               )}
             </div>
