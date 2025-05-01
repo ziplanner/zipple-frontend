@@ -17,15 +17,19 @@ const UserMenu = () => {
 
   // 현재 URL과 가장 잘 맞는 메뉴 path 찾기
   const currentMenuPath = useMemo(() => {
-    const exactMatch = menuList.find((item) => pathname === item.path);
-    if (exactMatch) return exactMatch.path;
-
-    const partialMatch = menuList
-      .sort((a, b) => b.path.length - a.path.length)
-      .find((item) => pathname.startsWith(item.path));
-
-    return partialMatch?.path ?? "";
+    return menuList.find((item) => pathname === item.path)?.path ?? "";
   }, [pathname, menuList]);
+
+  // const currentMenuPath = useMemo(() => {
+  //   const exactMatch = menuList.find((item) => pathname === item.path);
+  //   if (exactMatch) return exactMatch.path;
+
+  //   const partialMatch = menuList
+  //     .sort((a, b) => b.path.length - a.path.length)
+  //     .find((item) => pathname.startsWith(item.path));
+
+  //   return partialMatch?.path ?? "";
+  // }, [pathname, menuList]);
 
   const handleMenuClick = (path: string) => {
     router.push(path);

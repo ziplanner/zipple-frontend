@@ -16,15 +16,19 @@ const MobileUserMenu = () => {
 
   // 현재 URL에 가장 잘 맞는 path 선택 (정확 일치 > 포함 > fallback)
   const currentMenuPath = useMemo(() => {
-    const exactMatch = menuList.find((menu) => pathname === menu.path);
-    if (exactMatch) return exactMatch.path;
-
-    const partialMatch = menuList
-      .sort((a, b) => b.path.length - a.path.length) // 긴 path 우선
-      .find((menu) => pathname.startsWith(menu.path));
-
-    return partialMatch?.path ?? "";
+    return menuList.find((item) => pathname === item.path)?.path ?? "";
   }, [pathname, menuList]);
+
+  // const currentMenuPath = useMemo(() => {
+  //   const exactMatch = menuList.find((menu) => pathname === menu.path);
+  //   if (exactMatch) return exactMatch.path;
+
+  //   const partialMatch = menuList
+  //     .sort((a, b) => b.path.length - a.path.length) // 긴 path 우선
+  //     .find((menu) => pathname.startsWith(menu.path));
+
+  //   return partialMatch?.path ?? "";
+  // }, [pathname, menuList]);
 
   const handleMenuClick = (path: string) => {
     router.push(path);
