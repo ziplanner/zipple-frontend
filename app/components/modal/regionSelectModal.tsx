@@ -137,7 +137,7 @@ const RegionModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
-      <div className="relative bg-white rounded-[20px] pt-10 max-w-[480px] mx-5 flex flex-col shadow-lg h-4/5">
+      <div className="relative bg-white rounded-[20px] pt-10 mx-5 md:mx-0 w-[480px] flex flex-col shadow-lg h-4/5">
         {/* 닫기 버튼 */}
         <button onClick={onClose} className="absolute top-4 right-4 p-1">
           <Image src={close} alt="close" width={20} height={20} />
@@ -147,7 +147,7 @@ const RegionModal = ({
         <div className="mb-5 px-5 md:px-10">
           <h1 className="text-text-primary text-20s">
             {modalTitle}
-            <span className="text-text-secondary text-14r md:text-16r ml-2">
+            <span className="text-text-secondary text-16r ml-2">
               (최대 {maxSelectable}개)
             </span>
           </h1>
@@ -158,7 +158,7 @@ const RegionModal = ({
           {selectedRegions.map((region, index) => (
             <div
               key={index}
-              className="flex text-12m md:text-14m items-center px-3 py-2.5 bg-main_bg rounded-md text-main min-w-max"
+              className="flex text-14m items-center px-3 py-2.5 bg-main_bg rounded-md text-main min-w-max"
             >
               <span className="flex gap-1">
                 {region.city}
@@ -185,8 +185,8 @@ const RegionModal = ({
                 onClick={() => setSelectedCity(city)}
                 className={`px-5 py-4 cursor-pointer flex justify-between items-center ${
                   selectedCity === city
-                    ? "text-text-primary text-14m md:text-16m"
-                    : "text-text-secondary text-14r md:text-16r"
+                    ? "text-text-primary text-16m"
+                    : "text-text-secondary text-16r"
                 }`}
               >
                 <span>{city}</span>
@@ -215,7 +215,7 @@ const RegionModal = ({
                   onClick={() =>
                     !disabled && toggleRegion(selectedCity, district)
                   }
-                  className={`px-5 py-3 text-14r md:text-16r cursor-pointer flex justify-between items-center
+                  className={`px-5 py-3 text-16r cursor-pointer flex justify-between items-center
                     ${
                       disabled
                         ? "text-text-light bg-border cursor-not-allowed"
@@ -238,7 +238,7 @@ const RegionModal = ({
         </div>
 
         {/* 적용 버튼 */}
-        <div className="flex justify-center p-10">
+        <div className="flex justify-center p-5 md:p-10">
           <LargeBtn onClick={handleSave} text="적용" color="blue" />
         </div>
       </div>
