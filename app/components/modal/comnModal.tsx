@@ -9,7 +9,7 @@ const ComnModal = ({ onClose }: ComnModalProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
       <div
-        className="relative bg-white rounded-[20px] p-5 w-[330px] md:w-[480px]
+        className="relative bg-white rounded-[20px] p-5 max-w-[480px] mx-5
       flex flex-col items-center shadow-lg"
       >
         {/* 닫기 버튼 */}
