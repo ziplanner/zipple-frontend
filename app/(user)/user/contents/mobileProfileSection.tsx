@@ -9,6 +9,7 @@ import MobileUserMenu from "@/app/components/menu/mobileUserMenu";
 import vector_black from "@/app/images/icon/vector.svg";
 import { motion, AnimatePresence } from "framer-motion"; // 추가!
 import { useRole } from "@/app/context/roleContextProvider";
+import { useRouter } from "next/navigation";
 
 interface RoleTokenProps {
   role: "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE";
@@ -16,6 +17,7 @@ interface RoleTokenProps {
 
 const MobileProfileSection = () => {
   const { role, setRole } = useRole();
+  const router = useRouter();
 
   const [name, setName] = useState<string>("권수연");
   const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(avatar);
@@ -44,7 +46,9 @@ const MobileProfileSection = () => {
       EXPERT: "GENERAL",
       NONE: "GENERAL",
     };
+
     setRole(nextRole[role]);
+    router.push("/user");
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

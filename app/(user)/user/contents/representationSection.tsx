@@ -13,7 +13,7 @@ import FilterInput from "@/app/components/input/filterInput";
 import RegionModal from "@/app/components/modal/regionSelectModal";
 import AlertMessage from "@/app/components/alert/alertMessage";
 
-const AgentSection = () => {
+const RepresentationSection = () => {
   const [showAlert, setShowAlert] = useState<boolean>(false);
 
   const [phone, setPhone] = useState<string>("");
@@ -234,4 +234,4 @@ const AgentSection = () => {
   );
 };
 
-export default AgentSection;
+export default RepresentationSection;

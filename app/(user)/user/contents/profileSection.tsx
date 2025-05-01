@@ -7,6 +7,7 @@ import vector from "@/app/images/icon/mypage/vector.svg";
 import RoleToken from "@/app/components/token/roleToken";
 import UserMenu from "@/app/components/menu/userMenu";
 import { useRole } from "@/app/context/roleContextProvider";
+import { useRouter } from "next/navigation";
 
 interface RoleTokenProps {
   role: "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE";
@@ -14,6 +15,7 @@ interface RoleTokenProps {
 
 const ProfileSection = () => {
   const { role, setRole } = useRole();
+  const router = useRouter();
 
   const [name, setName] = useState<string>("권수연");
   const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(avatar);
@@ -39,6 +41,7 @@ const ProfileSection = () => {
     };
 
     setRole(nextRole[role]);
+    router.push("/user");
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
