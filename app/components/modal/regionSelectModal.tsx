@@ -137,14 +137,14 @@ const RegionModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
-      <div className="relative bg-white rounded-[20px] pt-10 w-[480px] flex flex-col shadow-lg h-4/5">
+      <div className="relative bg-white rounded-[20px] pt-10 w-[330px] md:w-[480px] flex flex-col shadow-lg h-4/5">
         {/* 닫기 버튼 */}
         <button onClick={onClose} className="absolute top-4 right-4 p-1">
           <Image src={close} alt="close" width={20} height={20} />
         </button>
 
         {/* Header */}
-        <div className="mb-5 px-10">
+        <div className="mb-5 px-5 md:px-10">
           <h1 className="text-text-primary text-20s">
             {modalTitle}
             <span className="text-text-secondary text-14r md:text-16r ml-2">

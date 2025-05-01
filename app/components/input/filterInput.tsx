@@ -31,7 +31,7 @@ const FilterInput: React.FC<InputBoxProps> = ({
         placeholder={placeholder}
         disabled={disabled}
         className={clsx(
-          "w-full h-[60px] pl-4 pr-12 text-text-secondary rounded-[10px] outline-none transition border border-background-light", // pr-12로 아이콘 공간 확보
+          "w-full h-[60px] pl-2 md:pl-4 pr-12 text-text-secondary rounded-[10px] outline-none transition border border-background-light", // pr-12로 아이콘 공간 확보
           {
             "bg-background-soft text-text-light": disabled,
             "focus:border-main": !disabled && !error,

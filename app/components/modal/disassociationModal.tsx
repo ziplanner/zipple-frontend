@@ -29,7 +29,7 @@ const DisassociationModal = ({ onClose, onSubmit }: ComnModalProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
       <div
-        className="relative bg-white rounded-[20px] p-5 w-[480px]
+        className="relative bg-white rounded-[20px] p-5 w-[330px] md:w-[480px]
   flex flex-col items-center shadow-lg"
       >
         {/* 닫기 버튼 */}
@@ -37,7 +37,7 @@ const DisassociationModal = ({ onClose, onSubmit }: ComnModalProps) => {
           <Image src={close} alt="close" width={20} height={20} />
         </button>
         {/* Header */}
-        <div className="flex flex-col w-full p-5">
+        <div className="flex flex-col w-full py-2 md:p-5">
           <h1 className="text-text-primary text-18s md:text-20s mb-10">
             소속 해제
           </h1>

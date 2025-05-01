@@ -26,7 +26,7 @@ export const DateInput = ({ onChange }: DateInputProps) => {
       <input
         type="text"
         placeholder="YYYY"
-        className="flex-1 w-full h-[60px] border rounded-[10px] px-4
+        className="flex-1 w-full h-[60px] border rounded-[10px] px-2 md:px-4
                 focus:outline-none focus:border-main text-center"
         value={year}
         maxLength={4}
@@ -39,7 +39,7 @@ export const DateInput = ({ onChange }: DateInputProps) => {
       <input
         type="text"
         placeholder="MM"
-        className="flex-1 w-full h-[60px] border rounded-[10px] px-4
+        className="flex-1 w-full h-[60px] border rounded-[10px] px-2 md:px-4
                 focus:outline-none focus:border-main text-center"
         value={month}
         maxLength={2}
@@ -52,7 +52,7 @@ export const DateInput = ({ onChange }: DateInputProps) => {
       <input
         type="text"
         placeholder="DD"
-        className="flex-1 w-full h-[60px] border rounded-[10px] px-4
+        className="flex-1 w-full h-[60px] border rounded-[10px] px-2 md:px-4
                 focus:outline-none focus:border-main text-center"
         value={day}
         maxLength={2}

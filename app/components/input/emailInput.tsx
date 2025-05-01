@@ -32,7 +32,7 @@ export const EmailInput = ({ value, onChange, disabled }: EmailInputProps) => {
       {/* 이메일 아이디 입력 */}
       <input
         type="text"
-        className={`w-full h-[60px] border rounded-[10px] px-4
+        className={`w-full h-[60px] border rounded-[10px] px-2 md:px-4
                 focus:outline-none focus:border-main ${
                   disabled ? "bg-background-soft" : ""
                 }`}
@@ -45,7 +45,7 @@ export const EmailInput = ({ value, onChange, disabled }: EmailInputProps) => {
 
       {/* 이메일 도메인 선택 */}
       <select
-        className={`w-full h-[60px] border border-background-light rounded-[10px] px-4
+        className={`w-full h-[60px] border border-background-light rounded-[10px] px-2 md:px-4
                 focus:outline-none focus:border-main ${
                   disabled ? " bg-background-soft" : ""
                 }`}
