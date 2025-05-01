@@ -1,8 +1,15 @@
+import { useState } from "react";
+import DisassociationModal from "../modal/disassociationModal";
+import AlertMessage from "../alert/alertMessage";
+
 interface TableDataProps {
   data: any[];
 }
 
 const Table = ({ data }: TableDataProps) => {
+  const [open, setOpen] = useState<boolean>(false);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+
   return (
     <div className="overflow-x-auto custom-scrollbar rounded-[10px] border border-line-light">
       <table className="min-w-full text-center table-fixed">
@@ -30,7 +37,7 @@ const Table = ({ data }: TableDataProps) => {
                 <td
                   className="px-6 py-4 w-[20%] underline cursor-pointer"
                   onClick={() => {
-                    alert("소속 해제");
+                    setOpen(true);
                   }}
                 >
                   {row.affiliation}
@@ -40,6 +47,25 @@ const Table = ({ data }: TableDataProps) => {
           </tbody>
         </table>
       </div>
+      {open && (
+        <DisassociationModal
+          onClose={() => {
+            setOpen(false);
+          }}
+          onSubmit={() => {
+            setOpen(false);
+            setShowAlert(true);
+          }}
+        />
+      )}
+      {showAlert && (
+        <AlertMessage
+          text="해제 되었습니다!"
+          onClose={() => {
+            setShowAlert(false);
+          }}
+        />
+      )}
     </div>
   );
 };

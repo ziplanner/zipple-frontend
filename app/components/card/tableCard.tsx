@@ -1,8 +1,15 @@
+import { useState } from "react";
+import DisassociationModal from "../modal/disassociationModal";
+import AlertMessage from "../alert/alertMessage";
+
 interface TableDataProps {
   data: any[];
 }
 
 const TableCard = ({ data }: TableDataProps) => {
+  const [open, setOpen] = useState<boolean>(false);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+
   return (
     <div className="space-y-4">
       {data.map((row, idx) => (
@@ -31,7 +38,9 @@ const TableCard = ({ data }: TableDataProps) => {
               <div className={`text-16m ${row.statusColor}`}>{row.status}</div>
               <div
                 className="underline text-15r text-text-secondary cursor-pointer"
-                onClick={() => alert("소속 해제")}
+                onClick={() => {
+                  setOpen(true);
+                }}
               >
                 {row.affiliation}
               </div>
@@ -39,6 +48,25 @@ const TableCard = ({ data }: TableDataProps) => {
           </div>
         </div>
       ))}
+      {open && (
+        <DisassociationModal
+          onClose={() => {
+            setOpen(false);
+          }}
+          onSubmit={() => {
+            setOpen(false);
+            setShowAlert(true);
+          }}
+        />
+      )}
+      {showAlert && (
+        <AlertMessage
+          text="해제 되었습니다!"
+          onClose={() => {
+            setShowAlert(false);
+          }}
+        />
+      )}
     </div>
   );
 };

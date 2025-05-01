@@ -147,7 +147,7 @@ const RegionModal = ({
         <div className="mb-5 px-10">
           <h1 className="text-text-primary text-20s">
             {modalTitle}
-            <span className="text-text-secondary text-16r ml-2">
+            <span className="text-text-secondary text-14r md:text-16r ml-2">
               (최대 {maxSelectable}개)
             </span>
           </h1>
@@ -158,7 +158,7 @@ const RegionModal = ({
           {selectedRegions.map((region, index) => (
             <div
               key={index}
-              className="flex text-14m items-center px-3 py-2.5 bg-main_bg rounded-md text-main min-w-max"
+              className="flex text-12m md:text-14m items-center px-3 py-2.5 bg-main_bg rounded-md text-main min-w-max"
             >
               <span className="flex gap-1">
                 {region.city}
@@ -185,8 +185,8 @@ const RegionModal = ({
                 onClick={() => setSelectedCity(city)}
                 className={`px-5 py-4 cursor-pointer flex justify-between items-center ${
                   selectedCity === city
-                    ? "text-text-primary text-16m"
-                    : "text-text-secondary text-16r"
+                    ? "text-text-primary text-14m md:text-16m"
+                    : "text-text-secondary text-14r md:text-16r"
                 }`}
               >
                 <span>{city}</span>
@@ -215,7 +215,7 @@ const RegionModal = ({
                   onClick={() =>
                     !disabled && toggleRegion(selectedCity, district)
                   }
-                  className={`px-5 py-3 text-16r cursor-pointer flex justify-between items-center
+                  className={`px-5 py-3 text-14r md:text-16r cursor-pointer flex justify-between items-center
                     ${
                       disabled
                         ? "text-text-light bg-border cursor-not-allowed"

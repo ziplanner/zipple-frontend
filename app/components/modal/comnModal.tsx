@@ -16,7 +16,12 @@ const ComnModal = ({ onClose }: ComnModalProps) => {
         <button onClick={onClose} className="absolute top-4 right-4 p-1">
           <Image src={close} alt="close" width={20} height={20} />
         </button>
-        <div></div>
+        <div className="flex flex-col w-full p-5">
+          {/* Header */}
+          <h1 className="text-text-primary text-18s md:text-20s mb-5">
+            Header
+          </h1>
+        </div>
       </div>
     </div>
   );
