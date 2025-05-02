@@ -21,6 +21,8 @@ export const LargeBtn = ({
             ? "bg-main text-white"
             : color === "white"
             ? "bg-white text-text-secondary"
+            : color === "gray"
+            ? "bg-white border border-text-secondary text-text-secondary"
             : "bg-white border border-black text-black"
         } ${className}
 `}
