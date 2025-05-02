@@ -1,0 +1,26 @@
+"use client";
+
+import useResponsive from "@/app/hook/useResponsive";
+import ProfileSection from "./content/profileSection";
+import MobileProfileSection from "./content/mobileProfileSection";
+
+export default function UserLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const isMd = useResponsive("md");
+
+  return (
+    <div
+      className="flex w-full gap-10 md:gap-0 flex-col md:flex-row max-w-screen-xl2
+      justify-self-center md:mt-20 mt-5"
+    >
+      {/* 왼쪽 : 프로필 영역 */}
+      {isMd ? <ProfileSection /> : <MobileProfileSection />}
+
+      {/* 오른쪽 : 라우팅에 따라 바뀌는 영역 */}
+      {children}
+    </div>
+  );
+}
