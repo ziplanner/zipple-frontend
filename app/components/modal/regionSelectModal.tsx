@@ -21,6 +21,7 @@ interface RegionModalProps {
   disabledRegions?: Region[];
   modalTitle?: string;
   maxSelectable?: number;
+  btnType?: "basic" | "double";
 }
 
 const RegionModal = ({
@@ -30,6 +31,7 @@ const RegionModal = ({
   disabledRegions = [],
   modalTitle = "활동지역",
   maxSelectable = 3,
+  btnType = "basic",
 }: RegionModalProps) => {
   const [selectedCity, setSelectedCity] = useState<string>("서울");
   const [selectedRegions, setSelectedRegions] =
@@ -138,8 +140,8 @@ const RegionModal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
       <div
-        className="relative bg-white rounded-[20px] pt-10 mx-5 md:mx-0 w-full 
-      md:w-[480px] flex flex-col shadow-lg h-3/4 md:h-4/5"
+        className="relative bg-white rounded-[20px] pt-[30px] md:pt-10 w-full max-w-[480px] mx-5
+              flex flex-col shadow-lg h-[80vh] overflow-hidden"
       >
         {/* 닫기 버튼 */}
         <button onClick={onClose} className="absolute top-4 right-4 p-1">
@@ -241,8 +243,19 @@ const RegionModal = ({
         </div>
 
         {/* 적용 버튼 */}
-        <div className="flex justify-center p-5 md:p-10">
-          <LargeBtn onClick={handleSave} text="적용" color="blue" />
+        <div className="flex justify-center py-[30px] px-5 md:p-10">
+          {btnType === "basic" ? (
+            <LargeBtn onClick={handleSave} text="적용" color="blue" />
+          ) : (
+            <div className="flex w-full gap-2.5">
+              <LargeBtn
+                onClick={() => setSelectedRegions([])}
+                text="초기화"
+                color="gray"
+              />
+              <LargeBtn onClick={handleSave} text="적용" color="blue" />
+            </div>
+          )}
         </div>
       </div>
     </div>
