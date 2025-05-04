@@ -8,6 +8,7 @@ import gt from "@/app/images/icon/gt.svg";
 import close_blue from "@/app/images/icon/close_blue.svg";
 import vector_black from "@/app/images/icon/vector.svg";
 import { LargeBtn } from "../button/largeBtn";
+import { CITIES, districtMap } from "@/app/data/region";
 
 interface Region {
   city: string;
@@ -36,63 +37,6 @@ const RegionModal = ({
   const [selectedCity, setSelectedCity] = useState<string>("서울");
   const [selectedRegions, setSelectedRegions] =
     useState<Region[]>(initialRegions);
-
-  const cities = [
-    "전국",
-    "서울",
-    "경기",
-    "인천",
-    "대전",
-    "세종",
-    "충남",
-    "충북",
-    "광주",
-    "전남",
-  ];
-
-  const districtMap: Record<string, string[]> = {
-    서울: [
-      "서울 전체",
-      "강남구",
-      "강동구",
-      "강북구",
-      "강서구",
-      "관악구",
-      "광진구",
-      "구로구",
-      "금천구",
-      "노원구",
-    ],
-    경기: [
-      "경기 전체",
-      "가평군",
-      "고양시",
-      "과천시",
-      "광명시",
-      "광주시",
-      "구리시",
-      "군포시",
-      "김포시",
-      "남양주시",
-    ],
-    인천: [
-      "인천 전체",
-      "강화군",
-      "계양구",
-      "남동구",
-      "동구",
-      "미추홀구",
-      "부평구",
-      "서구",
-      "연수구",
-    ],
-    대전: ["대전 전체", "동구", "서구", "유성구"],
-    세종: ["세종 전체", "조치원읍", "한솔동"],
-    충남: ["충남 전체", "천안시", "공주시"],
-    충북: ["충북 전체", "청주시", "충주시"],
-    광주: ["광주 전체", "동구", "서구", "남구", "북구"],
-    전남: ["전남 전체", "목포시", "여수시", "순천시"],
-  };
 
   const getDistricts = (city: string): string[] => {
     return districtMap[city] || [`${city} 전체`];
@@ -184,7 +128,7 @@ const RegionModal = ({
         <div className="flex h-full overflow-y-auto">
           {/* 시도 선택 */}
           <div className="w-1/3 bg-background-soft overflow-y-auto custom-scrollbar">
-            {cities.map((city, index) => (
+            {CITIES.map((city, index) => (
               <div
                 key={index}
                 onClick={() => setSelectedCity(city)}

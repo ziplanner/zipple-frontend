@@ -28,7 +28,7 @@ const PortfolioModal = ({ onClose, onSubmit }: PortfolioModalProps) => {
     const file = e.target.files?.[0];
     if (file) {
       setImageFile(file);
-      setPreviewUrl(URL.createObjectURL(file)); // 미리보기용 URL 생성
+      setPreviewUrl(URL.createObjectURL(file));
     }
   };
   const handleSubmit = () => {

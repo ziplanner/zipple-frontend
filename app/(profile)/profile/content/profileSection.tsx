@@ -17,7 +17,7 @@ const ProfileSection = () => {
   return (
     <div
       className="md:w-[280px] lx:w-[340px] md:pt-5 md:px-12 lx:py-10 lx:px-[60px]
-    border border-border rounded-[20px]"
+    border border-border rounded-[20px] md:ml-8 lg:ml-20 md:mt-10 lg:mt-20"
     >
       <div className="flex flex-col w-full items-center">
         <div className="md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px]">
