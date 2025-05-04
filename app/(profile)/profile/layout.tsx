@@ -12,10 +12,7 @@ export default function UserLayout({
   const isMd = useResponsive("md");
 
   return (
-    <div
-      className="flex w-full gap-10 md:gap-0 flex-col md:flex-row max-w-screen-xl2
-      justify-self-center md:mt-20 mt-5"
-    >
+    <div className="flex w-full gap-10 md:gap-0 flex-col md:flex-row max-w-screen-xl2 justify-self-center">
       {/* 왼쪽 : 프로필 영역 */}
       {isMd ? <ProfileSection /> : <MobileProfileSection />}
 

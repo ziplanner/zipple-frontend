@@ -15,7 +15,7 @@ const MobileProfileSection = () => {
   const [likeCount, setLikeCount] = useState<number>(12);
 
   return (
-    <div className="w-full p-[30px] pb-5 border border-border rounded-[20px]">
+    <div className="w-full p-[30px] pb-5 border border-border rounded-[20px] mt-5">
       <div className="flex flex-col w-full items-center">
         <div className="flex gap-4 items-center justify-center">
           <Image
