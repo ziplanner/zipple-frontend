@@ -1,11 +1,11 @@
 "use client";
 
-import PortfolioSection from "./content/portfolioSection";
+import InfoSection from "./content/infoSection";
 
 const ProfilePage = () => {
   return (
     <div className="w-full">
-      <PortfolioSection />
+      <InfoSection />
     </div>
   );
 };

@@ -17,13 +17,13 @@ const DUMMY_DATA = Array(6)
     date: "2025.05.05",
   }));
 
-const PortfolioSection = () => {
+const InfoSection = () => {
   const router = useRouter();
 
   const [isOpen, setIsOpen] = useState<boolean>(true);
 
   return (
-    <div className="flex w-full flex-col md:px-8 md:py-10 lg:p-20">
+    <div className="flex w-full flex-col md:px-8 md:py-10 lg:px-[60px] lg:py-20">
       <h1 className="text-24s md:text-36s text-text-primary mb-[30px] md:mb-10">
         안녕하세요. 홍길동 중개사입니다.
       </h1>
@@ -122,7 +122,7 @@ const PortfolioSection = () => {
         <h2 className="text-text-primary text-18s md:text-24s">포토폴리오</h2>
         <BasicBtn
           onClick={() => {
-            router.push("/portfolio");
+            router.push("/profile/portfolio");
           }}
           text={"전체보기"}
         />
@@ -136,4 +136,4 @@ const PortfolioSection = () => {
   );
 };
 
-export default PortfolioSection;
+export default InfoSection;
