@@ -12,16 +12,19 @@ import { BlueBtn } from "../../button/blueBtn";
 import SignupModal from "../../modal/kakao/signupModal";
 import useResponsive from "@/app/hook/useResponsive";
 import bar from "@/app/images/icon/footer/bar.svg";
+import { useAuthStore } from "@/app/store/authStore";
 
 const Header = () => {
   const router = useRouter();
   const isMd = useResponsive("md");
-  const isLg = useResponsive("lg");
 
   const [count, setCount] = useState<number>(0);
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
 
+  // 로그인 상태
+  const { accessToken } = useAuthStore();
+
+  const isLoggedIn = !!accessToken;
   const displayCount = count > 99 ? "99+" : count.toString();
 
   return (
@@ -44,24 +47,17 @@ const Header = () => {
 
         {/* Right */}
         {!isLoggedIn ? (
-          // 미로그인 상태
           <BlueBtn
             text={"로그인 / 회원가입"}
-            onClick={() => {
-              setOpenModal(true);
-            }}
+            onClick={() => setOpenModal(true)}
           />
         ) : (
-          // 로그인 상태
           <div className="flex items-center md:space-x-6">
             <div className="text-text-primary flex items-center space-x-1 md:space-x-2">
               <span className="text-12m md:text-14m lg:text-16m">
                 받은 견적
               </span>
-              <span
-                className="flex bg-main text-white text-12s md:text-14r 
-              items-center justify-center w-6 h-6 lg:w-[30px] lg:h-[30px] md:w-7 md:h-7 rounded-full"
-              >
+              <span className="flex bg-main text-white text-12s md:text-14r items-center justify-center w-6 h-6 lg:w-[30px] lg:h-[30px] md:w-7 md:h-7 rounded-full">
                 {displayCount}
               </span>
             </div>
@@ -92,13 +88,8 @@ const Header = () => {
           </div>
         )}
       </div>
-      {openModal && (
-        <SignupModal
-          onClose={() => {
-            setOpenModal(false);
-          }}
-        />
-      )}
+
+      {openModal && <SignupModal onClose={() => setOpenModal(false)} />}
     </header>
   );
 };

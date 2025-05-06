@@ -1,7 +1,15 @@
+"use client";
+
+import { useEffect } from "react";
 import Footer from "./footer";
 import Header from "./header/header";
+import { initUserInfo } from "@/app/utils/initUser";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  useEffect(() => {
+    initUserInfo();
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header />

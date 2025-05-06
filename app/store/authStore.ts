@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 interface AuthState {
   accessToken: string | null;
@@ -12,12 +13,22 @@ interface AuthState {
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  accessToken: null,
-  refreshToken: null,
-  isRegistered: false,
-  setAuth: ({ accessToken, refreshToken, isRegistered }) =>
-    set({ accessToken, refreshToken, isRegistered }),
-  logout: () =>
-    set({ accessToken: null, refreshToken: null, isRegistered: false }),
-}));
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      accessToken: null,
+      refreshToken: null,
+      isRegistered: false,
+      setAuth: ({ accessToken, refreshToken, isRegistered }) =>
+        set({ accessToken, refreshToken, isRegistered }),
+      logout: () =>
+        set({ accessToken: null, refreshToken: null, isRegistered: false }),
+    }),
+    {
+      name: "zipple-storage",
+      storage: createJSONStorage(() =>
+        typeof window !== "undefined" ? localStorage : undefined!
+      ),
+    }
+  )
+);

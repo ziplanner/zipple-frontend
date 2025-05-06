@@ -1,15 +1,28 @@
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
 import avatar from "@/app/images/icon/header/avatar.svg";
 import vector from "@/app/images/icon/header/vector.svg";
-import user from "@/app/images/icon/header/user.svg";
-import logout from "@/app/images/icon/header/logout.svg";
+import userIcon from "@/app/images/icon/header/user.svg";
+import logoutIcon from "@/app/images/icon/header/logout.svg";
 import heart from "@/app/images/icon/header/heart.svg";
+import { logout } from "@/app/api/login/api";
+import { useUserStore } from "@/app/store/userStore";
 
 const UserMenu = () => {
   const menuRef = useRef<HTMLDivElement>(null);
+  const user = useUserStore((state) => state.user);
+
   const [open, setOpen] = useState<boolean>(false);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (err) {
+      console.log(err);
+      alert("로그아웃에 실패했습니다.");
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -29,14 +42,14 @@ const UserMenu = () => {
         className="flex gap-2.5 items-center lg:space-x-2 md:space-x-1"
       >
         <Image
-          src={avatar}
+          src={user?.profileUrl || avatar}
           alt="User avatar"
           width={28}
           height={28}
           className="rounded-full lg:w-8 lg:h-8"
         />
         <span className="text-text-primary lg:text-16m md:text-14m">
-          홍길동님
+          {user?.nickname || "회원"}님
         </span>
         <Image
           src={vector}
@@ -59,7 +72,7 @@ const UserMenu = () => {
             className="block px-2.5 py-2 hover:bg-background-extraSoft rounded-md"
           >
             <div className="flex gap-2.5 items-center">
-              <Image src={user} alt="마이페이지" width={20} height={20} />
+              <Image src={userIcon} alt="마이페이지" width={20} height={20} />
               마이페이지
             </div>
           </Link>
@@ -73,15 +86,15 @@ const UserMenu = () => {
             </div>
           </Link>
 
-          <Link
-            href="#"
-            className="block px-2.5 py-2 hover:bg-background-extraSoft rounded-md"
-          >
-            <div className="flex gap-2.5 items-center">
-              <Image src={logout} alt="로그아웃" width={20} height={20} />
+          <div className="block px-2.5 py-2 hover:bg-background-extraSoft rounded-md">
+            <div
+              className="flex gap-2.5 items-center cursor-pointer"
+              onClick={handleLogout}
+            >
+              <Image src={logoutIcon} alt="로그아웃" width={20} height={20} />
               로그아웃
             </div>
-          </Link>
+          </div>
         </div>
       )}
     </div>
