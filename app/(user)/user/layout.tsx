@@ -16,12 +16,17 @@ export default function UserLayout({
   const router = useRouter();
   const isMd = useResponsive("md");
 
-  const { user } = useUserStore();
+  const { user, hasHydrated } = useUserStore();
 
   const [showAlert, setShowAlert] = useState<boolean>(false);
 
   useEffect(() => {
-    if (user?.roleName[0] === "UNREGISTERED") {
+    if (!hasHydrated) return;
+
+    if (
+      user?.roleName?.length === 0 ||
+      user?.roleName?.[0] === "UNREGISTERED"
+    ) {
       setShowAlert(true);
 
       const timer = setTimeout(() => {
@@ -30,7 +35,7 @@ export default function UserLayout({
 
       return () => clearTimeout(timer);
     }
-  }, [user]);
+  }, [user, hasHydrated]);
 
   return (
     <div className="flex w-full gap-10 md:gap-0 flex-col md:flex-row max-w-screen-xl2 justify-self-center">
@@ -43,7 +48,7 @@ export default function UserLayout({
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center">
           <AlertMessage
             text="회원가입이 필요한 서비스입니다."
-            onClose={() => setShowAlert(false)}
+            onClose={() => {}}
           />
         </div>
       )}

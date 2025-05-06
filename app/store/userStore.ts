@@ -6,6 +6,8 @@ interface UserState {
   user: UserRoleResponse | null;
   setUser: (user: UserRoleResponse) => void;
   clearUser: () => void;
+  hasHydrated: boolean;
+  setHasHydrated: (value: boolean) => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -14,6 +16,8 @@ export const useUserStore = create<UserState>()(
       user: null,
       setUser: (user) => set({ user }),
       clearUser: () => set({ user: null }),
+      hasHydrated: false,
+      setHasHydrated: (value) => set({ hasHydrated: value }),
     }),
     {
       name: "user-store",
@@ -21,6 +25,10 @@ export const useUserStore = create<UserState>()(
         typeof window !== "undefined"
           ? createJSONStorage(() => localStorage)
           : undefined!,
+      // persist가 복원된 직후 실행
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

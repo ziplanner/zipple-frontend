@@ -41,13 +41,15 @@ const UserMenu = () => {
         onClick={() => setOpen(!open)}
         className="flex gap-2.5 items-center lg:space-x-2 md:space-x-1"
       >
-        <Image
-          src={user?.profileUrl || avatar}
-          alt="User avatar"
-          width={28}
-          height={28}
-          className="rounded-full lg:w-8 lg:h-8"
-        />
+        <div className="w-8 h-8 lg:w-8 lg:h-8 rounded-full overflow-hidden">
+          <Image
+            src={user?.profileUrl || avatar}
+            alt="User avatar"
+            width={28} // 실제 사이즈는 Tailwind로 제어
+            height={28}
+            className="object-cover w-full h-full"
+          />
+        </div>
         <span className="text-text-primary lg:text-16m md:text-14m">
           {user?.nickname || "회원"}님
         </span>
