@@ -11,7 +11,7 @@ import {
 
 export interface UserRoleResponse {
   userId: number;
-  roleName: string;
+  roleName: string[];
   nickname: string;
   profileUrl: string;
 }
