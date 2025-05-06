@@ -8,9 +8,14 @@ import { PhoneInput } from "@/app/components/input/phoneInput";
 import { CustomSelectBox } from "@/app/components/selectBox/customSelectBox";
 import { PrimaryBtn } from "@/app/components/button/primaryBtn";
 import AlertMessage from "@/app/components/alert/alertMessage";
+import { withdrawAll } from "@/app/api/login/api";
+import { useAuthStore } from "@/app/store/authStore";
+import { useUserStore } from "@/app/store/userStore";
+import Alert from "@/app/components/alert/alert";
 
 const GeneralSection = () => {
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [showWithdrawAlert, setShowWithdrawAlert] = useState<boolean>(false);
 
   const [nickname, setNickname] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
@@ -42,6 +47,18 @@ const GeneralSection = () => {
       setShowAlert(true);
     }
     setIsEditMode(!isEditMode);
+  };
+
+  const handleWithdrawAll = async () => {
+    try {
+      await withdrawAll();
+      useAuthStore.getState().logout();
+      useUserStore.getState().clearUser();
+      window.location.href = "/";
+    } catch (error) {
+      alert("회원 탈퇴에 실패했습니다.");
+      console.error(error);
+    }
   };
 
   return (
@@ -120,6 +137,7 @@ const GeneralSection = () => {
       <p
         className="flex text-text-light text-16m md:text-18m cursor-pointer
       underline mt-10 mb-[138px] self-end"
+        onClick={() => setShowWithdrawAlert(true)}
       >
         회원탈퇴
       </p>
@@ -129,6 +147,16 @@ const GeneralSection = () => {
           onClose={() => {
             setShowAlert(false);
           }}
+        />
+      )}
+      {showWithdrawAlert && (
+        <Alert
+          text="정말 탈퇴하시겠습니까?"
+          subText="탈퇴 시 모든 정보가 삭제됩니다."
+          leftBtnText="취소"
+          rightBtnText="확인"
+          onClose={() => setShowWithdrawAlert(false)}
+          onConfirm={handleWithdrawAll}
         />
       )}
     </div>

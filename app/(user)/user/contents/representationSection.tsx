@@ -12,9 +12,20 @@ import { CustomSelectBox } from "@/app/components/selectBox/customSelectBox";
 import FilterInput from "@/app/components/input/filterInput";
 import RegionModal from "@/app/components/modal/regionSelectModal";
 import AlertMessage from "@/app/components/alert/alertMessage";
+import { useRouter } from "next/navigation";
+import Alert from "@/app/components/alert/alert";
+import { withdrawAll, withdrawPartial } from "@/app/api/login/api";
+import { useAuthStore } from "@/app/store/authStore";
+import { useUserStore } from "@/app/store/userStore";
+import { initUserInfo } from "@/app/utils/initUser";
 
 const RepresentationSection = () => {
+  const router = useRouter();
+
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [showWithdrawAlert, setShowWithdrawAlert] = useState<boolean>(false);
+  const [showPartialWithdrawAlert, setShowPartialWithdrawAlert] =
+    useState<boolean>(false);
 
   const [phone, setPhone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -61,6 +72,29 @@ const RepresentationSection = () => {
       setShowAlert(true);
     }
     setIsSpecialtyEditMode(!isSpecialtyEditMode);
+  };
+
+  const handleWithdrawAll = async () => {
+    try {
+      await withdrawAll();
+      useAuthStore.getState().logout();
+      useUserStore.getState().clearUser();
+      router.push("/");
+    } catch (error) {
+      alert("회원 탈퇴에 실패했습니다.");
+      console.error(error);
+    }
+  };
+
+  const handleWithdrawPartial = async () => {
+    try {
+      await withdrawPartial();
+      initUserInfo();
+      router.push("/user");
+    } catch (error) {
+      alert("부분 탈퇴에 실패했습니다.");
+      console.error(error);
+    }
   };
 
   return (
@@ -183,6 +217,7 @@ const RepresentationSection = () => {
         <p
           className="flex text-error text-16m md:text-18m cursor-pointer
       underline"
+          onClick={() => setShowPartialWithdrawAlert(true)}
         >
           중개사만 탈퇴
         </p>
@@ -190,6 +225,7 @@ const RepresentationSection = () => {
         <p
           className="flex text-text-light text-16m md:text-18m cursor-pointer
       underline"
+          onClick={() => setShowWithdrawAlert(true)}
         >
           회원탈퇴
         </p>
@@ -226,6 +262,30 @@ const RepresentationSection = () => {
           onClose={() => {
             setShowAlert(false);
           }}
+        />
+      )}
+      {showPartialWithdrawAlert && (
+        <Alert
+          text="정말 중개사만 탈퇴하시겠습니까?"
+          subText="중개사 정보가 삭제되며, 일반회원 정보는 유지됩니다."
+          leftBtnText="취소"
+          rightBtnText="확인"
+          onClose={() => setShowPartialWithdrawAlert(false)}
+          onConfirm={() => {
+            setShowPartialWithdrawAlert(false);
+            handleWithdrawPartial();
+          }}
+        />
+      )}
+
+      {showWithdrawAlert && (
+        <Alert
+          text="정말 회원을 탈퇴하시겠습니까?"
+          subText="탈퇴 시 모든 정보가 삭제됩니다."
+          leftBtnText="취소"
+          rightBtnText="확인"
+          onClose={() => setShowWithdrawAlert(false)}
+          onConfirm={handleWithdrawAll}
         />
       )}
     </div>

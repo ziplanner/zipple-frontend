@@ -1,6 +1,13 @@
 import { useAuthStore } from "@/app/store/authStore";
 import axiosInstance from "../axiosInstance";
-import { LOGIN, LOGOUT, RENEW, ROLE } from "../apiUrl";
+import {
+  LOGIN,
+  LOGOUT,
+  RENEW,
+  ROLE,
+  WITHDRAW,
+  WITHDRAW_USERTYPE,
+} from "../apiUrl";
 
 export interface UserRoleResponse {
   userId: number;
@@ -65,7 +72,18 @@ export const logout = async () => {
   }
 };
 
+// 회원정보 조회
 export const getUserRole = async (): Promise<UserRoleResponse> => {
   const response = await axiosInstance.get(ROLE);
   return response.data;
+};
+
+// 서비스 회원 탈퇴
+export const withdrawAll = async (): Promise<void> => {
+  await axiosInstance.delete(WITHDRAW);
+};
+
+// 부분 회원 탈퇴
+export const withdrawPartial = async (): Promise<void> => {
+  await axiosInstance.delete(WITHDRAW_USERTYPE);
 };
