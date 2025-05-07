@@ -123,7 +123,7 @@ const Test = () => {
         <div>
           <h2 className="font-bold text-xl mb-4">커스텀 드롭다운</h2>
           <div className="flex flex-col gap-2">
-            <CustomSelectBox
+            {/* <CustomSelectBox
               options={["선택 1", "선택 2", "선택 3"]}
               value={customSelect}
               onChange={setCustomSelect}
@@ -133,7 +133,7 @@ const Test = () => {
               value={customSelect}
               onChange={setCustomSelect}
               disabled
-            />
+            /> */}
           </div>
         </div>
       </div>
