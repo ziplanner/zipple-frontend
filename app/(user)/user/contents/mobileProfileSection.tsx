@@ -12,7 +12,7 @@ import { useRole } from "@/app/context/roleContextProvider";
 import { useRouter } from "next/navigation";
 
 interface RoleTokenProps {
-  role: "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE";
+  role: "GENERAL" | "REPRESENTATIVE" | "ASSOCIATE" | "EXPERT" | "NONE";
 }
 
 const MobileProfileSection = () => {
@@ -29,7 +29,7 @@ const MobileProfileSection = () => {
 
   const roleDesc: Record<RoleTokenProps["role"], string> = {
     GENERAL: "생활 전문가로 전환",
-    REPRESENTATION: "일반 회원으로 전환",
+    REPRESENTATIVE: "일반 회원으로 전환",
     ASSOCIATE: "일반 회원으로 전환",
     EXPERT: "일반 회원으로 전환",
     NONE: "",
@@ -38,10 +38,10 @@ const MobileProfileSection = () => {
   const handleRoleChange = () => {
     const nextRole: Record<
       RoleTokenProps["role"],
-      "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE"
+      "GENERAL" | "REPRESENTATIVE" | "ASSOCIATE" | "EXPERT" | "NONE"
     > = {
-      GENERAL: "REPRESENTATION",
-      REPRESENTATION: "ASSOCIATE",
+      GENERAL: "REPRESENTATIVE",
+      REPRESENTATIVE: "ASSOCIATE",
       ASSOCIATE: "EXPERT",
       EXPERT: "GENERAL",
       NONE: "GENERAL",
