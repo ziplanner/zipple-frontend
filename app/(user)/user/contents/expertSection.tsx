@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Input from "@/app/components/input/input";
 import { EmailInput } from "@/app/components/input/emailInput";
@@ -17,7 +17,8 @@ import { withdrawAll, withdrawPartial } from "@/app/api/login/api";
 import { useAuthStore } from "@/app/store/authStore";
 import { useUserStore } from "@/app/store/userStore";
 import { useRouter } from "next/navigation";
-import { CATEGORY } from "@/app/data/category";
+import { EXPERT_CATEGORY, EXPERT_DETAIL_CATEGORY } from "@/app/data/category";
+import { getExpertUserRole, updateExpertUserRole } from "@/app/api/user/api";
 
 const ExpertSection = () => {
   const router = useRouter();
@@ -34,11 +35,28 @@ const ExpertSection = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>("");
   const [selectedDetailSpecialty, setSelectedDetailSpecialty] = useState<
     string[]
-  >([]); // 상세분야 체크된 값들
+  >([]);
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isSpecialtyEditMode, setIsSpecialtyEditMode] =
     useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchExpertInfo = async () => {
+      try {
+        const data = await getExpertUserRole();
+        setPhone(data.phoneNumber || "");
+        setEmail(data.mainEmail || "");
+        setTitle(data.introduceTitle || "");
+        setDescription(data.introduceContent || "");
+        setSelectedSpecialty(data.expertType || "");
+        setSelectedDetailSpecialty(data.expertDetail || []);
+      } catch (error) {
+        console.error("생활 전문가 정보 조회 실패", error);
+      }
+    };
+    fetchExpertInfo();
+  }, []);
 
   const handlePhoneChange = (fullPhone: string) => {
     setPhone(fullPhone);
@@ -48,17 +66,27 @@ const ExpertSection = () => {
     setEmail(fullEmail);
   };
 
-  const handleEditMode = () => {
+  const handleEditMode = async () => {
     if (isEditMode) {
-      // 저장 시 알림 표시
-      setShowAlert(true);
+      try {
+        await updateExpertUserRole({
+          phoneNumber: phone,
+          mainEmail: email,
+          introduceTitle: title,
+          introduceContent: description,
+        });
+        setShowAlert(true);
+      } catch (error) {
+        alert("정보 저장 실패");
+        console.error(error);
+        return;
+      }
     }
     setIsEditMode(!isEditMode);
   };
 
   const handleSpecialtyEditMode = () => {
     if (isSpecialtyEditMode) {
-      // 저장 시 알림 표시
       setShowAlert(true);
     }
     setIsSpecialtyEditMode(!isSpecialtyEditMode);
@@ -155,7 +183,7 @@ const ExpertSection = () => {
           <div className="flex flex-col gap-2.5">
             <h3 className="text-text-primary text-14m md:text-16m">전문분야</h3>
             <CustomSelectBox
-              options={CATEGORY}
+              options={EXPERT_CATEGORY}
               value={selectedSpecialty}
               onChange={setSelectedSpecialty}
               disabled={!isSpecialtyEditMode}
@@ -173,16 +201,7 @@ const ExpertSection = () => {
               </span>
             </h3>
             <MultiSelectBox
-              options={[
-                {
-                  label: "가정 이사 (20평 이상)",
-                  value: "가정 이사",
-                  disabled: true,
-                },
-                { label: "원룸/소형 이사", value: "원룸/소형 이사" },
-                { label: "사무실 이사", value: "사무실 이사" },
-                { label: "해외 이사", value: "해외 이사", disabled: true },
-              ]}
+              options={EXPERT_DETAIL_CATEGORY}
               value={selectedDetailSpecialty}
               onChange={setSelectedDetailSpecialty}
               disabled={!isSpecialtyEditMode}
