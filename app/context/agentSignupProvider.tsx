@@ -94,7 +94,7 @@ export const AgentSignupProvider: React.FC<SignupProviderProps> = ({
 }) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
 
-  const [type, setType] = useState<string>("REPRESENTATION");
+  const [type, setType] = useState<string>("REPRESENTATIVE");
   const [searchValue, setSearchValue] = useState<string>("");
   const [checkedValues, setCheckedValues] = useState<string[]>([]);
   const [businessLicenseNumber, setBusinessLicenseNumber] =
