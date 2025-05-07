@@ -17,6 +17,7 @@ import { withdrawAll, withdrawPartial } from "@/app/api/login/api";
 import { useAuthStore } from "@/app/store/authStore";
 import { useUserStore } from "@/app/store/userStore";
 import { useRouter } from "next/navigation";
+import { CATEGORY } from "@/app/data/category";
 
 const ExpertSection = () => {
   const router = useRouter();
@@ -154,7 +155,7 @@ const ExpertSection = () => {
           <div className="flex flex-col gap-2.5">
             <h3 className="text-text-primary text-14m md:text-16m">전문분야</h3>
             <CustomSelectBox
-              options={["주거", "상업", "토지", "기타"]}
+              options={CATEGORY}
               value={selectedSpecialty}
               onChange={setSelectedSpecialty}
               disabled={!isSpecialtyEditMode}
