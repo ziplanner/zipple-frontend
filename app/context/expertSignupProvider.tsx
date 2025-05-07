@@ -1,3 +1,5 @@
+"use client";
+
 import {
   createContext,
   useContext,
@@ -21,17 +23,17 @@ interface SignupContextType {
   currentStep: number;
   setCurrentStep: (step: number) => void;
 
-  searchValue: string;
-  setSearchValue: (value: string) => void;
+  businessName: string;
+  setBusinessName: (value: string) => void;
 
-  checkedValues: string[];
-  setCheckedValues: (values: string[]) => void;
+  expertDetailType: string[];
+  setExpertDetailType: (values: string[]) => void;
 
-  customSelect: string;
-  setCustomSelect: (value: string) => void;
+  expertType: string;
+  setExpertType: (value: string) => void;
 
-  businessNumber: string;
-  setBusinessNumber: (value: string) => void;
+  businessLicenseNumber: string;
+  setBusinessLicenseNumber: (value: string) => void;
 
   openingDate: string;
   setOpeningDate: (value: string) => void;
@@ -39,17 +41,17 @@ interface SignupContextType {
   name: string;
   setName: (value: string) => void;
 
-  birth: string;
-  setBirth: (value: string) => void;
+  birthday: string;
+  setBirthday: (value: string) => void;
 
   email: string;
   setEmail: (value: string) => void;
 
-  phone: string;
-  setPhone: (value: string) => void;
+  phoneNumber: string;
+  setPhoneNumber: (value: string) => void;
 
-  nationality: string;
-  setNationality: (value: string) => void;
+  foreigner: string;
+  setForeigner: (value: string) => void;
 
   profileImage: string;
   setProfileImage: (value: string) => void;
@@ -57,8 +59,8 @@ interface SignupContextType {
   terms: TermsState;
   setTerms: Dispatch<SetStateAction<TermsState>>;
 
-  businessFile: File | null;
-  setBusinessFile: (file: File | null) => void;
+  businessLicense: File | null;
+  setBusinessLicense: (file: File | null) => void;
 }
 
 const ExpertSignupContext = createContext<SignupContextType | undefined>(
@@ -84,17 +86,18 @@ export const ExpertSignupProvider: React.FC<SignupProviderProps> = ({
 }) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
 
-  const [searchValue, setSearchValue] = useState<string>(""); // 사업자 상호 검색값
-  const [checkedValues, setCheckedValues] = useState<string[]>([]); // 상세분야 체크된 값들
-  const [customSelect, setCustomSelect] = useState<string>(""); // 전문분야 선택값
-  const [businessNumber, setBusinessNumber] = useState<string>(""); // 사업자등록번호 값
-  const [openingDate, setOpeningDate] = useState<string>(""); // 개업일자 값
+  const [businessName, setBusinessName] = useState<string>("");
+  const [expertDetailType, setExpertDetailType] = useState<string[]>([]);
+  const [expertType, setExpertType] = useState<string>("");
+  const [businessLicenseNumber, setBusinessLicenseNumber] =
+    useState<string>("");
+  const [openingDate, setOpeningDate] = useState<string>("");
 
-  const [name, setName] = useState<string>(""); // 이름
-  const [birth, setBirth] = useState<string>(""); // 생년월일
-  const [email, setEmail] = useState<string>(""); // 이메일
-  const [phone, setPhone] = useState<string>(""); // 전화번호
-  const [nationality, setNationality] = useState<string>("내국인"); // 국적
+  const [name, setName] = useState<string>("");
+  const [birthday, setBirthday] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [foreigner, setForeigner] = useState<string>("L");
   const [profileImage, setProfileImage] = useState<string>(defaultProfile);
 
   const [terms, setTerms] = useState<TermsState>({
@@ -106,39 +109,39 @@ export const ExpertSignupProvider: React.FC<SignupProviderProps> = ({
     marketing: false,
   });
 
-  const [businessFile, setBusinessFile] = useState<File | null>(null);
+  const [businessLicense, setBusinessLicense] = useState<File | null>(null);
 
   return (
     <ExpertSignupContext.Provider
       value={{
         currentStep,
         setCurrentStep,
-        searchValue,
-        setSearchValue,
-        checkedValues,
-        setCheckedValues,
-        customSelect,
-        setCustomSelect,
-        businessNumber,
-        setBusinessNumber,
+        businessName,
+        setBusinessName,
+        expertDetailType,
+        setExpertDetailType,
+        expertType,
+        setExpertType,
+        businessLicenseNumber,
+        setBusinessLicenseNumber,
         openingDate,
         setOpeningDate,
         name,
         setName,
-        birth,
-        setBirth,
+        birthday,
+        setBirthday,
         email,
         setEmail,
-        phone,
-        setPhone,
-        nationality,
-        setNationality,
+        phoneNumber,
+        setPhoneNumber,
+        foreigner,
+        setForeigner,
         profileImage,
         setProfileImage,
         terms,
         setTerms,
-        businessFile,
-        setBusinessFile,
+        businessLicense,
+        setBusinessLicense,
       }}
     >
       {children}
