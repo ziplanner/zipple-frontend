@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useUserStore } from "@/app/store/userStore";
 import { useEffect, useState } from "react";
 import AlertMessage from "@/app/components/alert/alertMessage";
+import { initUserInfo } from "@/app/utils/initUser";
 
 export default function UserLayout({
   children,
@@ -21,21 +22,29 @@ export default function UserLayout({
   const [showAlert, setShowAlert] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!hasHydrated) return;
+    const initialize = async () => {
+      await initUserInfo(); // initUserInfo가 내부적으로 user 상태 갱신함
 
-    if (
-      user?.roleName?.length === 0 ||
-      user?.roleName?.[0] === "UNREGISTERED"
-    ) {
-      setShowAlert(true);
+      const { user, hasHydrated } = useUserStore.getState(); // 최신 상태 가져오기
 
-      const timer = setTimeout(() => {
-        router.push("/signup");
-      }, 2000);
+      if (!hasHydrated) return;
 
-      return () => clearTimeout(timer);
-    }
-  }, [user, hasHydrated]);
+      if (
+        user?.roleName?.length === 0 ||
+        user?.roleName?.[0] === "UNREGISTERED"
+      ) {
+        setShowAlert(true);
+
+        const timer = setTimeout(() => {
+          router.push("/signup");
+        }, 2000);
+
+        return () => clearTimeout(timer);
+      }
+    };
+
+    initialize();
+  }, []);
 
   return (
     <div className="flex w-full gap-10 md:gap-0 flex-col md:flex-row max-w-screen-xl2 justify-self-center">
