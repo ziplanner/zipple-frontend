@@ -30,7 +30,7 @@ const ProfileSection = () => {
           />
         </div>
         <p className="text-text-primary text-24m mb-[6px] mt-5">{name}</p>
-        <RoleToken role={"REPRESENTATION"} />
+        <RoleToken role={"REPRESENTATIVE"} />
         {/* Badges */}
         <div className="flex flex-wrap justify-end gap-2 mt-5">
           {["대표", "1인 가구 전문가"].map((badge, i) => (
