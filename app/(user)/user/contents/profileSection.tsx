@@ -8,51 +8,72 @@ import RoleToken from "@/app/components/token/roleToken";
 import UserMenu from "@/app/components/menu/userMenu";
 import { useRole } from "@/app/context/roleContextProvider";
 import { useRouter } from "next/navigation";
+import { useUserStore } from "@/app/store/userStore";
 
 interface RoleTokenProps {
-  role: "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE";
+  role: "GENERAL" | "REPRESENTATIVE" | "ASSOCIATE" | "EXPERT" | "NONE";
 }
 
 const ProfileSection = () => {
   const { role, setRole } = useRole();
+  const { user } = useUserStore();
   const router = useRouter();
 
-  const [name, setName] = useState<string>("권수연");
-  const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(avatar);
+  const [name, setName] = useState<string>(user?.nickname || "");
+  const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(
+    user?.profileUrl || avatar
+  );
 
-  const roleDesc: Record<RoleTokenProps["role"], string> = {
+  const roleDescMap: Partial<Record<string, string>> = {
     GENERAL: "생활 전문가로 전환",
-    REPRESENTATION: "일반 회원으로 전환",
+    REPRESENTATIVE: "일반 회원으로 전환",
     ASSOCIATE: "일반 회원으로 전환",
     EXPERT: "일반 회원으로 전환",
-    NONE: "",
+  };
+
+  const switchTextMap: Partial<Record<string, string>> = {
+    REPRESENTATIVE: "대표 중개사로 전환",
+    ASSOCIATE: "소속 중개사로 전환",
+    EXPERT: "생활 전문가로 전환",
+    GENERAL: "일반 회원으로 전환",
+  };
+
+  const renderRoleText = () => {
+    const roles = user?.roleName || [];
+
+    // 두 개의 role을 가진 경우 (전환 대상 role만 찾아서 출력)
+    if (roles.length === 2) {
+      const target = roles.find((r) => r !== role);
+      console.log("현재 role", role);
+      console.log("전환 대상 role", target);
+      return switchTextMap[target || ""] || "";
+    }
+
+    // 단일 role인 경우: 등록 가능한 다른 role 안내
+    const registerable = Object.keys(switchTextMap).find(
+      (r) => !roles.includes(r)
+    );
+    return switchTextMap[registerable || ""] || "";
   };
 
   const handleRoleChange = () => {
-    const nextRole: Record<
-      RoleTokenProps["role"],
-      "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE"
-    > = {
-      GENERAL: "REPRESENTATION",
-      REPRESENTATION: "ASSOCIATE",
-      ASSOCIATE: "EXPERT",
-      EXPERT: "GENERAL",
-      NONE: "GENERAL",
-    };
+    const roles = user?.roleName || [];
 
-    setRole(nextRole[role]);
-    router.push("/user");
+    if (roles.length === 2) {
+      const next = roles.find((r) => r !== role);
+      if (next) setRole(next as RoleTokenProps["role"]);
+    } else {
+      router.push("/signup");
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const reader = new FileReader();
-
       reader.onloadend = () => {
         setAvatarSrc(reader.result as string);
       };
-
       reader.readAsDataURL(file);
     }
   };
@@ -86,37 +107,32 @@ const ProfileSection = () => {
         </div>
         <p className="text-text-primary text-24m mb-[6px] mt-5">{name}</p>
         <RoleToken role={role} />
-        {/* 전환 버튼 */}
         <button
           className="flex w-full flex-row items-center justify-center py-2.5 gap-1.5 rounded-md bg-main mt-[60px]"
           onClick={handleRoleChange}
         >
           <Image
             src={change}
-            alt={"change"}
+            alt="change"
             width={20}
             height={20}
             className="md:w-5 md:h-5"
           />
-          <p className="text-white text-18s">{roleDesc[role]}</p>
+          <p className="text-white text-18s">{renderRoleText()}</p>
         </button>
         <div className="bg-border h-[1px] mt-[60px] md:w-[220px] lx:w-[260px] mb-[42px]" />
         {role !== "GENERAL" && (
-          <button
-            className="flex w-full justify-between mb-11
-      items-center text-main text-18s"
-          >
+          <button className="flex w-full justify-between mb-11 items-center text-main text-18s">
             프로필 미리보기
             <Image
               src={vector}
-              alt={"vector"}
+              alt="vector"
               width={10}
               height={10}
               className="w-2.5 h-2.5"
             />
           </button>
         )}
-        {/* 사용자 role에 따라 변하는 좌측 menu */}
         <UserMenu />
       </div>
     </div>
