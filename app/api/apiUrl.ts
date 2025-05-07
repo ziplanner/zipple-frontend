@@ -16,3 +16,9 @@ export const REGISTER_REPRESENTATIVE = "/register/representative";
 export const VERIFY_LICENSE = "/verify/license";
 export const VERIFY_MESSAGE = "/verify/message";
 export const VERIFY_NUMBER = "/verify/number";
+
+// mypage
+export const MYPAGE_GENERAL = "/mypage/general";
+export const MYPAGE_ASSOCIATE = "/mypage/associate";
+export const MYPAGE_REPRESENTATIVE = "/mypage/representative";
+export const MYPAGE_EXPERT = "/mypage/expert";
