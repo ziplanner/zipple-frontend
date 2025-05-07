@@ -8,13 +8,16 @@ const LoginLoading = () => {
         <Image
           src={loginIcon}
           alt="login"
-          width={96}
-          height={108}
-          className="h-[120px] w-[135px]"
+          width={128}
+          height={28}
+          className="md:w-[256px] md:h-14"
         />
-        <h1 className="text-white text-h3 md:text-h1_contents_title">
-          ZIPPLE 로그인 중⋯
-        </h1>
+        <div className="flex items-center justify-center gap-2 md:gap-3 mt-10">
+          <p className="rounded-full bg-skyblue w-3 h-3 md:w-5 md:h-5 animate-bounce-delay-0"></p>
+          <p className="rounded-full bg-[#7ea0eb] w-3 h-3 md:w-5 md:h-5 animate-bounce-delay-1"></p>
+          <p className="rounded-full bg-[#4f80f1] w-3 h-3 md:w-5 md:h-5 animate-bounce-delay-2"></p>
+          <p className="rounded-full bg-main w-3 h-3 md:w-5 md:h-5 animate-bounce-delay-3"></p>
+        </div>
       </div>
     </div>
   );
