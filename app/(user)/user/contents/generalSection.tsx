@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EmailInput } from "@/app/components/input/emailInput";
 import Input from "@/app/components/input/input";
 import { InputWithBtn } from "@/app/components/input/inputWithBtn";
@@ -13,6 +13,7 @@ import { useAuthStore } from "@/app/store/authStore";
 import { useUserStore } from "@/app/store/userStore";
 import Alert from "@/app/components/alert/alert";
 import { CATEGORY } from "@/app/data/category";
+import { getGeneralUserRole, updateGeneralUserRole } from "@/app/api/user/api";
 
 const GeneralSection = () => {
   const [showAlert, setShowAlert] = useState<boolean>(false);
@@ -26,6 +27,22 @@ const GeneralSection = () => {
   const [email, setEmail] = useState<string>("");
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const data = await getGeneralUserRole();
+        setNickname(data.nickname || "");
+        setPhone(data.phoneNumber || "");
+        setEmail(data.mainEmail || "");
+        setAddressSearch(data.address || "");
+        setResidenceType(data.houseType || "");
+      } catch (error) {
+        console.error("사용자 정보 조회 실패", error);
+      }
+    };
+    fetchUserInfo();
+  }, []);
+
   const handlePhoneChange = (fullPhone: string) => {
     setPhone(fullPhone);
   };
@@ -38,14 +55,30 @@ const GeneralSection = () => {
     setAddressSearch(value);
   };
 
-  const handleSearch = () => {
-    console.log("검색 클릭:", addressSearch);
+  const handleAddressSearch = () => {
+    new window.daum.Postcode({
+      oncomplete: (data: any) => {
+        setAddressSearch(data.address);
+      },
+    }).open();
   };
 
-  const handleEditMode = () => {
+  const handleEditMode = async () => {
     if (isEditMode) {
-      // 저장 시 알림 표시
-      setShowAlert(true);
+      try {
+        await updateGeneralUserRole({
+          nickname,
+          phoneNumber: phone,
+          address: addressSearch,
+          houseType: residenceType,
+          mainEmail: email,
+        });
+        setShowAlert(true);
+      } catch (error) {
+        alert("정보 저장 실패");
+        console.error(error);
+        return;
+      }
     }
     setIsEditMode(!isEditMode);
   };
@@ -89,25 +122,26 @@ const GeneralSection = () => {
               주소 <span className="text-error">*</span>
             </h3>
             {isEditMode ? (
-              <InputWithBtn
-                type="search"
-                searchValue={addressSearch}
-                onSearchChange={handleAddressSearchChange}
-                onSearchClick={handleSearch}
-              />
+              <>
+                <InputWithBtn
+                  type="search"
+                  searchValue={addressSearch}
+                  onSearchChange={setAddressSearch}
+                  onSearchClick={handleAddressSearch}
+                />
+                <Input
+                  value={detailedAddress}
+                  onChange={(e) => setDetailedAddress(e.target.value)}
+                  placeholder="상세주소를 입력해주세요."
+                />
+              </>
             ) : (
               <Input
                 value={addressSearch}
                 onChange={(e) => setAddressSearch(e.target.value)}
-                disabled={!isEditMode}
+                disabled
               />
             )}
-            <Input
-              value={detailedAddress}
-              onChange={(e) => setDetailedAddress(e.target.value)}
-              placeholder="상세주소를 입력해주세요."
-              disabled={!isEditMode}
-            />
           </div>
           <div className="flex flex-col gap-2.5">
             <h3 className="text-text-primary text-14m md:text-16m">
