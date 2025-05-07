@@ -3,11 +3,19 @@
 import { useEffect } from "react";
 import Footer from "./footer";
 import Header from "./header/header";
-import { initUserInfo } from "@/app/utils/initUser";
+import { initUserInfo, refreshUserInfo } from "@/app/utils/initUser";
+import { useAuthStore } from "@/app/store/authStore";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  const { accessToken } = useAuthStore();
+
+  const isLoggedIn = !!accessToken;
+
   useEffect(() => {
-    initUserInfo();
+    if (isLoggedIn) {
+      initUserInfo();
+      // refreshUserInfo();
+    }
   }, []);
 
   return (
