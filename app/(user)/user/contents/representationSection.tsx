@@ -18,6 +18,7 @@ import { withdrawAll, withdrawPartial } from "@/app/api/login/api";
 import { useAuthStore } from "@/app/store/authStore";
 import { useUserStore } from "@/app/store/userStore";
 import { initUserInfo } from "@/app/utils/initUser";
+import { CATEGORY } from "@/app/data/category";
 
 const RepresentationSection = () => {
   const router = useRouter();
@@ -195,7 +196,7 @@ const RepresentationSection = () => {
           <div className="flex flex-col gap-2.5 lx:w-1/2 lx:pr-5">
             <h3 className="text-text-primary text-14m md:text-16m">전문분야</h3>
             <CustomSelectBox
-              options={["주거", "상업", "토지", "기타"]}
+              options={CATEGORY}
               value={selectedSpecialty}
               onChange={setSelectedSpecialty}
               disabled={!isSpecialtyEditMode}
