@@ -11,3 +11,8 @@ export const REGISTER_ASSOCIATE = "/register/associate";
 export const REGISTER_EXPERT = "/register/expert";
 export const REGISTER_GENERAL = "/register/general";
 export const REGISTER_REPRESENTATIVE = "/register/representative";
+
+// verify
+export const VERIFY_LICENSE = "/verify/license";
+export const VERIFY_MESSAGE = "/verify/message";
+export const VERIFY_NUMBER = "/verify/number";
