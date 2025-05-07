@@ -12,6 +12,7 @@ import { withdrawAll } from "@/app/api/login/api";
 import { useAuthStore } from "@/app/store/authStore";
 import { useUserStore } from "@/app/store/userStore";
 import Alert from "@/app/components/alert/alert";
+import { CATEGORY } from "@/app/data/category";
 
 const GeneralSection = () => {
   const [showAlert, setShowAlert] = useState<boolean>(false);
@@ -113,7 +114,7 @@ const GeneralSection = () => {
               주거형태 <span className="text-error">*</span>
             </h3>
             <CustomSelectBox
-              options={["선택 1", "선택 2", "선택 3"]}
+              options={CATEGORY}
               value={residenceType}
               onChange={(value) => setResidenceType(value)}
               disabled={!isEditMode}
