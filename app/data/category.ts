@@ -6,6 +6,11 @@ type SpecialtyCategory = {
   }[];
 };
 
+type UserSpecialtyCategory = {
+  label: string;
+  value: string;
+};
+
 export const specialtyCategories: SpecialtyCategory[] = [
   {
     title: "주거 부동산",
@@ -100,4 +105,23 @@ export const livingExpertCategories: SpecialtyCategory[] = [
       { label: "붙박이", value: "BUILT_IN_FURNITURE" },
     ],
   },
+];
+
+export const CATEGORY: UserSpecialtyCategory[] = [
+  { label: "아파트", value: "APARTMENT" },
+  { label: "주택/다가구", value: "HOUSE" },
+  { label: "빌라/다세대", value: "VILLA" },
+  { label: "원룸/투룸", value: "ONE_ROOM_TWO_ROOM" },
+  { label: "오피스텔", value: "OFFICE_HOTEL" },
+  { label: "상가 점포", value: "COMMERCIAL_SHOP" },
+  { label: "빌딩/상업시설", value: "BUILDING" },
+  { label: "사무실", value: "OFFICE" },
+  { label: "공장/창고/지식산업센터", value: "FACTORY_WAREHOUSE" },
+  { label: "재건축/재개발", value: "RECONSTRUCTION" },
+  { label: "토지", value: "LAND" },
+  { label: "병원/요양원", value: "HOSPITAL" },
+  { label: "경매/분양", value: "AUCTION_SALE" },
+  { label: "종교시설", value: "RELIGIOUS_FACILITY" },
+  { label: "호텔/모텔/펜션", value: "HOTEL" },
+  { label: "기타", value: "OTHER" },
 ];
