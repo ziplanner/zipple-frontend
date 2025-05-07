@@ -28,7 +28,7 @@ const MobileProfileSection = () => {
           <div>
             <div className="flex gap-2">
               <p className="text-text-primary text-18m">{name}</p>
-              <RoleToken role={"REPRESENTATION"} />
+              <RoleToken role={"REPRESENTATIVE"} />
             </div>
             {/* Badges */}
             <div className="flex gap-[6px] mt-2.5">
