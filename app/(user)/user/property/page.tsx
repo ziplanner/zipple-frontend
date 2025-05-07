@@ -11,7 +11,7 @@ import ReapplicationModal from "@/app/components/modal/reapplicatinoModal";
 import AlertMessage from "@/app/components/alert/alertMessage";
 import NoticeBar from "@/app/components/bar/noticeBar";
 
-// type RoleType = "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE";
+// type RoleType = "GENERAL" | "REPRESENTATIVE" | "ASSOCIATE" | "EXPERT" | "NONE";
 
 const UserPropertyPage = () => {
   const isLg = useResponsive("lg");
