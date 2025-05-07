@@ -7,7 +7,10 @@ type InputBoxProps = {
   placeholder?: string;
   error?: boolean;
   errorMessage?: string;
+  success?: boolean;
+  successMessage?: string;
   disabled?: boolean;
+  className?: string;
 };
 
 const Input: React.FC<InputBoxProps> = ({
@@ -16,10 +19,13 @@ const Input: React.FC<InputBoxProps> = ({
   placeholder = "내용을 입력해주세요.",
   error = false,
   errorMessage,
+  success = false,
+  successMessage,
   disabled = false,
+  className,
 }) => {
   return (
-    <div className="flex flex-col space-y-1 text-18r">
+    <div className={`flex flex-col space-y-1 text-18r ${className}`}>
       <input
         type="text"
         value={value}
@@ -32,10 +38,14 @@ const Input: React.FC<InputBoxProps> = ({
             "bg-background-soft text-text-light": disabled,
             " focus:border-main": !disabled && !error,
             "border-error text-error": error,
+            "border-secondary text-secondary": success,
           }
         )}
       />
       {error && errorMessage && <p className="text-error">{errorMessage}</p>}
+      {success && successMessage && (
+        <p className="text-secondary">{successMessage}</p>
+      )}
     </div>
   );
 };
