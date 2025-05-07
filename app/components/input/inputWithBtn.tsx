@@ -16,6 +16,8 @@ interface InputWithBtnProps {
   onBtnClick?: () => void;
   accept?: string;
   direction?: "row" | "col" | "responsive";
+  disabled?: boolean;
+  inputId?: string;
 }
 
 export const InputWithBtn = ({
@@ -29,6 +31,8 @@ export const InputWithBtn = ({
   onBtnClick,
   accept,
   direction = "responsive",
+  disabled = false,
+  inputId,
 }: InputWithBtnProps) => {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -72,8 +76,9 @@ export const InputWithBtn = ({
         value={searchValue}
         onChange={(e) => onSearchChange(e.target.value)}
         onKeyDown={handleKeyDown}
-        className="flex-grow w-full h-[60px] border rounded-[10px] px-2 md:px-4 text-18r
-                focus:outline-none focus:border-main text-text-secondary"
+        disabled={disabled}
+        className={`flex-grow w-full h-[60px] border rounded-[10px] px-2 md:px-4 text-18r
+                focus:outline-none focus:border-main text-text-secondary`}
       />
 
       {/* 타입별 버튼 */}
@@ -90,14 +95,14 @@ export const InputWithBtn = ({
       {type === "file" && (
         <>
           <label
-            htmlFor="file-upload"
+            htmlFor={inputId || "file-upload"}
             className={`${getDirectionWidthClass()} h-[60px] border border-btn rounded-[10px] flex items-center justify-center gap-1
                     cursor-pointer transition active:scale-95 text-btn text-18s flex-shrink-0`}
           >
             <Image src={uploadIcon} alt="upload" className="w-6 h-6" /> 파일선택
           </label>
           <input
-            id="file-upload"
+            id={inputId || "file-upload"}
             type="file"
             className="hidden"
             accept={accept}
