@@ -30,8 +30,8 @@ interface SignupContextType {
   checkedValues: string[];
   setCheckedValues: (values: string[]) => void;
 
-  businessNumber: string;
-  setBusinessNumber: (value: string) => void;
+  businessLicenseNumber: string;
+  setBusinessLicenseNumber: (value: string) => void;
 
   openingDate: string;
   setOpeningDate: (value: string) => void;
@@ -39,23 +39,23 @@ interface SignupContextType {
   name: string;
   setName: (value: string) => void;
 
-  birth: string;
-  setBirth: (value: string) => void;
+  birthday: string;
+  setBirthday: (value: string) => void;
 
   email: string;
   setEmail: (value: string) => void;
 
-  phone: string;
-  setPhone: (value: string) => void;
+  phoneNumber: string;
+  setPhoneNumber: (value: string) => void;
 
-  nationality: string;
-  setNationality: (value: string) => void;
+  foreigner: string;
+  setForeigner: (value: string) => void;
 
   profileImage: string;
   setProfileImage: (value: string) => void;
 
-  selectedSpecialty: string;
-  setSelectedSpecialty: (value: string) => void;
+  specializedType: string;
+  setSpecializedType: (value: string) => void;
 
   terms: TermsState;
   setTerms: Dispatch<SetStateAction<TermsState>>;
@@ -94,17 +94,18 @@ export const AgentSignupProvider: React.FC<SignupProviderProps> = ({
 }) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
 
-  const [type, setType] = useState<string>("");
-  const [searchValue, setSearchValue] = useState<string>(""); // 사업자 상호 검색값
-  const [checkedValues, setCheckedValues] = useState<string[]>([]); // 상세분야 체크된 값들
-  const [businessNumber, setBusinessNumber] = useState<string>(""); // 사업자등록번호 값
-  const [openingDate, setOpeningDate] = useState<string>(""); // 개업일자 값
+  const [type, setType] = useState<string>("REPRESENTATION");
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [checkedValues, setCheckedValues] = useState<string[]>([]);
+  const [businessLicenseNumber, setBusinessLicenseNumber] =
+    useState<string>("");
+  const [openingDate, setOpeningDate] = useState<string>("");
 
-  const [name, setName] = useState<string>(""); // 이름
-  const [birth, setBirth] = useState<string>(""); // 생년월일
-  const [email, setEmail] = useState<string>(""); // 이메일
-  const [phone, setPhone] = useState<string>(""); // 전화번호
-  const [nationality, setNationality] = useState<string>("내국인"); // 국적
+  const [name, setName] = useState<string>("");
+  const [birthday, setBirthday] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [foreigner, setForeigner] = useState<string>("L");
   const [profileImage, setProfileImage] = useState<string>(defaultProfile);
 
   const [terms, setTerms] = useState<TermsState>({
@@ -122,7 +123,7 @@ export const AgentSignupProvider: React.FC<SignupProviderProps> = ({
     null
   );
 
-  const [selectedSpecialty, setSelectedSpecialty] = useState<string>(""); // 전문분야
+  const [specializedType, setSpecializedType] = useState<string>("");
   const [businessRegistrationFileName, setBusinessRegistrationFileName] =
     useState<string>("");
   const [brokerageLicenseFileName, setBrokerageLicenseFileName] =
@@ -139,20 +140,20 @@ export const AgentSignupProvider: React.FC<SignupProviderProps> = ({
         setSearchValue,
         checkedValues,
         setCheckedValues,
-        businessNumber,
-        setBusinessNumber,
+        businessLicenseNumber,
+        setBusinessLicenseNumber,
         openingDate,
         setOpeningDate,
         name,
         setName,
-        birth,
-        setBirth,
+        birthday,
+        setBirthday,
         email,
         setEmail,
-        phone,
-        setPhone,
-        nationality,
-        setNationality,
+        phoneNumber,
+        setPhoneNumber,
+        foreigner,
+        setForeigner,
         profileImage,
         setProfileImage,
         terms,
@@ -161,8 +162,8 @@ export const AgentSignupProvider: React.FC<SignupProviderProps> = ({
         setBusinessRegistrationFile,
         brokerageLicenseFile,
         setBrokerageLicenseFile,
-        selectedSpecialty,
-        setSelectedSpecialty,
+        specializedType,
+        setSpecializedType,
         businessRegistrationFileName,
         setBusinessRegistrationFileName,
         brokerageLicenseFileName,
