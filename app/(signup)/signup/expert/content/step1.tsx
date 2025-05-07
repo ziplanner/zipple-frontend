@@ -1,32 +1,55 @@
+import { useState, useEffect } from "react";
 import { LargeBtn } from "@/app/components/button/largeBtn";
 import { DateInput } from "@/app/components/input/dateInput";
 import { InputWithBtn } from "@/app/components/input/inputWithBtn";
 import { CustomSelectBox } from "@/app/components/selectBox/customSelectBox";
 import { MultiSelectBox } from "@/app/components/selectBox/multiSelectBox";
 import { useExpertSignup } from "@/app/context/expertSignupProvider";
+import AlertMessage from "@/app/components/alert/alertMessage";
+import { CATEGORY } from "@/app/data/category";
 
 const Step1 = () => {
   const {
     currentStep,
     setCurrentStep,
-    searchValue,
-    setSearchValue,
-    checkedValues,
-    setCheckedValues,
-    customSelect,
-    setCustomSelect,
-    businessNumber,
-    setBusinessNumber,
+    businessName,
+    setBusinessName,
+    expertDetailType,
+    setExpertDetailType,
+    expertType,
+    setExpertType,
+    businessLicenseNumber,
+    setBusinessLicenseNumber,
     openingDate,
     setOpeningDate,
   } = useExpertSignup();
 
+  const [alertText, setAlertText] = useState<string | null>(null);
+  const [isNextEnabled, setIsNextEnabled] = useState(false);
+
+  useEffect(() => {
+    const allFieldsFilled =
+      businessName.trim() !== "" &&
+      expertType.trim() !== "" &&
+      expertDetailType.length > 0 &&
+      openingDate.trim() !== "" &&
+      businessLicenseNumber.trim() !== "";
+
+    setIsNextEnabled(allFieldsFilled);
+  }, [
+    businessName,
+    expertType,
+    expertDetailType,
+    openingDate,
+    businessLicenseNumber,
+  ]);
+
   const handleSearch = () => {
-    console.log("Searching for:", searchValue);
+    console.log("Searching for:", businessName);
   };
 
   const handleBusinessNumberChange = (value: string) => {
-    setBusinessNumber(value);
+    setBusinessLicenseNumber(value);
   };
 
   const handleOpeningDateChange = (date: string) => {
@@ -34,6 +57,10 @@ const Step1 = () => {
   };
 
   const handleNext = () => {
+    if (!isNextEnabled) {
+      // setAlertText("모든 필수 항목을 입력해주세요.");
+      return;
+    }
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     }
@@ -47,8 +74,8 @@ const Step1 = () => {
         </h3>
         <InputWithBtn
           type="search"
-          searchValue={searchValue}
-          onSearchChange={setSearchValue}
+          searchValue={businessName}
+          onSearchChange={setBusinessName}
           onSearchClick={handleSearch}
           placeholder="사업자 상호명을 검색해주세요."
         />
@@ -58,9 +85,9 @@ const Step1 = () => {
           전문분야 <span className="text-error">*</span>
         </h3>
         <CustomSelectBox
-          options={["선택 1", "선택 2", "선택 3"]}
-          value={customSelect}
-          onChange={setCustomSelect}
+          options={CATEGORY}
+          value={expertType}
+          onChange={setExpertType}
         />
       </div>
       <div className="flex flex-col gap-2.5">
@@ -78,8 +105,8 @@ const Step1 = () => {
             { label: "사무실 이사", value: "사무실 이사" },
             { label: "해외 이사", value: "해외 이사", disabled: true },
           ]}
-          value={checkedValues}
-          onChange={setCheckedValues}
+          value={expertDetailType}
+          onChange={setExpertDetailType}
         />
       </div>
       <div className="flex flex-col gap-2.5">
@@ -97,7 +124,7 @@ const Step1 = () => {
           onBtnClick={() => {}}
           placeholder="사업자등록번호를 입력해주세요. (‘-’ 제외)"
           label="인증"
-          searchValue={businessNumber}
+          searchValue={businessLicenseNumber}
           onSearchChange={handleBusinessNumberChange}
         />
       </div>
@@ -106,7 +133,12 @@ const Step1 = () => {
         text={"다음"}
         color="black"
         className="mt-[60px]"
+        disabled={!isNextEnabled}
       />
+
+      {alertText && (
+        <AlertMessage text={alertText} onClose={() => setAlertText(null)} />
+      )}
     </div>
   );
 };
