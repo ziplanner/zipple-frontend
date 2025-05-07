@@ -186,7 +186,7 @@ const Step1 = () => {
         </h3>
         <Chips
           options={[
-            { label: "대표 공인중개사", value: "REPRESENTATION" },
+            { label: "대표 공인중개사", value: "REPRESENTATIVE" },
             { label: "소속 공인중개사", value: "ASSOCIATE" },
           ]}
           value={type}
