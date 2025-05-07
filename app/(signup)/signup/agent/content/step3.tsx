@@ -46,7 +46,7 @@ const Step3 = () => {
 
   const isValid =
     businessRegistrationFile &&
-    (type === "REPRESENTATION" ? brokerageLicenseFile : true) &&
+    (type === "REPRESENTATIVE" ? brokerageLicenseFile : true) &&
     specializedType &&
     terms.service &&
     terms.privacy &&
@@ -170,7 +170,7 @@ const Step3 = () => {
         />
       </div>
 
-      {type === "REPRESENTATION" && (
+      {type === "REPRESENTATIVE" && (
         <div className="flex flex-col gap-2.5">
           <h3 className="text-text-primary text-14m md:text-16m">
             중개등록증 <span className="text-error">*</span>
