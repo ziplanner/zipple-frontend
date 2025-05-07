@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Input from "@/app/components/input/input";
 import { EmailInput } from "@/app/components/input/emailInput";
@@ -17,14 +17,18 @@ import { initUserInfo } from "@/app/utils/initUser";
 import Alert from "@/app/components/alert/alert";
 import { useRouter } from "next/navigation";
 import { CATEGORY } from "@/app/data/category";
+import {
+  getAssociateUserRole,
+  updateAssociateUserRole,
+} from "@/app/api/user/api";
 
 const AssociateSection = () => {
   const router = useRouter();
 
-  const [showAlert, setShowAlert] = useState<boolean>(false);
-  const [showWithdrawAlert, setShowWithdrawAlert] = useState<boolean>(false); // 전체 탈퇴
+  const [showAlert, setShowAlert] = useState(false);
+  const [showWithdrawAlert, setShowWithdrawAlert] = useState(false);
   const [showPartialWithdrawAlert, setShowPartialWithdrawAlert] =
-    useState<boolean>(false); // 중개사만 탈퇴
+    useState(false);
 
   const [phone, setPhone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -45,17 +49,45 @@ const AssociateSection = () => {
     setEmail(fullEmail);
   };
 
-  const handleEditMode = () => {
+  useEffect(() => {
+    const fetchAssociateInfo = async () => {
+      try {
+        const data = await getAssociateUserRole();
+        setPhone(data.phoneNumber || "");
+        setEmail(data.mainEmail || "");
+        setUrl(data.introduceUrl || "");
+        setTitle(data.introduceTitle || "");
+        setDescription(data.introduceContent || "");
+        setSelectedSpecialty(data.specializedType || "");
+      } catch (error) {
+        console.error("소속 중개사 정보 조회 실패", error);
+      }
+    };
+    fetchAssociateInfo();
+  }, []);
+
+  const handleEditMode = async () => {
     if (isEditMode) {
-      // 저장 시 알림 표시
-      setShowAlert(true);
+      try {
+        await updateAssociateUserRole({
+          phoneNumber: phone,
+          mainEmail: email,
+          introduceUrl: url,
+          introduceTitle: title,
+          introduceContent: description,
+        });
+        setShowAlert(true);
+      } catch (error) {
+        alert("정보 저장 실패");
+        console.error(error);
+        return;
+      }
     }
     setIsEditMode(!isEditMode);
   };
 
   const handleSpecialtyEditMode = () => {
     if (isSpecialtyEditMode) {
-      // 저장 시 알림 표시
       setShowAlert(true);
     }
     setIsSpecialtyEditMode(!isSpecialtyEditMode);

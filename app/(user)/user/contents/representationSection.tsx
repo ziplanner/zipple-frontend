@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Input from "@/app/components/input/input";
 import { EmailInput } from "@/app/components/input/emailInput";
@@ -19,10 +19,15 @@ import { useAuthStore } from "@/app/store/authStore";
 import { useUserStore } from "@/app/store/userStore";
 import { initUserInfo } from "@/app/utils/initUser";
 import { CATEGORY } from "@/app/data/category";
+import { getRepUserRole, updateRepUserRole } from "@/app/api/user/api";
+
+interface Region {
+  city: string;
+  district: string;
+}
 
 const RepresentationSection = () => {
   const router = useRouter();
-
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [showWithdrawAlert, setShowWithdrawAlert] = useState<boolean>(false);
   const [showPartialWithdrawAlert, setShowPartialWithdrawAlert] =
@@ -34,13 +39,8 @@ const RepresentationSection = () => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>("");
-  const [primaryRegions, setPrimaryRegions] = useState<
-    { city: string; district: string }[]
-  >([]);
-
-  const [additionalRegions, setAdditionalRegions] = useState<
-    { city: string; district: string }[]
-  >([]);
+  const [primaryRegions, setPrimaryRegions] = useState<Region[]>([]);
+  const [additionalRegions, setAdditionalRegions] = useState<Region[]>([]);
 
   const [isOpenPrimary, setIsOpenPrimary] = useState<boolean>(false);
   const [isOpenAdditional, setIsOpenAdditional] = useState<boolean>(false);
@@ -48,28 +48,60 @@ const RepresentationSection = () => {
   const [isSpecialtyEditMode, setIsSpecialtyEditMode] =
     useState<boolean>(false);
 
-  const formatRegions = (regions: { city: string; district: string }[]) =>
+  useEffect(() => {
+    const fetchRepInfo = async () => {
+      try {
+        const data = await getRepUserRole();
+        setPhone(data.phoneNumber || "");
+        setEmail(data.mainEmail || "");
+        setUrl(data.introduceUrl || "");
+        setTitle(data.introduceTitle || "");
+        setDescription(data.introduceContent || "");
+        setSelectedSpecialty(data.specializedType || "");
+        setPrimaryRegions(
+          data.representativeArea ? JSON.parse(data.representativeArea) : []
+        );
+        setAdditionalRegions(
+          data.additionalArea ? JSON.parse(data.additionalArea) : []
+        );
+      } catch (error) {
+        console.error("대표 중개사 정보 조회 실패", error);
+      }
+    };
+    fetchRepInfo();
+  }, []);
+
+  const formatRegions = (regions: Region[]) =>
     regions.map((r) => `${r.city} > ${r.district}`).join(", ");
 
-  const handlePhoneChange = (fullPhone: string) => {
-    setPhone(fullPhone);
-  };
-
-  const handleEmailChange = (fullEmail: string) => {
-    setEmail(fullEmail);
-  };
-
-  const handleEditMode = () => {
+  const handleEditMode = async () => {
     if (isEditMode) {
-      // 저장 시 알림 표시
-      setShowAlert(true);
+      try {
+        await updateRepUserRole({
+          phoneNumber: phone,
+          mainEmail: email,
+          introduceUrl: url,
+          representativeArea: primaryRegions.map(
+            (r) => `${r.city} ${r.district}`
+          ),
+          additionalArea: additionalRegions.map(
+            (r) => `${r.city} ${r.district}`
+          ),
+          introduceTitle: title,
+          introduceContent: description,
+        });
+        setShowAlert(true);
+      } catch (error) {
+        alert("정보 저장 실패");
+        console.error(error);
+        return;
+      }
     }
     setIsEditMode(!isEditMode);
   };
 
   const handleSpecialtyEditMode = () => {
     if (isSpecialtyEditMode) {
-      // 저장 시 알림 표시
       setShowAlert(true);
     }
     setIsSpecialtyEditMode(!isSpecialtyEditMode);
@@ -108,7 +140,7 @@ const RepresentationSection = () => {
             <h3 className="text-text-primary text-14m md:text-16m">전화번호</h3>
             <PhoneInput
               value={phone}
-              onChange={handlePhoneChange}
+              onChange={setPhone}
               disabled={!isEditMode}
             />
           </div>
@@ -116,7 +148,7 @@ const RepresentationSection = () => {
             <h3 className="text-text-primary text-14m md:text-16m">이메일</h3>
             <EmailInput
               value={email}
-              onChange={handleEmailChange}
+              onChange={setEmail}
               disabled={!isEditMode}
             />
           </div>
@@ -127,7 +159,6 @@ const RepresentationSection = () => {
             <Input
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder=""
               disabled={!isEditMode}
             />
           </div>
@@ -147,7 +178,6 @@ const RepresentationSection = () => {
               <h3 className="text-text-primary text-14m md:text-16m">
                 추가 활동지역
               </h3>
-
               <FilterInput
                 value={formatRegions(additionalRegions)}
                 onChange={() => {}}
@@ -163,7 +193,6 @@ const RepresentationSection = () => {
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="[공인중개사무소명]의 000 중개사 입니다."
               disabled={!isEditMode}
             />
           </div>
@@ -174,8 +203,6 @@ const RepresentationSection = () => {
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder={`안녕하세요. 
-집플 공인중개사의 홍길동 중개사입니다.`}
               maxLength={1500}
               disabled={!isEditMode}
             />
@@ -183,15 +210,13 @@ const RepresentationSection = () => {
         </div>
         <PrimaryBtn
           onClick={handleEditMode}
-          text={`${isEditMode ? "저장" : "수정"}`}
+          text={isEditMode ? "저장" : "수정"}
         />
       </div>
+
       <div className="border-b border-background-light w-full my-10" />
-      {/* 분야 영역 */}
-      <div
-        className="flex w-full flex-col gap-[30px] items-center md:items-start
-      lg:flex-row lg:items-start lg:justify-between lg:gap-[130px]"
-      >
+
+      <div className="flex w-full flex-col gap-[30px] items-center md:items-start lg:flex-row lg:items-start lg:justify-between lg:gap-[130px]">
         <div className="flex flex-col gap-[30px] md:gap-10 flex-1">
           <div className="flex flex-col gap-2.5 lx:w-1/2 lx:pr-5">
             <h3 className="text-text-primary text-14m md:text-16m">전문분야</h3>
@@ -203,29 +228,26 @@ const RepresentationSection = () => {
             />
             <p className="text-text-secondary text-14r mt-1 whitespace-nowrap">
               ※ 전문 분야는 최초 설정 또는 변경 후, 7일이 지나야 바꿀 수 있어요.
-              (최근 변경일: 2024.05.05)
             </p>
           </div>
         </div>
         <PrimaryBtn
           onClick={handleSpecialtyEditMode}
-          text={`${isSpecialtyEditMode ? "저장" : "수정"}`}
+          text={isSpecialtyEditMode ? "저장" : "수정"}
         />
       </div>
 
       <div className="border-b border-background-light w-full mt-10" />
       <div className="flex gap-3 self-end mt-10 mb-[138px] items-center">
         <p
-          className="flex text-error text-16m md:text-18m cursor-pointer
-      underline"
+          className="flex text-error text-16m md:text-18m cursor-pointer underline"
           onClick={() => setShowPartialWithdrawAlert(true)}
         >
           중개사만 탈퇴
         </p>
         <Image src={bar} alt="bar" width={1} height={10} className="mx-4 " />
         <p
-          className="flex text-text-light text-16m md:text-18m cursor-pointer
-      underline"
+          className="flex text-text-light text-16m md:text-18m cursor-pointer underline"
           onClick={() => setShowWithdrawAlert(true)}
         >
           회원탈퇴
@@ -235,12 +257,25 @@ const RepresentationSection = () => {
         <RegionModal
           modalTitle="대표 활동지역"
           onClose={() => setIsOpenPrimary(false)}
-          onSave={(regions) => {
+          onSave={(regions: Region[]) => {
             setPrimaryRegions(regions);
             setIsOpenPrimary(false);
           }}
           initialRegions={primaryRegions}
           maxSelectable={3}
+        />
+      )}
+      {isOpenAdditional && (
+        <RegionModal
+          modalTitle="추가 활동지역"
+          onClose={() => setIsOpenAdditional(false)}
+          onSave={(regions: Region[]) => {
+            setAdditionalRegions(regions);
+            setIsOpenAdditional(false);
+          }}
+          initialRegions={additionalRegions}
+          disabledRegions={primaryRegions}
+          maxSelectable={5}
         />
       )}
 
@@ -253,16 +288,14 @@ const RepresentationSection = () => {
             setIsOpenAdditional(false);
           }}
           initialRegions={additionalRegions}
-          disabledRegions={primaryRegions} // 대표지역은 선택 불가
+          disabledRegions={primaryRegions}
           maxSelectable={5}
         />
       )}
       {showAlert && (
         <AlertMessage
           text="저장되었습니다!"
-          onClose={() => {
-            setShowAlert(false);
-          }}
+          onClose={() => setShowAlert(false)}
         />
       )}
       {showPartialWithdrawAlert && (
@@ -278,7 +311,6 @@ const RepresentationSection = () => {
           }}
         />
       )}
-
       {showWithdrawAlert && (
         <Alert
           text="정말 회원을 탈퇴하시겠습니까?"
