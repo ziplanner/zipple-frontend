@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BasicBtn } from "@/app/components/button/basicBtn";
 import { LargeBtn } from "@/app/components/button/largeBtn";
 import { Chips } from "@/app/components/chips/chips";
@@ -8,6 +8,7 @@ import { PhoneInput } from "@/app/components/input/phoneInput";
 import Image from "next/image";
 import { useExpertSignup } from "@/app/context/expertSignupProvider";
 import { DateInput } from "@/app/components/input/dateInput";
+import AlertMessage from "@/app/components/alert/alertMessage";
 
 const Step2 = () => {
   const {
@@ -15,39 +16,47 @@ const Step2 = () => {
     setCurrentStep,
     name,
     setName,
-    birth,
-    setBirth,
+    birthday,
+    setBirthday,
     email,
     setEmail,
-    phone,
-    setPhone,
-    nationality,
-    setNationality,
+    phoneNumber,
+    setPhoneNumber,
+    foreigner,
+    setForeigner,
     profileImage,
     setProfileImage,
   } = useExpertSignup();
 
-  // 전화번호 입력 값 업데이트
+  const [alertText, setAlertText] = useState<string | null>(null);
+  const [isNextEnabled, setIsNextEnabled] = useState(false);
+
+  useEffect(() => {
+    const required =
+      name.trim() !== "" &&
+      birthday.trim() !== "" &&
+      phoneNumber.trim() !== "" &&
+      foreigner !== "" &&
+      profileImage !== "";
+    setIsNextEnabled(required);
+  }, [name, birthday, phoneNumber, foreigner, profileImage]);
+
   const handlePhoneChange = (value: string) => {
-    setPhone(value);
+    setPhoneNumber(value);
   };
 
-  // 생년월일 입력 값 업데이트
   const handleBirthChange = (date: string) => {
-    setBirth(date);
+    setBirthday(date);
   };
 
-  // 이메일 입력 값 업데이트
   const handleEmailChange = (value: string) => {
     setEmail(value);
   };
 
-  // 내외국인 선택 업데이트
   const handleNationalityChange = (value: string) => {
-    setNationality(value);
+    setForeigner(value);
   };
 
-  // 프로필 사진 파일 선택 핸들러
   const handleProfileImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -62,6 +71,10 @@ const Step2 = () => {
   };
 
   const handleNext = () => {
+    if (!isNextEnabled) {
+      // setAlertText("모든 필수 항목을 입력해주세요.");
+      return;
+    }
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     }
@@ -105,10 +118,7 @@ const Step2 = () => {
           </label>
         </div>
 
-        <div
-          className="flex flex-col p-5 bg-background-extraSoft text-text-secondary
-        rounded-[10px] text-14r gap-2 md:gap-1"
-        >
+        <div className="flex flex-col p-5 bg-background-extraSoft text-text-secondary rounded-[10px] text-14r gap-2 md:gap-1">
           <p>
             ※ 프로필 사진은 정면 얼굴이 잘 보이는 1:1 비율 이미지로 등록해
             주세요.
@@ -147,15 +157,15 @@ const Step2 = () => {
       </div>
 
       <div className="flex flex-col gap-2.5">
-        <h3 className="text-text-primary text-14m md:t ext-16m">
+        <h3 className="text-text-primary text-14m md:text-16m">
           내외국인 <span className="text-error">*</span>
         </h3>
         <Chips
           options={[
-            { label: "내국인", value: "내국인" },
-            { label: "외국인", value: "외국인" },
+            { label: "내국인", value: "L" },
+            { label: "외국인", value: "F" },
           ]}
-          value={nationality}
+          value={foreigner}
           onChange={handleNationalityChange}
         />
       </div>
@@ -164,12 +174,17 @@ const Step2 = () => {
         <h3 className="text-text-primary text-14m md:text-16m">
           전화번호 <span className="text-error">*</span>
         </h3>
-        <PhoneInput value={phone} onChange={handlePhoneChange} />
+        <PhoneInput value={phoneNumber} onChange={handlePhoneChange} />
         <LargeBtn onClick={() => {}} text="인증받기" color="" />
       </div>
 
       <div className="mt-[60px]">
-        <LargeBtn onClick={handleNext} text="다음" color="black" />
+        <LargeBtn
+          onClick={handleNext}
+          text="다음"
+          color="black"
+          disabled={!isNextEnabled}
+        />
         <LargeBtn
           onClick={handlePrev}
           text="이전"
@@ -177,6 +192,10 @@ const Step2 = () => {
           className="mt-2.5"
         />
       </div>
+
+      {alertText && (
+        <AlertMessage text={alertText} onClose={() => setAlertText(null)} />
+      )}
     </div>
   );
 };
