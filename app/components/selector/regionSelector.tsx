@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import Image from "next/image";
 import close_blue from "@/app/images/icon/close_blue.svg";
@@ -135,7 +133,7 @@ export const RegionSelector = ({
               selectedRegions.map((region, index) => (
                 <div
                   key={index}
-                  className="flex text-14m items-center px-2.5 py-2 bg-main_bg rounded-md text-main min-w-max"
+                  className="flex text-14m items-center px-2.5 h-9 bg-main_bg rounded-md text-main min-w-max"
                 >
                   <span className="flex gap-1 items-center">
                     {region.city}
