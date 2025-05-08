@@ -16,6 +16,7 @@ export default {
         main: "#3772F7",
         secondary: "#2032A7",
         main_bg: "#ECF3FF",
+        main_bg2: "#F1F5FE",
         main40: "#3772F799",
         sub: "#FFE100",
         sub_bg: "#FFFCE8",
@@ -86,6 +87,18 @@ export default {
         "12r": ["12px", { fontWeight: "400" }],
 
         "24l": ["24px", { fontWeight: "300" }],
+      },
+      keyframes: {
+        "bounce-up-down": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+      },
+      animation: {
+        "bounce-delay-0": "bounce-up-down 1s ease-in-out infinite",
+        "bounce-delay-1": "bounce-up-down 1s ease-in-out infinite 0.2s",
+        "bounce-delay-2": "bounce-up-down 1s ease-in-out infinite 0.4s",
+        "bounce-delay-3": "bounce-up-down 1s ease-in-out infinite 0.6s",
       },
     },
   },

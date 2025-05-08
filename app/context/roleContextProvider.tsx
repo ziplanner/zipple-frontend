@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-type RoleType = "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE";
+type RoleType = "GENERAL" | "REPRESENTATIVE" | "ASSOCIATE" | "EXPERT" | "NONE";
 
 interface RoleContextType {
   role: RoleType;

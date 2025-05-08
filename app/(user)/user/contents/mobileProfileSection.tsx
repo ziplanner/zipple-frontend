@@ -7,17 +7,19 @@ import vector from "@/app/images/icon/mypage/vector.svg";
 import RoleToken from "@/app/components/token/roleToken";
 import MobileUserMenu from "@/app/components/menu/mobileUserMenu";
 import vector_black from "@/app/images/icon/vector.svg";
-import { motion, AnimatePresence } from "framer-motion"; // 추가!
+import { motion, AnimatePresence } from "framer-motion";
 import { useRole } from "@/app/context/roleContextProvider";
 import { useRouter } from "next/navigation";
+import { useUserStore } from "@/app/store/userStore";
 
 interface RoleTokenProps {
-  role: "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE";
+  role: "GENERAL" | "REPRESENTATIVE" | "ASSOCIATE" | "EXPERT" | "NONE";
 }
 
 const MobileProfileSection = () => {
-  const { role, setRole } = useRole();
   const router = useRouter();
+  const { role, setRole } = useRole();
+  const { user } = useUserStore();
 
   const [name, setName] = useState<string>("권수연");
   const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(avatar);
@@ -27,28 +29,40 @@ const MobileProfileSection = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const roleDesc: Record<RoleTokenProps["role"], string> = {
-    GENERAL: "생활 전문가로 전환",
-    REPRESENTATION: "일반 회원으로 전환",
-    ASSOCIATE: "일반 회원으로 전환",
-    EXPERT: "일반 회원으로 전환",
-    NONE: "",
+  const switchTextMap: Partial<Record<string, string>> = {
+    REPRESENTATIVE: "대표 중개사로 전환",
+    ASSOCIATE: "소속 중개사로 전환",
+    EXPERT: "생활 전문가로 전환",
+    GENERAL: "일반 회원으로 전환",
+  };
+
+  const renderRoleText = () => {
+    const roles = user?.roleName || [];
+
+    // 두 개의 role을 가진 경우 (전환 대상 role만 찾아서 출력)
+    if (roles.length === 2) {
+      const target = roles.find((r) => r !== role);
+      console.log("현재 role", role);
+      console.log("전환 대상 role", target);
+      return switchTextMap[target || ""] || "";
+    }
+
+    // 단일 role인 경우: 등록 가능한 다른 role 안내
+    const registerable = Object.keys(switchTextMap).find(
+      (r) => !roles.includes(r)
+    );
+    return switchTextMap[registerable || ""] || "";
   };
 
   const handleRoleChange = () => {
-    const nextRole: Record<
-      RoleTokenProps["role"],
-      "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE"
-    > = {
-      GENERAL: "REPRESENTATION",
-      REPRESENTATION: "ASSOCIATE",
-      ASSOCIATE: "EXPERT",
-      EXPERT: "GENERAL",
-      NONE: "GENERAL",
-    };
+    const roles = user?.roleName || [];
 
-    setRole(nextRole[role]);
-    router.push("/user");
+    if (roles.length === 2) {
+      const next = roles.find((r) => r !== role);
+      if (next) setRole(next as RoleTokenProps["role"]);
+    } else {
+      router.push("/signup");
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -155,7 +169,7 @@ const MobileProfileSection = () => {
               height={20}
               className="md:w-5 md:h-5"
             />
-            <p className="text-white text-16s">{roleDesc[role]}</p>
+            <p className="text-white text-16s">{renderRoleText()}</p>
           </button>
 
           {role !== "GENERAL" && (

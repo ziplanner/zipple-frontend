@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 
 interface CustomSelectBoxProps {
-  options: string[];
+  options: { label: string; value: string }[];
   value: string;
   onChange: (value: string) => void;
   disabled?: boolean;
@@ -16,7 +16,7 @@ export const CustomSelectBox = ({
   onChange,
   disabled = false,
 }: CustomSelectBoxProps) => {
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -37,6 +37,9 @@ export const CustomSelectBox = ({
     };
   }, [open]);
 
+  const selectedLabel =
+    options.find((option) => option.value === value)?.label || "선택해주세요";
+
   return (
     <div ref={boxRef} className="relative w-full">
       <button
@@ -50,7 +53,7 @@ export const CustomSelectBox = ({
               : "text-text-light"
           } ${open ? "rounded-t-[8px]" : "rounded-[8px]"}`}
       >
-        {value || "선택해주세요"}
+        {selectedLabel}
         <ChevronDown
           className={`w-4 h-4 ml-2 transition-transform duration-200 ${
             open ? "rotate-180" : "rotate-0"
@@ -60,21 +63,21 @@ export const CustomSelectBox = ({
 
       {open && (
         <div
-          className="absolute top-full w-full bg-white border border-background-light border-t-0
-        rounded-b-[8px] shadow-md z-10 overflow-hidden"
+          className="absolute top-full w-full h-[258px] overflow-y-auto custom-scrollbar bg-white border border-background-light border-t-0
+          rounded-b-[8px] shadow-md z-10 overflow-hidden"
         >
           {options.map((option) => (
             <div
-              key={option}
+              key={option.value}
               onClick={() => {
-                onChange(option);
+                onChange(option.value);
                 setOpen(false);
               }}
               className={`px-4 py-3 text-18r cursor-pointer ${
-                value === option ? "text-blue-600" : "text-text-light"
+                value === option.value ? "text-blue-600" : "text-text-light"
               } hover:bg-hover`}
             >
-              {option}
+              {option.label}
             </div>
           ))}
         </div>

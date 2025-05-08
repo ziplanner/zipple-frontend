@@ -3,6 +3,9 @@ import TermsBox from "@/app/components/box/termsBox";
 import { LargeBtn } from "@/app/components/button/largeBtn";
 import { InputWithBtn } from "@/app/components/input/inputWithBtn";
 import { useExpertSignup } from "@/app/context/expertSignupProvider";
+import { registerExpertUser } from "@/app/api/signup/api";
+import AlertMessage from "@/app/components/alert/alertMessage";
+import { useRouter } from "next/router";
 
 const Step3 = () => {
   const {
@@ -10,11 +13,37 @@ const Step3 = () => {
     setCurrentStep,
     terms,
     setTerms,
-    businessFile,
-    setBusinessFile,
-    searchValue,
-    setSearchValue,
+    businessLicense,
+    setBusinessLicense,
+    businessName,
+    expertType,
+    expertDetailType,
+    businessLicenseNumber,
+    openingDate,
+    name,
+    birthday,
+    email,
+    phoneNumber,
+    foreigner,
+    profileImage,
   } = useExpertSignup();
+
+  const base64ToFile = (base64: string, filename: string): File => {
+    const arr = base64.split(",");
+    const mime = arr[0].match(/:(.*?);/)?.[1] || "image/jpeg";
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  };
+
+  const router = useRouter();
+
+  const [fileName, setFileName] = useState<string>("");
+  const [alertText, setAlertText] = useState<string | null>(null);
 
   const handlePrev = () => {
     if (currentStep > 1) {
@@ -22,7 +51,7 @@ const Step3 = () => {
     }
   };
 
-  const handleTermsChange = (key: "marketing", value: boolean) => {
+  const handleTermsChange = (key: keyof typeof terms, value: boolean) => {
     setTerms((prev) => ({
       ...prev,
       [key]: value,
@@ -31,24 +60,52 @@ const Step3 = () => {
 
   const handleFileSelect = (file: File | null) => {
     if (file) {
-      setBusinessFile(file);
-      setSearchValue(file.name);
+      setBusinessLicense(file);
+      setFileName(file.name);
     }
   };
 
-  const handleComplete = () => {
-    if (!businessFile) {
-      alert("사업자등록증을 업로드해주세요.");
+  const handleComplete = async () => {
+    if (!businessLicense) {
+      setAlertText("사업자등록증을 업로드해주세요.");
       return;
     }
 
     if (!terms.service || !terms.privacy || !terms.policy || !terms.age) {
-      alert("필수 약관에 모두 동의해주세요.");
+      setAlertText("필수 약관에 모두 동의해주세요.");
       return;
     }
 
-    console.log("제출할 파일:", businessFile);
-    console.log("제출할 데이터:", terms);
+    try {
+      const profileImageFile = base64ToFile(profileImage, "profile.jpg");
+
+      await registerExpertUser(
+        {
+          name,
+          birthday,
+          email,
+          foreigner,
+          phoneNumber,
+          businessName,
+          businessLicenseNumber,
+          openingDate,
+          expertType,
+          expertDetailType,
+          requiredConsent: true,
+          marketing: terms.marketing,
+        },
+        businessLicense,
+        profileImageFile
+      );
+
+      setAlertText("생활전문가 등록이 완료되었습니다.");
+      setTimeout(() => {
+        router.push("/");
+      }, 2000);
+    } catch (error) {
+      console.error("등록 실패", error);
+      setAlertText("회원 등록 중 오류가 발생했습니다.");
+    }
   };
 
   return (
@@ -63,7 +120,7 @@ const Step3 = () => {
         <InputWithBtn
           type="file"
           placeholder="사업자등록증.pdf"
-          searchValue={searchValue}
+          searchValue={fileName}
           onSearchChange={() => {}}
           accept=".pdf"
           onFileSelect={handleFileSelect}
@@ -77,9 +134,23 @@ const Step3 = () => {
 
       {/* 버튼 */}
       <div className="mt-[60px] flex flex-col gap-3">
-        <LargeBtn onClick={handleComplete} text={"완료"} color="blue" />
+        <LargeBtn
+          onClick={handleComplete}
+          text={"완료"}
+          color="blue"
+          disabled={
+            !businessLicense ||
+            !terms.service ||
+            !terms.privacy ||
+            !terms.policy ||
+            !terms.age
+          }
+        />
         <LargeBtn onClick={handlePrev} text={"이전"} color="white" />
       </div>
+      {alertText && (
+        <AlertMessage text={alertText} onClose={() => setAlertText(null)} />
+      )}
     </div>
   );
 };

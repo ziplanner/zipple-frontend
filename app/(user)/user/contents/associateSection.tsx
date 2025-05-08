@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Input from "@/app/components/input/input";
 import { EmailInput } from "@/app/components/input/emailInput";
@@ -10,9 +10,25 @@ import bar from "@/app/images/icon/footer/bar.svg";
 import Textarea from "@/app/components/textarea/textarea";
 import { CustomSelectBox } from "@/app/components/selectBox/customSelectBox";
 import AlertMessage from "@/app/components/alert/alertMessage";
+import { useAuthStore } from "@/app/store/authStore";
+import { useUserStore } from "@/app/store/userStore";
+import { withdrawAll, withdrawPartial } from "@/app/api/login/api";
+import { initUserInfo } from "@/app/utils/initUser";
+import Alert from "@/app/components/alert/alert";
+import { useRouter } from "next/navigation";
+import { CATEGORY } from "@/app/data/category";
+import {
+  getAssociateUserRole,
+  updateAssociateUserRole,
+} from "@/app/api/user/api";
 
 const AssociateSection = () => {
-  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const router = useRouter();
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [showWithdrawAlert, setShowWithdrawAlert] = useState(false);
+  const [showPartialWithdrawAlert, setShowPartialWithdrawAlert] =
+    useState(false);
 
   const [phone, setPhone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -33,20 +49,71 @@ const AssociateSection = () => {
     setEmail(fullEmail);
   };
 
-  const handleEditMode = () => {
+  useEffect(() => {
+    const fetchAssociateInfo = async () => {
+      try {
+        const data = await getAssociateUserRole();
+        setPhone(data.phoneNumber || "");
+        setEmail(data.mainEmail || "");
+        setUrl(data.introduceUrl || "");
+        setTitle(data.introduceTitle || "");
+        setDescription(data.introduceContent || "");
+        setSelectedSpecialty(data.specializedType || "");
+      } catch (error) {
+        console.error("소속 중개사 정보 조회 실패", error);
+      }
+    };
+    fetchAssociateInfo();
+  }, []);
+
+  const handleEditMode = async () => {
     if (isEditMode) {
-      // 저장 시 알림 표시
-      setShowAlert(true);
+      try {
+        await updateAssociateUserRole({
+          phoneNumber: phone,
+          mainEmail: email,
+          introduceUrl: url,
+          introduceTitle: title,
+          introduceContent: description,
+        });
+        setShowAlert(true);
+      } catch (error) {
+        alert("정보 저장 실패");
+        console.error(error);
+        return;
+      }
     }
     setIsEditMode(!isEditMode);
   };
 
   const handleSpecialtyEditMode = () => {
     if (isSpecialtyEditMode) {
-      // 저장 시 알림 표시
       setShowAlert(true);
     }
     setIsSpecialtyEditMode(!isSpecialtyEditMode);
+  };
+
+  const handleWithdrawAll = async () => {
+    try {
+      await withdrawAll();
+      useAuthStore.getState().logout();
+      useUserStore.getState().clearUser();
+      router.push("/");
+    } catch (error) {
+      alert("회원 탈퇴에 실패했습니다.");
+      console.error(error);
+    }
+  };
+
+  const handleWithdrawPartial = async () => {
+    try {
+      await withdrawPartial();
+      initUserInfo();
+      router.push("/user");
+    } catch (error) {
+      alert("부분 탈퇴에 실패했습니다.");
+      console.error(error);
+    }
   };
 
   return (
@@ -127,7 +194,7 @@ const AssociateSection = () => {
           <div className="flex flex-col gap-2.5 lx:w-1/2 lx:pr-5">
             <h3 className="text-text-primary text-14m md:text-16m">전문분야</h3>
             <CustomSelectBox
-              options={["주거", "상업", "토지", "기타"]}
+              options={CATEGORY}
               value={selectedSpecialty}
               onChange={setSelectedSpecialty}
               disabled={!isSpecialtyEditMode}
@@ -149,6 +216,7 @@ const AssociateSection = () => {
         <p
           className="flex text-error text-16m md:text-18m cursor-pointer
       underline"
+          onClick={() => setShowPartialWithdrawAlert(true)}
         >
           중개사만 탈퇴
         </p>
@@ -156,6 +224,7 @@ const AssociateSection = () => {
         <p
           className="flex text-text-light text-16m md:text-18m cursor-pointer
       underline"
+          onClick={() => setShowWithdrawAlert(true)}
         >
           회원탈퇴
         </p>
@@ -166,6 +235,30 @@ const AssociateSection = () => {
           onClose={() => {
             setShowAlert(false);
           }}
+        />
+      )}
+      {showPartialWithdrawAlert && (
+        <Alert
+          text="정말 중개사만 탈퇴하시겠습니까?"
+          subText="중개사 정보가 삭제되며, 일반회원 정보는 유지됩니다."
+          leftBtnText="취소"
+          rightBtnText="확인"
+          onClose={() => setShowPartialWithdrawAlert(false)}
+          onConfirm={() => {
+            setShowPartialWithdrawAlert(false);
+            handleWithdrawPartial();
+          }}
+        />
+      )}
+
+      {showWithdrawAlert && (
+        <Alert
+          text="정말 회원을 탈퇴하시겠습니까?"
+          subText="탈퇴 시 모든 정보가 삭제됩니다."
+          leftBtnText="취소"
+          rightBtnText="확인"
+          onClose={() => setShowWithdrawAlert(false)}
+          onConfirm={handleWithdrawAll}
         />
       )}
     </div>
