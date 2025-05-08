@@ -34,12 +34,12 @@ const RegionModal = ({
   maxSelectable = 3,
   btnType = "basic",
 }: RegionModalProps) => {
-  const [selectedCity, setSelectedCity] = useState<string>("서울");
+  const [selectedCity, setSelectedCity] = useState<string>(CITIES[1].value);
   const [selectedRegions, setSelectedRegions] =
     useState<Region[]>(initialRegions);
 
-  const getDistricts = (city: string): string[] => {
-    return districtMap[city] || [`${city} 전체`];
+  const getDistricts = (city: string) => {
+    return districtMap[city] || [];
   };
 
   const isRegionSelected = (city: string, district: string) =>
@@ -73,6 +73,8 @@ const RegionModal = ({
   };
 
   const districts = getDistricts(selectedCity);
+  const selectedCityLabel =
+    CITIES.find((c) => c.value === selectedCity)?.label || selectedCity;
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -104,24 +106,31 @@ const RegionModal = ({
 
         {/* 선택된 지역 태그 */}
         <div className="flex flex-nowrap no-scrollbar gap-2.5 mb-5 mx-5 overflow-x-auto overflow-y-hidden h-14">
-          {selectedRegions.map((region, index) => (
-            <div
-              key={index}
-              className="flex text-14m items-center px-3 py-2.5 bg-main_bg rounded-md text-main min-w-max"
-            >
-              <span className="flex gap-1">
-                {region.city}
-                <Image src={gt} alt=">" width={10} height={10} />
-                {region.district}
-              </span>
-              <button
-                onClick={() => removeRegion(region.city, region.district)}
-                className="ml-2"
+          {selectedRegions.map((region, index) => {
+            const cityLabel =
+              CITIES.find((c) => c.value === region.city)?.label || region.city;
+            const districtLabel =
+              districtMap[region.city]?.find((d) => d.value === region.district)
+                ?.label || region.district;
+            return (
+              <div
+                key={index}
+                className="flex text-14m items-center px-3 py-2.5 bg-main_bg rounded-md text-main min-w-max"
               >
-                <Image src={close_blue} alt="x" width={10} height={10} />
-              </button>
-            </div>
-          ))}
+                <span className="flex gap-1">
+                  {cityLabel}
+                  <Image src={gt} alt=">" width={10} height={10} />
+                  {districtLabel}
+                </span>
+                <button
+                  onClick={() => removeRegion(region.city, region.district)}
+                  className="ml-2"
+                >
+                  <Image src={close_blue} alt="x" width={10} height={10} />
+                </button>
+              </div>
+            );
+          })}
         </div>
 
         {/* 지역 선택 영역 */}
@@ -131,15 +140,15 @@ const RegionModal = ({
             {CITIES.map((city, index) => (
               <div
                 key={index}
-                onClick={() => setSelectedCity(city)}
+                onClick={() => setSelectedCity(city.value)}
                 className={`px-4 md:px-5 py-3 md:py-4 cursor-pointer flex justify-between items-center ${
-                  selectedCity === city
+                  selectedCity === city.value
                     ? "text-text-primary text-14m md:text-16m"
                     : "text-text-secondary text-14r md:text-16r"
                 }`}
               >
-                <span>{city}</span>
-                {selectedCity === city && (
+                <span>{city.label}</span>
+                {selectedCity === city.value && (
                   <Image
                     src={vector_black}
                     alt="selected"
@@ -154,16 +163,14 @@ const RegionModal = ({
 
           {/* 구군 선택 */}
           <div className="w-2/3 overflow-y-auto custom-scrollbar">
-            {districts.map((district, index) => {
-              const disabled = isRegionDisabled(selectedCity, district);
-              const selected = isRegionSelected(selectedCity, district);
+            {districts.map(({ label, value }, index) => {
+              const disabled = isRegionDisabled(selectedCity, value);
+              const selected = isRegionSelected(selectedCity, value);
 
               return (
                 <div
                   key={index}
-                  onClick={() =>
-                    !disabled && toggleRegion(selectedCity, district)
-                  }
+                  onClick={() => !disabled && toggleRegion(selectedCity, value)}
                   className={`px-4 md:px-5 py-2.5 md:py-3 text-14r md:text-16r cursor-pointer flex justify-between items-center
                     ${
                       disabled
@@ -173,7 +180,7 @@ const RegionModal = ({
                         : "text-text-light"
                     }`}
                 >
-                  <span>{district}</span>
+                  <span>{label}</span>
                   <Image
                     src={disabled ? checkNone : selected ? checkOn : checkOff}
                     alt="checkbox"
