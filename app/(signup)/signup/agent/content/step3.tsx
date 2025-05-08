@@ -45,16 +45,16 @@ const Step3 = () => {
   const [alertText, setAlertText] = useState<string | null>(null);
 
   const isValid =
-    businessRegistrationFile &&
-    (type === "REPRESENTATIVE" ? brokerageLicenseFile : true) &&
+    brokerageLicenseFile &&
+    (type === "REPRESENTATIVE" ? businessRegistrationFile : true) &&
     specializedType &&
     terms.service &&
     terms.privacy &&
     terms.policy &&
     terms.age;
 
-  console.log(businessRegistrationFile);
-  console.log(brokerageLicenseFile);
+  console.log("대표만 보냄", businessRegistrationFile);
+  console.log("소속 + 대표 둘 다 보냄", brokerageLicenseFile);
   console.log(terms.service);
   console.log(terms.privacy);
   console.log(terms.age);
@@ -70,6 +70,7 @@ const Step3 = () => {
   const handleBusinessFileSelect = (file: File | null) => {
     if (file) {
       setBusinessRegistrationFile(file);
+      console.log("file >>>", file);
       setBusinessRegistrationFileName(file.name);
     }
   };
@@ -77,6 +78,7 @@ const Step3 = () => {
   const handleLicenseFileSelect = (file: File | null) => {
     if (file) {
       setBrokerageLicenseFile(file);
+      console.log("file", file);
       setBrokerageLicenseFileName(file.name);
     }
   };
@@ -108,6 +110,8 @@ const Step3 = () => {
     try {
       const profileImageFile = base64ToFile(profileImage, "profile.jpg");
 
+      console.log(brokerageLicenseFile);
+
       const commonData = {
         name,
         birthday,
@@ -121,6 +125,10 @@ const Step3 = () => {
         requiredConsent: true,
         marketing: terms.marketing,
       };
+
+      console.log("파라미터", commonData);
+      console.log("파라미터", brokerageLicenseFile!);
+      console.log("파라미터", profileImageFile);
 
       if (type === "ASSOCIATE") {
         await registerAssociateUser(
@@ -154,38 +162,37 @@ const Step3 = () => {
   return (
     <div className="flex flex-col gap-5 px-5 py-[30px] w-full md:p-10 border border-border md:w-[600px] rounded-[20px]">
       <h2 className="text-text-primary text-18s md:text-24s mb-5">서류 제출</h2>
-
-      <div className="flex flex-col gap-2.5">
-        <h3 className="text-text-primary text-14m md:text-16m">
-          사업자등록증 <span className="text-error">*</span>
-        </h3>
-        <InputWithBtn
-          inputId="business"
-          type="file"
-          placeholder="사업자등록증.pdf"
-          searchValue={businessRegistrationFileName}
-          onSearchChange={() => {}}
-          accept=".pdf"
-          onFileSelect={handleBusinessFileSelect}
-        />
-      </div>
-
       {type === "REPRESENTATIVE" && (
         <div className="flex flex-col gap-2.5">
           <h3 className="text-text-primary text-14m md:text-16m">
-            중개등록증 <span className="text-error">*</span>
+            사업자등록증 <span className="text-error">*</span>
           </h3>
           <InputWithBtn
-            inputId="license"
+            inputId="business"
             type="file"
-            placeholder="중개등록증.pdf"
-            searchValue={brokerageLicenseFileName}
-            onSearchChange={() => {}}
+            placeholder="사업자등록증.pdf"
+            searchValue={businessRegistrationFileName}
+            onSearchChange={setBusinessRegistrationFileName}
             accept=".pdf"
-            onFileSelect={handleLicenseFileSelect}
+            onFileSelect={handleBusinessFileSelect}
           />
         </div>
       )}
+
+      <div className="flex flex-col gap-2.5">
+        <h3 className="text-text-primary text-14m md:text-16m">
+          중개등록증 <span className="text-error">*</span>
+        </h3>
+        <InputWithBtn
+          inputId="license"
+          type="file"
+          placeholder="중개등록증.pdf"
+          searchValue={brokerageLicenseFileName}
+          onSearchChange={setBrokerageLicenseFileName}
+          accept=".pdf"
+          onFileSelect={handleLicenseFileSelect}
+        />
+      </div>
 
       <div className="border-b border-background-light border-dotted w-full my-[30px] md:my-5" />
 
