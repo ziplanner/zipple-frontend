@@ -5,6 +5,7 @@ import Pagination from "@/app/components/pagination/pagination";
 import RegionSection from "./content/regionSection";
 import SpecialtySection from "./content/serviceSection";
 import ProfileCard from "@/app/components/card/profileCard";
+import { useRouter } from "next/navigation";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -28,6 +29,8 @@ const DUMMY_DATA = Array(32)
   }));
 
 export default function ServicePage() {
+  const router = useRouter();
+
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -55,7 +58,13 @@ export default function ServicePage() {
 
           <div className="">
             {currentItems.map((agent, i) => (
-              <ProfileCard key={i} {...agent} />
+              <ProfileCard
+                key={i}
+                {...agent}
+                onClick={() => {
+                  router.push("/profile/portfolio");
+                }}
+              />
             ))}
             <Pagination
               currentPage={currentPage}

@@ -15,6 +15,7 @@ interface AgentCardProps {
   badges: string[];
   liked: boolean;
   likeCount: number;
+  onClick: () => void;
 }
 
 const ProfileCard = ({
@@ -29,11 +30,15 @@ const ProfileCard = ({
   badges,
   liked,
   likeCount,
+  onClick,
 }: AgentCardProps) => {
   const isMd = useResponsive("md");
 
   return (
-    <div className="relative border-b border-border py-5 lg:py-8 lg:px-4 bg-white">
+    <div
+      className="relative border-b border-border py-5 lg:py-8 lg:px-4 bg-white cursor-pointer"
+      onClick={onClick}
+    >
       {/* Like Button - top right */}
       <div className="absolute top-4 right-5 flex flex-col items-center">
         {liked ? (
