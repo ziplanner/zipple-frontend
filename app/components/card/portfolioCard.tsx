@@ -3,20 +3,26 @@ import { Menu } from "../menu/menu";
 import Alert from "../alert/alert";
 
 interface PortfolioCardProps {
+  portfolioId: number;
   title: string;
   date: string;
   thumbnail?: string;
+  onEdit: (id: number) => void;
+  onDelete: (id: number) => void;
 }
 
 export const PortfolioCard = ({
+  portfolioId,
   title,
   date,
   thumbnail,
+  onEdit,
+  onDelete,
 }: PortfolioCardProps) => {
   const [showAlert, setShowAlert] = useState(false);
 
-  const handleDelete = () => {
-    console.log("삭제됨!");
+  const handleDelete = async () => {
+    await onDelete(portfolioId);
     setShowAlert(false);
   };
 
@@ -33,7 +39,10 @@ export const PortfolioCard = ({
         )}
         {/* 메뉴 버튼 */}
         <div className="absolute top-2 right-2">
-          <Menu onEdit={() => {}} onDelete={() => setShowAlert(true)} />
+          <Menu
+            onEdit={() => onEdit(portfolioId)}
+            onDelete={() => setShowAlert(true)}
+          />
         </div>
       </div>
 
