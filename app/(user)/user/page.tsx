@@ -13,7 +13,7 @@ const UserPage = () => {
     switch (role) {
       case "GENERAL":
         return <GeneralSection />;
-      case "REPRESENTATION":
+      case "REPRESENTATIVE":
         return <RepresentationSection />;
       case "ASSOCIATE":
         return <AssociateSection />;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Input from "@/app/components/input/input";
 import { EmailInput } from "@/app/components/input/emailInput";
@@ -11,9 +11,22 @@ import Textarea from "@/app/components/textarea/textarea";
 import { CustomSelectBox } from "@/app/components/selectBox/customSelectBox";
 import { MultiSelectBox } from "@/app/components/selectBox/multiSelectBox";
 import AlertMessage from "@/app/components/alert/alertMessage";
+import Alert from "@/app/components/alert/alert";
+import { initUserInfo } from "@/app/utils/initUser";
+import { withdrawAll, withdrawPartial } from "@/app/api/login/api";
+import { useAuthStore } from "@/app/store/authStore";
+import { useUserStore } from "@/app/store/userStore";
+import { useRouter } from "next/navigation";
+import { EXPERT_CATEGORY, EXPERT_DETAIL_CATEGORY } from "@/app/data/category";
+import { getExpertUserRole, updateExpertUserRole } from "@/app/api/user/api";
 
 const ExpertSection = () => {
+  const router = useRouter();
+
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [showWithdrawAlert, setShowWithdrawAlert] = useState<boolean>(false);
+  const [showPartialWithdrawAlert, setShowPartialWithdrawAlert] =
+    useState<boolean>(false);
 
   const [phone, setPhone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -22,11 +35,28 @@ const ExpertSection = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>("");
   const [selectedDetailSpecialty, setSelectedDetailSpecialty] = useState<
     string[]
-  >([]); // 상세분야 체크된 값들
+  >([]);
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isSpecialtyEditMode, setIsSpecialtyEditMode] =
     useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchExpertInfo = async () => {
+      try {
+        const data = await getExpertUserRole();
+        setPhone(data.phoneNumber || "");
+        setEmail(data.mainEmail || "");
+        setTitle(data.introduceTitle || "");
+        setDescription(data.introduceContent || "");
+        setSelectedSpecialty(data.expertType || "");
+        setSelectedDetailSpecialty(data.expertDetail || []);
+      } catch (error) {
+        console.error("생활 전문가 정보 조회 실패", error);
+      }
+    };
+    fetchExpertInfo();
+  }, []);
 
   const handlePhoneChange = (fullPhone: string) => {
     setPhone(fullPhone);
@@ -36,20 +66,53 @@ const ExpertSection = () => {
     setEmail(fullEmail);
   };
 
-  const handleEditMode = () => {
+  const handleEditMode = async () => {
     if (isEditMode) {
-      // 저장 시 알림 표시
-      setShowAlert(true);
+      try {
+        await updateExpertUserRole({
+          phoneNumber: phone,
+          mainEmail: email,
+          introduceTitle: title,
+          introduceContent: description,
+        });
+        setShowAlert(true);
+      } catch (error) {
+        alert("정보 저장 실패");
+        console.error(error);
+        return;
+      }
     }
     setIsEditMode(!isEditMode);
   };
 
   const handleSpecialtyEditMode = () => {
     if (isSpecialtyEditMode) {
-      // 저장 시 알림 표시
       setShowAlert(true);
     }
     setIsSpecialtyEditMode(!isSpecialtyEditMode);
+  };
+
+  const handleWithdrawAll = async () => {
+    try {
+      await withdrawAll();
+      useAuthStore.getState().logout();
+      useUserStore.getState().clearUser();
+      router.push("/");
+    } catch (error) {
+      alert("회원 탈퇴에 실패했습니다.");
+      console.error(error);
+    }
+  };
+
+  const handleWithdrawPartial = async () => {
+    try {
+      await withdrawPartial();
+      initUserInfo();
+      router.push("/user");
+    } catch (error) {
+      alert("부분 탈퇴에 실패했습니다.");
+      console.error(error);
+    }
   };
 
   return (
@@ -120,7 +183,7 @@ const ExpertSection = () => {
           <div className="flex flex-col gap-2.5">
             <h3 className="text-text-primary text-14m md:text-16m">전문분야</h3>
             <CustomSelectBox
-              options={["주거", "상업", "토지", "기타"]}
+              options={EXPERT_CATEGORY}
               value={selectedSpecialty}
               onChange={setSelectedSpecialty}
               disabled={!isSpecialtyEditMode}
@@ -138,16 +201,7 @@ const ExpertSection = () => {
               </span>
             </h3>
             <MultiSelectBox
-              options={[
-                {
-                  label: "가정 이사 (20평 이상)",
-                  value: "가정 이사",
-                  disabled: true,
-                },
-                { label: "원룸/소형 이사", value: "원룸/소형 이사" },
-                { label: "사무실 이사", value: "사무실 이사" },
-                { label: "해외 이사", value: "해외 이사", disabled: true },
-              ]}
+              options={EXPERT_DETAIL_CATEGORY}
               value={selectedDetailSpecialty}
               onChange={setSelectedDetailSpecialty}
               disabled={!isSpecialtyEditMode}
@@ -165,6 +219,7 @@ const ExpertSection = () => {
         <p
           className="flex text-error text-16m md:text-18m cursor-pointer
       underline"
+          onClick={() => setShowPartialWithdrawAlert(true)}
         >
           생활전문가만 탈퇴
         </p>
@@ -172,6 +227,7 @@ const ExpertSection = () => {
         <p
           className="flex text-text-light text-16m md:text-18m cursor-pointer
       underline"
+          onClick={() => setShowWithdrawAlert(true)}
         >
           회원탈퇴
         </p>
@@ -182,6 +238,31 @@ const ExpertSection = () => {
           onClose={() => {
             setShowAlert(false);
           }}
+        />
+      )}
+
+      {showPartialWithdrawAlert && (
+        <Alert
+          text="정말 생활전문가만 탈퇴하시겠습니까?"
+          subText="생활전문가 정보가 삭제되며, 일반회원 정보는 유지됩니다."
+          leftBtnText="취소"
+          rightBtnText="확인"
+          onClose={() => setShowPartialWithdrawAlert(false)}
+          onConfirm={() => {
+            setShowPartialWithdrawAlert(false);
+            handleWithdrawPartial();
+          }}
+        />
+      )}
+
+      {showWithdrawAlert && (
+        <Alert
+          text="정말 회원을 탈퇴하시겠습니까?"
+          subText="탈퇴 시 모든 정보가 삭제됩니다."
+          leftBtnText="취소"
+          rightBtnText="확인"
+          onClose={() => setShowWithdrawAlert(false)}
+          onConfirm={handleWithdrawAll}
         />
       )}
     </div>

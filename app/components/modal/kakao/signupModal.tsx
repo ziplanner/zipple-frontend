@@ -8,6 +8,25 @@ interface SignupModalProps {
 }
 
 const SignupModal = ({ onClose }: SignupModalProps) => {
+  const handleLoginClick = () => {
+    const location = process.env.NEXT_PUBLIC_KAKAO_AUTH_URL;
+    const clientId = process.env.NEXT_PUBLIC_KAKAO_AUTH_API_KEY;
+    const redirectUri = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URL;
+    // const redirectUri = process.env.NEXT_PUBLIC_CLIENT_BASE_URL;
+    const respoinseType = "code";
+
+    const requestUrl =
+      location +
+      "?" +
+      "client_id=" +
+      clientId +
+      "&redirect_uri=" +
+      redirectUri +
+      "&response_type=" +
+      respoinseType;
+    window.location.href = requestUrl;
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
       {/* 모달 본체 */}
@@ -42,7 +61,7 @@ const SignupModal = ({ onClose }: SignupModalProps) => {
           width={400}
           height={60}
           className="cursor-pointer w-full p-5"
-          onClick={() => {}}
+          onClick={handleLoginClick}
         />
       </div>
     </div>

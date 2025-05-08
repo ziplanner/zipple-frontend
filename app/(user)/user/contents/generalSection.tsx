@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EmailInput } from "@/app/components/input/emailInput";
 import Input from "@/app/components/input/input";
 import { InputWithBtn } from "@/app/components/input/inputWithBtn";
@@ -8,9 +8,16 @@ import { PhoneInput } from "@/app/components/input/phoneInput";
 import { CustomSelectBox } from "@/app/components/selectBox/customSelectBox";
 import { PrimaryBtn } from "@/app/components/button/primaryBtn";
 import AlertMessage from "@/app/components/alert/alertMessage";
+import { withdrawAll } from "@/app/api/login/api";
+import { useAuthStore } from "@/app/store/authStore";
+import { useUserStore } from "@/app/store/userStore";
+import Alert from "@/app/components/alert/alert";
+import { CATEGORY } from "@/app/data/category";
+import { getGeneralUserRole, updateGeneralUserRole } from "@/app/api/user/api";
 
 const GeneralSection = () => {
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [showWithdrawAlert, setShowWithdrawAlert] = useState<boolean>(false);
 
   const [nickname, setNickname] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
@@ -19,6 +26,22 @@ const GeneralSection = () => {
   const [residenceType, setResidenceType] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const data = await getGeneralUserRole();
+        setNickname(data.nickname || "");
+        setPhone(data.phoneNumber || "");
+        setEmail(data.mainEmail || "");
+        setAddressSearch(data.address || "");
+        setResidenceType(data.houseType || "");
+      } catch (error) {
+        console.error("사용자 정보 조회 실패", error);
+      }
+    };
+    fetchUserInfo();
+  }, []);
 
   const handlePhoneChange = (fullPhone: string) => {
     setPhone(fullPhone);
@@ -32,16 +55,44 @@ const GeneralSection = () => {
     setAddressSearch(value);
   };
 
-  const handleSearch = () => {
-    console.log("검색 클릭:", addressSearch);
+  const handleAddressSearch = () => {
+    new window.daum.Postcode({
+      oncomplete: (data: any) => {
+        setAddressSearch(data.address);
+      },
+    }).open();
   };
 
-  const handleEditMode = () => {
+  const handleEditMode = async () => {
     if (isEditMode) {
-      // 저장 시 알림 표시
-      setShowAlert(true);
+      try {
+        await updateGeneralUserRole({
+          nickname,
+          phoneNumber: phone,
+          address: addressSearch,
+          houseType: residenceType,
+          mainEmail: email,
+        });
+        setShowAlert(true);
+      } catch (error) {
+        alert("정보 저장 실패");
+        console.error(error);
+        return;
+      }
     }
     setIsEditMode(!isEditMode);
+  };
+
+  const handleWithdrawAll = async () => {
+    try {
+      await withdrawAll();
+      useAuthStore.getState().logout();
+      useUserStore.getState().clearUser();
+      window.location.href = "/";
+    } catch (error) {
+      alert("회원 탈퇴에 실패했습니다.");
+      console.error(error);
+    }
   };
 
   return (
@@ -71,32 +122,33 @@ const GeneralSection = () => {
               주소 <span className="text-error">*</span>
             </h3>
             {isEditMode ? (
-              <InputWithBtn
-                type="search"
-                searchValue={addressSearch}
-                onSearchChange={handleAddressSearchChange}
-                onSearchClick={handleSearch}
-              />
+              <>
+                <InputWithBtn
+                  type="search"
+                  searchValue={addressSearch}
+                  onSearchChange={setAddressSearch}
+                  onSearchClick={handleAddressSearch}
+                />
+                <Input
+                  value={detailedAddress}
+                  onChange={(e) => setDetailedAddress(e.target.value)}
+                  placeholder="상세주소를 입력해주세요."
+                />
+              </>
             ) : (
               <Input
                 value={addressSearch}
                 onChange={(e) => setAddressSearch(e.target.value)}
-                disabled={!isEditMode}
+                disabled
               />
             )}
-            <Input
-              value={detailedAddress}
-              onChange={(e) => setDetailedAddress(e.target.value)}
-              placeholder="상세주소를 입력해주세요."
-              disabled={!isEditMode}
-            />
           </div>
           <div className="flex flex-col gap-2.5">
             <h3 className="text-text-primary text-14m md:text-16m">
               주거형태 <span className="text-error">*</span>
             </h3>
             <CustomSelectBox
-              options={["선택 1", "선택 2", "선택 3"]}
+              options={CATEGORY}
               value={residenceType}
               onChange={(value) => setResidenceType(value)}
               disabled={!isEditMode}
@@ -120,6 +172,7 @@ const GeneralSection = () => {
       <p
         className="flex text-text-light text-16m md:text-18m cursor-pointer
       underline mt-10 mb-[138px] self-end"
+        onClick={() => setShowWithdrawAlert(true)}
       >
         회원탈퇴
       </p>
@@ -129,6 +182,16 @@ const GeneralSection = () => {
           onClose={() => {
             setShowAlert(false);
           }}
+        />
+      )}
+      {showWithdrawAlert && (
+        <Alert
+          text="정말 탈퇴하시겠습니까?"
+          subText="탈퇴 시 모든 정보가 삭제됩니다."
+          leftBtnText="취소"
+          rightBtnText="확인"
+          onClose={() => setShowWithdrawAlert(false)}
+          onConfirm={handleWithdrawAll}
         />
       )}
     </div>

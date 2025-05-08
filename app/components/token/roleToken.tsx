@@ -1,10 +1,10 @@
 interface RoleTokenProps {
-  role: "GENERAL" | "REPRESENTATION" | "ASSOCIATE" | "EXPERT" | "NONE";
+  role: "GENERAL" | "REPRESENTATIVE" | "ASSOCIATE" | "EXPERT" | "NONE";
 }
 
 const roleNames: Record<RoleTokenProps["role"], string> = {
   GENERAL: "일반",
-  REPRESENTATION: "대표 공인중개사",
+  REPRESENTATIVE: "대표 공인중개사",
   ASSOCIATE: "소속 공인중개사",
   EXPERT: "생활 전문가",
   NONE: "",

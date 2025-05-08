@@ -10,36 +10,85 @@ import { CustomSelectBox } from "@/app/components/selectBox/customSelectBox";
 import checkOn from "@/app/images/icon/check_on.svg";
 import checkOff from "@/app/images/icon/check_off.svg";
 import Image from "next/image";
+import { registerGeneralUser } from "@/app/api/signup/api";
+import { useDaumPostcode } from "@/app/hook/useDaumPostcode";
+import AlertMessage from "@/app/components/alert/alertMessage";
+import { sendVerificationMessage, verifyPhoneCode } from "@/app/api/verify/api";
+import { CATEGORY } from "@/app/data/category";
+import { useRouter } from "next/navigation";
+import { refreshUserInfo } from "@/app/utils/initUser";
 
 const GeneralSignupPage = () => {
-  const [name, setName] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
-  const [address, setAddress] = useState<string>("");
-  const [detailedAddress, setDetailedAddress] = useState<string>("");
-  const [residence, setResidence] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [searchValue, setSearchValue] = useState<string>("");
-  const [customSelect, setCustomSelect] = useState<string>("");
-  const [marketingConsent, setMarketingConsent] = useState<boolean>(false);
+  const isDaumLoaded = useDaumPostcode();
+  const router = useRouter();
 
-  // 전화번호 입력 값 업데이트
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
+  const [verificationError, setVerificationError] = useState<string | null>(
+    null
+  );
+  const [verificationSuccess, setVerificationSuccess] = useState<string | null>(
+    null
+  );
+
+  const [detailedAddress, setDetailedAddress] = useState("");
+  const [email, setEmail] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  const [housingType, setHousingType] = useState("");
+  const [marketingConsent, setMarketingConsent] = useState(false);
+  const [alertText, setAlertText] = useState<string | null>(null);
+
   const handlePhoneChange = (value: string) => {
-    setPhone(value);
+    setPhoneNumber(value);
   };
 
-  // 이메일 입력 값 업데이트
   const handleEmailChange = (value: string) => {
     setEmail(value);
   };
 
-  // 주소 검색 값 업데이트
-  const handleSearch = () => {
-    console.log("주소 검색", searchValue);
+  const handleAddressSearch = () => {
+    if (!isDaumLoaded) {
+      setAlertText(
+        "주소 검색 API가 아직 로드되지 않았습니다. 잠시 후 다시 시도해주세요."
+      );
+      return;
+    }
+
+    new window.daum.Postcode({
+      oncomplete: (data: any) => {
+        setSearchValue(data.address);
+      },
+    }).open();
   };
 
-  // 마케팅 수신 동의 핸들러
   const handleMarketingConsentChange = () => {
     setMarketingConsent(!marketingConsent);
+  };
+
+  const handleSendVerification = async () => {
+    try {
+      await sendVerificationMessage(phoneNumber);
+      setVerificationSent(true);
+      setAlertText("인증번호가 전송되었습니다.");
+    } catch (error: any) {
+      setAlertText(error.message);
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    const result = await verifyPhoneCode(phoneNumber, verificationCode);
+    if (result.success) {
+      setIsPhoneVerified(true);
+      setVerificationError(null);
+      setVerificationSuccess("인증 되었습니다.");
+    } else {
+      setIsPhoneVerified(false);
+      setVerificationError(result.message || "인증번호가 올바르지 않습니다.");
+      setVerificationSuccess(null);
+    }
   };
 
   return (
@@ -49,7 +98,8 @@ const GeneralSignupPage = () => {
         <h2 className="text-text-primary text-18s md:text-24s mb-5">
           회원정보
         </h2>
-        <div className="flex flex-col gap-2.5"> 
+
+        <div className="flex flex-col gap-2.5">
           <h3 className="text-text-primary text-14m md:text-16m">
             이름 <span className="text-error">*</span>
           </h3>
@@ -59,13 +109,30 @@ const GeneralSignupPage = () => {
             placeholder="이름을 입력해주세요."
           />
         </div>
+
         <div className="flex flex-col gap-2.5">
           <h3 className="text-text-primary text-14m md:text-16m">
             전화번호 <span className="text-error">*</span>
           </h3>
-          <PhoneInput value={phone} onChange={handlePhoneChange} />
-          <LargeBtn onClick={() => {}} text={"인증받기"} color="" />
+          <PhoneInput value={phoneNumber} onChange={handlePhoneChange} />
+          <LargeBtn onClick={handleSendVerification} text="인증받기" color="" />
+          {verificationSent && (
+            <>
+              <Input
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
+                placeholder="인증번호를 입력해주세요."
+                error={!!verificationError}
+                errorMessage={verificationError || ""}
+                success={!!verificationSuccess}
+                successMessage={verificationSuccess || ""}
+                className="mt-2.5"
+              />
+              <LargeBtn onClick={handleVerifyCode} text="인증하기" color="" />
+            </>
+          )}
         </div>
+
         <div className="flex flex-col gap-2.5">
           <h3 className="text-text-primary text-14m md:text-16m">
             주소 <span className="text-error">*</span>
@@ -74,7 +141,8 @@ const GeneralSignupPage = () => {
             type="search"
             searchValue={searchValue}
             onSearchChange={setSearchValue}
-            onSearchClick={handleSearch}
+            onSearchClick={handleAddressSearch}
+            disabled={true}
           />
           <Input
             value={detailedAddress}
@@ -82,21 +150,25 @@ const GeneralSignupPage = () => {
             placeholder="상세주소를 입력해주세요."
           />
         </div>
+
         <div className="flex flex-col gap-2.5">
           <h3 className="text-text-primary text-14m md:text-16m">
             주거형태 <span className="text-error">*</span>
           </h3>
           <CustomSelectBox
-            options={["선택 1", "선택 2", "선택 3"]}
-            value={customSelect}
-            onChange={setCustomSelect}
+            options={CATEGORY}
+            value={housingType}
+            onChange={setHousingType}
           />
         </div>
+
         <div className="flex flex-col gap-2.5">
           <h3 className="text-text-primary text-14m md:text-16m">이메일</h3>
           <EmailInput value={email} onChange={handleEmailChange} />
         </div>
+
         <div className="border-b border-background-light border-dotted w-full my-[30px] md:my-10" />
+
         <div className="flex gap-2 items-center">
           <Image
             src={marketingConsent ? checkOn : checkOff}
@@ -110,13 +182,44 @@ const GeneralSignupPage = () => {
             (선택) 마케팅 알림 수신에 동의합니다.
           </p>
         </div>
+
         <LargeBtn
-          onClick={() => {}}
-          text={"완료"}
+          onClick={async () => {
+            try {
+              await registerGeneralUser({
+                name,
+                phoneNumber,
+                address: `${searchValue} ${detailedAddress}`,
+                housingType,
+                mainEmail: email || undefined,
+                requiredConsent: true,
+                marketing: marketingConsent,
+              });
+              setAlertText("회원 등록이 완료되었습니다.");
+              refreshUserInfo();
+              setTimeout(() => {
+                router.push("/");
+              }, 2000);
+            } catch (error) {
+              console.error("회원가입 실패", error);
+              setAlertText("회원 등록 중 오류가 발생했습니다.");
+            }
+          }}
+          text="완료"
           color="blue"
           className="mt-[60px]"
+          disabled={
+            !name.trim() ||
+            !phoneNumber.trim() ||
+            !searchValue.trim() ||
+            !housingType ||
+            !isPhoneVerified
+          }
         />
       </div>
+      {alertText && (
+        <AlertMessage text={alertText} onClose={() => setAlertText(null)} />
+      )}
     </div>
   );
 };
