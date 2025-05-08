@@ -94,19 +94,36 @@ export const InputWithBtn = ({
 
       {type === "file" && (
         <>
+          {/* 항상 보이는 텍스트 input → 파일 이름 보여주는 용도 */}
+          {/* <input
+            type="text"
+            value={searchValue}
+            placeholder={placeholder || ""}
+            disabled
+            className={`flex-grow w-full h-[60px] border rounded-[10px] px-2 md:px-4 text-18r
+        bg-background-soft text-text-secondary cursor-default`}
+          /> */}
+          {/* 파일 선택 버튼 */}
           <label
             htmlFor={inputId || "file-upload"}
             className={`${getDirectionWidthClass()} h-[60px] border border-btn rounded-[10px] flex items-center justify-center gap-1
-                    cursor-pointer transition active:scale-95 text-btn text-18s flex-shrink-0`}
+        cursor-pointer transition active:scale-95 text-btn text-18s flex-shrink-0`}
           >
             <Image src={uploadIcon} alt="upload" className="w-6 h-6" /> 파일선택
           </label>
+          {/* 숨겨진 진짜 파일 인풋 */}
           <input
             id={inputId || "file-upload"}
             type="file"
             className="hidden"
             accept={accept}
-            onChange={handleFileChange}
+            onChange={(e) => {
+              const file = e.target.files?.[0] || null;
+              if (file) {
+                onFileSelect?.(file);
+                onSearchChange(file.name);
+              }
+            }}
           />
         </>
       )}
