@@ -6,6 +6,7 @@ import { useExpertSignup } from "@/app/context/expertSignupProvider";
 import { registerExpertUser } from "@/app/api/signup/api";
 import AlertMessage from "@/app/components/alert/alertMessage";
 import { useRouter } from "next/router";
+import ErrorAlertMessage from "@/app/components/alert/errorAlertMessage";
 
 const Step3 = () => {
   const {
@@ -44,6 +45,7 @@ const Step3 = () => {
 
   const [fileName, setFileName] = useState<string>("");
   const [alertText, setAlertText] = useState<string | null>(null);
+  const [alertErrorText, setAlertErrorText] = useState<string | null>(null);
 
   const handlePrev = () => {
     if (currentStep > 1) {
@@ -104,7 +106,7 @@ const Step3 = () => {
       }, 2000);
     } catch (error) {
       console.error("등록 실패", error);
-      setAlertText("회원 등록 중 오류가 발생했습니다.");
+      setAlertErrorText("회원 등록 중 오류가 발생했습니다.");
     }
   };
 
@@ -150,6 +152,12 @@ const Step3 = () => {
       </div>
       {alertText && (
         <AlertMessage text={alertText} onClose={() => setAlertText(null)} />
+      )}
+      {alertErrorText && (
+        <ErrorAlertMessage
+          text={alertErrorText}
+          onClose={() => setAlertErrorText(null)}
+        />
       )}
     </div>
   );
