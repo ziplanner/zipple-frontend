@@ -29,7 +29,7 @@ const Step2 = () => {
   } = useExpertSignup();
 
   const [alertText, setAlertText] = useState<string | null>(null);
-  const [isNextEnabled, setIsNextEnabled] = useState(false);
+  const [isNextEnabled, setIsNextEnabled] = useState<boolean>(false);
 
   useEffect(() => {
     const required =
