@@ -18,7 +18,13 @@ export const VERIFY_MESSAGE = "/verify/message";
 export const VERIFY_NUMBER = "/verify/number";
 
 // mypage
+export const MYPAGE_INFO_GENERAL = "/mypage/info/general";
 export const MYPAGE_GENERAL = "/mypage/general";
+export const MYPAGE_INFO_ASSOCIATE = "/mypage/info/associate";
 export const MYPAGE_ASSOCIATE = "/mypage/associate";
+export const MYPAGE_INFO_REPRESENTATIVE = "/mypage/info/representative";
 export const MYPAGE_REPRESENTATIVE = "/mypage/representative";
+export const MYPAGE_INFO_EXPERT = "/mypage/expert";
 export const MYPAGE_EXPERT = "/mypage/expert";
+export const MYPAGE_PROFILEIMAGE = "/mypage/profileImage";
+export const MYPAGE_PORTFOLIO = "/mypage/portfolio";
