@@ -129,7 +129,18 @@ const InfoSection = () => {
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 lg:gap-8">
         {DUMMY_DATA.map((item) => (
-          <PortfolioCard key={item.id} title={item.title} date={item.date} />
+          <PortfolioCard
+            key={item.id}
+            title={item.title}
+            date={item.date}
+            portfolioId={0}
+            onEdit={function (id: number): void {
+              throw new Error("Function not implemented.");
+            }}
+            onDelete={function (id: number): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
         ))}
       </div>
     </div>

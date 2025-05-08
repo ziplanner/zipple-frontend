@@ -5,6 +5,7 @@ import Pagination from "@/app/components/pagination/pagination";
 import SpecialtySection from "./content/specialtySection";
 import RegionSection from "./content/regionSection";
 import ProfileCard from "@/app/components/card/profileCard";
+import { useRouter } from "next/navigation";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -28,6 +29,8 @@ const DUMMY_DATA = Array(17)
   }));
 
 export default function AgentPage() {
+  const router = useRouter();
+
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -35,6 +38,10 @@ export default function AgentPage() {
   const currentItems = DUMMY_DATA.slice(startIdx, endIdx);
 
   const totalPages = Math.ceil(DUMMY_DATA.length / ITEMS_PER_PAGE);
+
+  const handleRouter = () => {
+    router.push("/profile/portfolio");
+  };
 
   return (
     <div className="w-full mt-5 md:mt-10">
@@ -55,7 +62,7 @@ export default function AgentPage() {
 
           <div className="">
             {currentItems.map((agent, i) => (
-              <ProfileCard key={i} {...agent} />
+              <ProfileCard onClick={handleRouter} key={i} {...agent} />
             ))}
             <Pagination
               currentPage={currentPage}
