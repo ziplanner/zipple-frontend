@@ -265,7 +265,7 @@ const Step1 = () => {
             {selectedRealtor.bsnmCmpnm}
           </p>
           <p>
-            사업자등록번호:
+            중개사등록번호:
             <span className="text-14r md:text-16r">
               &nbsp; {selectedRealtor.jurirno}
             </span>
@@ -273,7 +273,7 @@ const Step1 = () => {
           <p>
             주소:
             <span className="text-14r md:text-16r">
-              &nbsp; {selectedRealtor.ldCodeNm} {selectedRealtor.crqfcAcqdt}
+              &nbsp; {selectedRealtor.ldCodeNm}
             </span>
           </p>
           <p>
