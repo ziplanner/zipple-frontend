@@ -58,9 +58,7 @@ export default function AgentPage() {
                 brokers.map((agent, i) => (
                   <ProfileCard
                     key={agent.brokerId}
-                    onClick={() =>
-                      router.push(`/profile/portfolio/${agent.brokerId}`)
-                    }
+                    onClick={() => router.push(`/profile?id=${agent.brokerId}`)}
                     {...agent}
                   />
                 ))

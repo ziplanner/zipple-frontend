@@ -1,27 +1,23 @@
 import { useState } from "react";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
+import defaultProfile from "@/app/images/icon/default_profile.svg";
 import phone from "@/app/images/icon/phone.svg";
 import RoleToken from "@/app/components/token/roleToken";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { useRouter } from "next/navigation";
-import defaultProfile from "@/app/images/icon/default_profile.svg";
+import { useBrokerDetail } from "@/app/context/agentDetailContext";
+import { formatPhoneNumber } from "@/app/utils/phoneNumber";
 
 const MobileProfileSection = () => {
-  const router = useRouter();
+  const data = useBrokerDetail();
 
-  const [name, setName] = useState<string>("");
-  const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(
-    defaultProfile
-  );
-  const [liked, setLiked] = useState<boolean>(true);
-  const [likeCount, setLikeCount] = useState<number>(12);
+  const [liked, setLiked] = useState<boolean>(false);
 
   return (
     <div className="w-full p-[30px] pb-5 border border-border rounded-[20px] mt-5">
       <div className="flex flex-col w-full items-center">
         <div className="flex gap-4 items-center justify-center">
           <Image
-            src={avatarSrc}
+            src={data?.profileUrl || defaultProfile}
             alt="User"
             width={80}
             height={80}
@@ -29,11 +25,11 @@ const MobileProfileSection = () => {
           />
           <div>
             <div className="flex gap-2">
-              <p className="text-text-primary text-18m">{name}</p>
-              <RoleToken role={"REPRESENTATIVE"} />
+              <p className="text-text-primary text-18m">{data?.nickname}</p>
+              <RoleToken role={data?.roleName || "GENERAL"} />
             </div>
             {/* Badges */}
-            <div className="flex gap-[6px] mt-2.5">
+            {/* <div className="flex gap-[6px] mt-2.5">
               {["대표", "1인 가구 전문가"].map((badge, i) => (
                 <span
                   key={i}
@@ -42,7 +38,7 @@ const MobileProfileSection = () => {
                   {badge}
                 </span>
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
         {/* 핸드폰 번호 */}
@@ -53,7 +49,12 @@ const MobileProfileSection = () => {
             onClick={() => {}}
           >
             <Image src={phone} alt="phone" width={20} height={20} />
-            <p className="text-main text-16m">010-1234-5678</p>
+            <p className="text-main text-16m">
+              {" "}
+              {data?.phoneNumber
+                ? formatPhoneNumber(data.phoneNumber)
+                : "번호 비공개"}
+            </p>
           </button>
         </div>
 
@@ -66,10 +67,10 @@ const MobileProfileSection = () => {
           )}
           <span
             className={`text-12m lg:text-14m ${
-              likeCount > 0 ? "text-error" : "text-text-light"
+              data?.likesCount || 0 > 0 ? "text-error" : "text-text-light"
             }`}
           >
-            {likeCount}
+            {data?.likesCount}
           </span>
         </div>
       </div>

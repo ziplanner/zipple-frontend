@@ -1,12 +1,15 @@
 "use client";
 
+import { Suspense } from "react";
 import InfoSection from "./content/infoSection";
 
 const ProfilePage = () => {
   return (
-    <div className="w-full">
-      <InfoSection />
-    </div>
+    <Suspense>
+      <div className="w-full">
+        <InfoSection />
+      </div>
+    </Suspense>
   );
 };
 

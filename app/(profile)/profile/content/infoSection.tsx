@@ -1,36 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import InfoCard from "@/app/components/card/infoCard";
 import vector from "@/app/images/icon/round_vector.svg";
 import { BasicBtn } from "@/app/components/button/basicBtn";
 import { PortfolioCard } from "@/app/components/card/portfolioCard";
 import { AnimatePresence, motion } from "framer-motion";
-import { useRouter } from "next/navigation";
-
-const DUMMY_DATA = Array(6)
-  .fill(0)
-  .map((_, i) => ({
-    id: i + 1,
-    title: `(포트폴리오 ${
-      i + 1
-    }) 100평대 사무실 임대 최대 한줄까지만 들어가겠습니다! `,
-    date: "2025.05.05",
-  }));
+import { useRouter, useSearchParams } from "next/navigation";
+import { BrokerDetailResponse } from "@/app/types/api";
+import { fetchBrokerDetail } from "@/app/api/matching/api";
 
 const InfoSection = () => {
   const router = useRouter();
+  const params = useSearchParams();
+  const brokerId = Number(params.get("id"));
 
+  const [data, setData] = useState<BrokerDetailResponse | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (!brokerId) return;
+
+    const load = async () => {
+      try {
+        const res = await fetchBrokerDetail(brokerId);
+        setData(res);
+      } catch (e) {
+        console.error("중개사 상세 조회 실패", e);
+      }
+    };
+
+    load();
+  }, [brokerId]);
 
   return (
     <div className="flex w-full flex-col md:px-8 md:py-10 lg:px-[60px] lg:py-20">
       <h1 className="text-24s md:text-36s text-text-primary mb-[30px] md:mb-10">
-        안녕하세요. 홍길동 중개사입니다.
+        안녕하세요. {data?.representativeName ?? "중개사"} 중개사입니다.
       </h1>
       <div className="flex flex-col lg:flex-row w-full gap-2.5 lg:gap-5 justify-evenly mb-10 md:mb-[60px]">
-        <InfoCard type={"link"} text={"www.zipple.co.kr"} />
-        <InfoCard type={"office"} text={"아파트"} />
-        <InfoCard type={"ping"} text={"강남구, 강동구, 성동구, 연수구"} />
+        <InfoCard type="link" text={data?.introduceUrl || "링크 없음"} />
+        <InfoCard type="office" text={data?.specializedType || "미지정"} />
+        <InfoCard
+          type="ping"
+          text={
+            [
+              ...(data?.representativeArea ?? []),
+              ...(data?.additionalArea ?? []),
+            ].join(", ") || "지역 정보 없음"
+          }
+        />
       </div>
       <div>
         <div className="flex justify-between w-full items-center mb-5 md:mb-10">
@@ -67,7 +85,7 @@ const InfoSection = () => {
                         상호명
                       </h3>
                       <p className="text-text-light text-16r lg:text-18r">
-                        집중이사
+                        {data?.businessName ?? "집중이사"}
                       </p>
                     </div>
                     <div className="flex flex-col gap-2.5">
@@ -107,19 +125,12 @@ const InfoSection = () => {
         } md:mb-10`}
       />
       <h2 className="text-text-primary text-18s md:text-24s mb-10">상세소개</h2>
-      <p className="text-18r text-text-secondary">
-        안녕하세요 송파구/강동구 중심으로 활동하는 공인중개사 김승연입니다.
-        <br /> 1인 가구, 신혼부부, 반려동물과 함께하는 분들까지 각 상황에 맞는
-        실거주형 매물을 정성껏 안내해드리고 있어요.
-        <br /> 전세/월세 계약 시 주의사항, 건물 컨디션과 주변 인프라 정보, 실제
-        주민들의 후기나 체감 정보까지 꼼꼼히 공유해드립니다.
-        <br /> 상담하실 때 불필요한 부담 없도록 정확하고 투명한 정보만 드리는
-        상담을 지향합니다. <br />집 구하는 일이 두렵거나 막막하셨다면, 저와 함께
-        편안하고 든든하게 준비해보세요 궁금하신 건 언제든지 문의주세요!
+      <p className="text-18r text-text-secondary whitespace-pre-line">
+        {data?.introduceContent || "소개 내용이 없습니다."}
       </p>
       <div className="border-b border-border w-full mt-5 mb-[30px] md:mt-[60px] md:mb-10" />
       <div className="flex justify-between w-full mb-10">
-        <h2 className="text-text-primary text-18s md:text-24s">포토폴리오</h2>
+        <h2 className="text-text-primary text-18s md:text-24s">포트폴리오</h2>
         <BasicBtn
           onClick={() => {
             router.push("/profile/portfolio");
@@ -128,20 +139,22 @@ const InfoSection = () => {
         />
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 lg:gap-8">
-        {DUMMY_DATA.map((item) => (
-          <PortfolioCard
-            key={item.id}
-            title={item.title}
-            date={item.date}
-            portfolioId={0}
-            onEdit={function (id: number): void {
-              throw new Error("Function not implemented.");
-            }}
-            onDelete={function (id: number): void {
-              throw new Error("Function not implemented.");
-            }}
-          />
-        ))}
+        {data?.portfolios.length ? (
+          data.portfolios.map((item, index) => (
+            <PortfolioCard
+              key={index}
+              title={item.title || `포트폴리오 ${index + 1}`}
+              date={item.date || "날짜 없음"}
+              portfolioId={item.portfolioId || 0}
+              onEdit={() => {}}
+              onDelete={() => {}}
+            />
+          ))
+        ) : (
+          <p className="text-text-secondary col-span-2 lg:col-span-3">
+            등록된 포트폴리오가 없습니다.
+          </p>
+        )}
       </div>
     </div>
   );

@@ -1,20 +1,16 @@
 import { useState } from "react";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import defaultProfile from "@/app/images/icon/default_profile.svg";
 import phone from "@/app/images/icon/phone.svg";
 import RoleToken from "@/app/components/token/roleToken";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import { useBrokerDetail } from "@/app/context/agentDetailContext";
+import { formatPhoneNumber } from "@/app/utils/phoneNumber";
 
 const ProfileSection = () => {
-  const router = useRouter();
+  const data = useBrokerDetail();
 
-  const [name, setName] = useState<string>("");
-  const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(
-    defaultProfile
-  );
-  const [liked, setLiked] = useState<boolean>(true);
-  const [likeCount, setLikeCount] = useState<number>(12);
+  const [liked, setLiked] = useState<boolean>(false);
 
   return (
     <div
@@ -24,17 +20,19 @@ const ProfileSection = () => {
       <div className="flex flex-col w-full items-center">
         <div className="md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px]">
           <Image
-            src={avatarSrc}
+            src={data?.profileUrl || defaultProfile}
             alt="User"
             width={180}
             height={180}
             className="rounded-full md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px]"
           />
         </div>
-        <p className="text-text-primary text-24m mb-[6px] mt-5">{name}</p>
-        <RoleToken role={"REPRESENTATIVE"} />
+        <p className="text-text-primary text-24m mb-[6px] mt-5">
+          {data?.nickname}
+        </p>
+        <RoleToken role={data?.roleName || "GENERAL"} />
         {/* Badges */}
-        <div className="flex flex-wrap justify-end gap-2 mt-5">
+        {/* <div className="flex flex-wrap justify-end gap-2 mt-5">
           {["대표", "1인 가구 전문가"].map((badge, i) => (
             <span
               key={i}
@@ -43,7 +41,7 @@ const ProfileSection = () => {
               {badge}
             </span>
           ))}
-        </div>
+        </div> */}
         {/* 핸드폰 번호 */}
         <button
           className="flex w-full items-center justify-center py-2.5 gap-1.5 
@@ -57,7 +55,11 @@ const ProfileSection = () => {
             height={20}
             className="md:w-5 md:h-5"
           />
-          <p className="text-main text-18m">010-1234-5678</p>
+          <p className="text-main text-18m">
+            {data?.phoneNumber
+              ? formatPhoneNumber(data.phoneNumber)
+              : "번호 비공개"}
+          </p>
         </button>
         {/* Like Button */}
         <div className="flex flex-col items-center justify-center mt-5">
@@ -68,10 +70,10 @@ const ProfileSection = () => {
           )}
           <span
             className={`text-12m lg:text-14m ${
-              likeCount > 0 ? "text-error" : "text-text-light"
+              data?.likesCount || 0 > 0 ? "text-error" : "text-text-light"
             }`}
           >
-            {likeCount}
+            {data?.likesCount}
           </span>
         </div>
       </div>

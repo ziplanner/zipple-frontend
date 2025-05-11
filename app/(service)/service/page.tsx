@@ -68,7 +68,7 @@ export default function ServicePage() {
                     representativeArea={[]}
                     key={expert.expertId}
                     onClick={() =>
-                      router.push(`/profile/portfolio/${expert.expertId}`)
+                      router.push(`/profile?id=${expert.expertId}`)
                     }
                     {...expert}
                   />
