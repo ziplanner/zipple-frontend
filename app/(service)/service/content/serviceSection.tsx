@@ -6,7 +6,11 @@ import useResponsive from "@/app/hook/useResponsive";
 import CategorySelector from "@/app/components/selector/categorySelector";
 import CategoryModal from "@/app/components/modal/categoryModal";
 
-const ServiceSection = () => {
+interface ServiceSectionProps {
+  onSelect: (value: string) => void;
+}
+
+const ServiceSection = ({ onSelect }: ServiceSectionProps) => {
   const isMd = useResponsive("md");
 
   const [selected, setSelected] = useState<string>("");
@@ -16,6 +20,7 @@ const ServiceSection = () => {
   const handleSelect = (value: string, label: string) => {
     setSelectedValue(value);
     setSelected(label);
+    onSelect(value);
     setOpen(false);
   };
 
@@ -32,7 +37,7 @@ const ServiceSection = () => {
   }, [open]);
 
   return (
-    <div className="w-full md:w-[260px] bg-white text-sm">
+    <div className="w-full md:w-[260px] bg-white mb-[120px]">
       <div
         className={`flex items-center justify-between md:mb-8 ${
           !isMd && "cursor-pointer"

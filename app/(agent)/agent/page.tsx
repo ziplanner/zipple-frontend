@@ -1,53 +1,45 @@
 "use client";
 
-import { useState } from "react";
-import Pagination from "@/app/components/pagination/pagination";
-import SpecialtySection from "./content/specialtySection";
-import RegionSection from "./content/regionSection";
-import ProfileCard from "@/app/components/card/profileCard";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
-const ITEMS_PER_PAGE = 10;
-
-const DUMMY_DATA = Array(17)
-  .fill(0)
-  .map((_, i) => ({
-    id: i + 1,
-    name: `중개사 (${i + 1})`,
-    agency: `부동산 (${i + 1})`,
-    profileImage: ``,
-    propertyType: `아파트`,
-    portfolioCount: 0,
-    greeting: `성실하고 꼼꼼한 상담 도와드립니다. (${i + 1})`,
-    description: `(${
-      i + 1
-    }) 고객님 눈높이에 맞춘 맞춤 매물을 제공해드립니다. 다양한 포트폴리오 보유 중입니다.`,
-    locations: ["서울 송파구", "서울 강남구"],
-    badges: ["대표", "1인가구 전문가"],
-    liked: false,
-    likeCount: 0,
-  }));
+import { fetchBrokerList } from "@/app/api/matching/api";
+import ProfileCard from "@/app/components/card/profileCard";
+import Pagination from "@/app/components/pagination/pagination";
+import RegionSection from "./content/regionSection";
+import SpecialtySection from "./content/specialtySection";
+import { BrokerResponse } from "@/app/types/api";
 
 export default function AgentPage() {
   const router = useRouter();
-
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [brokers, setBrokers] = useState<BrokerResponse[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [selectedType, setSelectedType] = useState<string>("");
 
-  const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIdx = startIdx + ITEMS_PER_PAGE;
-  const currentItems = DUMMY_DATA.slice(startIdx, endIdx);
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const res = await fetchBrokerList({
+          page: currentPage,
+          size: 10,
+          specializedType: selectedType,
+        });
 
-  const totalPages = Math.ceil(DUMMY_DATA.length / ITEMS_PER_PAGE);
+        setBrokers(res.portfolios);
+        setTotalPages(res.totalPages);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-  const handleRouter = () => {
-    router.push("/profile/portfolio");
-  };
+    loadData();
+  }, [currentPage, selectedType]);
 
   return (
     <div className="w-full mt-5 md:mt-10">
       <div
         className="flex w-full md:h-32 h-44 bg-sub_bg border border-sub text-sub_text
-        text-16s md:text-18s rounded-lg items-center justify-center"
+      text-16s md:text-18s rounded-lg items-center justify-center"
       >
         배너 자리입니다.
       </div>
@@ -55,20 +47,35 @@ export default function AgentPage() {
         중개사 매칭
       </h1>
       <div className="flex flex-col md:flex-row gap-5 md:gap-[60px]">
-        <SpecialtySection />
-        <div className="flex flex-col  w-full">
+        <SpecialtySection onSelect={setSelectedType} />
+        <div className="flex flex-col w-full min-h-[80vh]">
           <RegionSection />
           <div className="md:hidden border-b border-text-primary w-full my-5" />
 
-          <div className="">
-            {currentItems.map((agent, i) => (
-              <ProfileCard onClick={handleRouter} key={i} {...agent} />
-            ))}
+          <div className="flex flex-col flex-1 justify-between">
+            <div className="flex-1">
+              {brokers.length > 0 ? (
+                brokers.map((agent, i) => (
+                  <ProfileCard
+                    key={agent.brokerId}
+                    onClick={() =>
+                      router.push(`/profile/portfolio/${agent.brokerId}`)
+                    }
+                    {...agent}
+                  />
+                ))
+              ) : (
+                <p className="text-center text-text-secondary mt-10">
+                  중개사가 없습니다.
+                </p>
+              )}
+            </div>
+
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={setCurrentPage}
-              className="mb-24 md:mb-[120px] md:mt-20 mt-[60px]"
+              className="mt-10 mb-24 md:mb-[120px]"
             />
           </div>
         </div>

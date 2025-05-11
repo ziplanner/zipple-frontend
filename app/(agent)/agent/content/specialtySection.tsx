@@ -3,12 +3,14 @@ import Image from "next/image";
 import office from "@/app/images/icon/office.svg";
 import vector from "@/app/images/icon/vector_gray.svg";
 import useResponsive from "@/app/hook/useResponsive";
-import SpecialtyModal from "@/app/components/modal/categoryModal";
-import SpecialtySelector from "@/app/components/selector/categorySelector";
 import CategorySelector from "@/app/components/selector/categorySelector";
 import CategoryModal from "@/app/components/modal/categoryModal";
 
-const SpecialtySection = () => {
+interface SpecialtySectionProps {
+  onSelect: (value: string) => void;
+}
+
+const SpecialtySection = ({ onSelect }: SpecialtySectionProps) => {
   const isMd = useResponsive("md");
 
   const [selected, setSelected] = useState<string>("");
@@ -18,6 +20,7 @@ const SpecialtySection = () => {
   const handleSelect = (value: string, label: string) => {
     setSelectedValue(value);
     setSelected(label);
+    onSelect(value);
     setOpen(false);
   };
 
@@ -34,7 +37,7 @@ const SpecialtySection = () => {
   }, [open]);
 
   return (
-    <div className="w-full md:w-[260px] bg-white text-sm">
+    <div className="w-full md:w-[260px] bg-white mb-[120px]">
       <div
         className={`flex items-center justify-between md:mb-8 ${
           !isMd && "cursor-pointer"
@@ -57,7 +60,7 @@ const SpecialtySection = () => {
 
       {isMd ? (
         <CategorySelector
-          selected={selected}
+          selected={selectedValue}
           selectedValue={selectedValue}
           onSelect={handleSelect}
           type="agent"

@@ -4,32 +4,39 @@ import ping from "@/app/images/icon/ping_yellow.svg";
 import useResponsive from "@/app/hook/useResponsive";
 
 interface AgentCardProps {
+  brokerId: number;
   name: string;
-  agency: string;
+  businessName: string;
   profileImage?: string;
-  propertyType: string;
+  specializedType: string;
   portfolioCount: number;
-  greeting: string;
-  description: string;
-  locations: string[];
-  badges: string[];
-  liked: boolean;
-  likeCount: number;
+  likesCount: number;
+  isLiked: boolean;
+  introduceTitle?: string;
+  introduceContent?: string;
+  representativeArea: string[];
+  // 생활전문가
+  // agency?: string;
+  // propertyType?: string;
+  // greeting?: string;
+  // description?: string;
+  // locations?: string[];
+  // badges?: string;
   onClick: () => void;
 }
 
 const ProfileCard = ({
+  brokerId,
   name,
-  agency,
+  businessName,
   profileImage,
-  propertyType,
+  specializedType,
   portfolioCount,
-  greeting,
-  description,
-  locations,
-  badges,
-  liked,
-  likeCount,
+  likesCount,
+  isLiked,
+  introduceTitle,
+  introduceContent,
+  representativeArea,
   onClick,
 }: AgentCardProps) => {
   const isMd = useResponsive("md");
@@ -39,29 +46,31 @@ const ProfileCard = ({
       className="relative border-b border-border py-5 lg:py-8 lg:px-4 bg-white cursor-pointer"
       onClick={onClick}
     >
-      {/* Like Button - top right */}
+      {/* 좋아요 버튼 */}
       <div className="absolute top-4 right-5 flex flex-col items-center">
-        {liked ? (
+        {isLiked ? (
           <FaHeart className="text-error text-[26px]" />
         ) : (
           <FaRegHeart className="text-text-light text-[26px]" />
         )}
         <span
           className={`text-12m lg:text-14m ${
-            likeCount > 0 ? "text-error" : "text-text-light"
+            likesCount > 0 ? "text-error" : "text-text-light"
           }`}
         >
-          {likeCount}
+          {likesCount}
         </span>
       </div>
+
       <div className="flex flex-col md:flex-row md:gap-6 lg:gap-10">
-        {/* Top Tag */}
+        {/* 상단 태그 */}
         {!isMd && (
           <div className="text-14r lg:text-16m text-text-secondary mb-4">
-            {propertyType} | 포트폴리오 {portfolioCount}개
+            {specializedType} | 포트폴리오 {portfolioCount}개
           </div>
         )}
-        {/* Profile Image */}
+
+        {/* 프로필 이미지 */}
         <div className="flex flex-row items-center gap-5">
           <div className="w-[100px] h-[100px] md:w-[160px] md:h-[160px] lg:w-[200px] lg:h-[200px] rounded-full bg-gray-100 overflow-hidden shrink-0">
             {profileImage ? (
@@ -82,17 +91,17 @@ const ProfileCard = ({
                 {name}
               </div>
               <div className="text-14r lg:text-16r text-text-secondary">
-                {agency}
+                {businessName}
               </div>
             </div>
           )}
         </div>
 
+        {/* 우측 정보 */}
         <div className="flex flex-col w-full">
-          {/* Top Tag */}
           {isMd && (
             <div className="text-14r lg:text-16m text-text-secondary mb-4">
-              {propertyType} | 포트폴리오 {portfolioCount}개
+              {specializedType} | 포트폴리오 {portfolioCount}개
             </div>
           )}
           {isMd && (
@@ -101,42 +110,40 @@ const ProfileCard = ({
                 {name}
               </div>
               <div className="text-14r lg:text-16r text-text-secondary">
-                {agency}
+                {businessName}
               </div>
             </div>
           )}
-          {/* Greeting */}
+
+          {/* 인사말 */}
           <div className="text-14m lg:text-16m text-text-secondary mt-4 lg:mt-3 mb-2.5 lg:mb-5">
-            “ {greeting} ”
+            “ {introduceTitle || "중개사 인사말을 준비 중입니다."} ”
           </div>
 
-          {/* Description */}
-          <div
-            className="text-12r lg:text-14r text-text-light p-2.5 line-clamp-2
-      bg-background-soft rounded-[4px]"
-          >
-            {description}
+          {/* 상세 소개 */}
+          <div className="text-12r lg:text-14r text-text-light p-2.5 line-clamp-2 bg-background-soft rounded-[4px]">
+            {introduceContent || "상세 소개가 등록되지 않았습니다."}
           </div>
+
+          {/* 지역 + 배지 */}
           <div
             className="flex flex-col gap-2 lg:gap-0 lg:flex-row items-start
-          lg:items-center justify-between mt-3 lg:mt-4"
+            lg:items-center justify-between mt-3 lg:mt-4"
           >
-            {/* Location */}
+            {/* 활동 지역 */}
             <div className="flex items-center gap-0.5 text-14m lg:text-16m text-text-secondary">
               <Image src={ping} alt="ping" width={24} height={24} />
-              {locations.join(", ")}
+              {representativeArea.length > 0
+                ? representativeArea.join(", ")
+                : "지역 정보 없음"}
             </div>
 
-            {/* Badges */}
+            {/* 배지 */}
             <div className="flex flex-wrap justify-end gap-2 self-end lg:self-baseline">
-              {badges.map((badge, i) => (
-                <span
-                  key={i}
-                  className="bg-yellow-100 text-yellow-700 text-12 m px-2 py-0.5 rounded-md"
-                >
-                  {badge}
-                </span>
-              ))}
+              <span className="bg-yellow-100 text-yellow-700 text-12m px-2 py-0.5 rounded-md">
+                대표
+              </span>
+              {/* 추가 배지 있으면 여기에 */}
             </div>
           </div>
         </div>
