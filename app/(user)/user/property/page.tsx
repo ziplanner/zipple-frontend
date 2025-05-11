@@ -6,15 +6,16 @@ import { TABLE } from "@/app/data/table";
 import Table from "@/app/components/table/table";
 import useResponsive from "@/app/hook/useResponsive";
 import TableCard from "@/app/components/card/tableCard";
-import { useRole } from "@/app/context/roleContextProvider";
 import ReapplicationModal from "@/app/components/modal/reapplicatinoModal";
 import AlertMessage from "@/app/components/alert/alertMessage";
 import NoticeBar from "@/app/components/bar/noticeBar";
-
+import { useUserStore } from "@/app/store/userStore";
 
 const UserPropertyPage = () => {
   const isLg = useResponsive("lg");
-  const { role } = useRole();
+
+  const { user } = useUserStore();
+  const role = user?.lastLoginType;
 
   const roleType = role === "ASSOCIATE";
 

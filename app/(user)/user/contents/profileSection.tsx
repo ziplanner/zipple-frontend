@@ -1,27 +1,28 @@
 import { useState } from "react";
 import Image, { StaticImageData } from "next/image";
-import avatar from "@/app/images/icon/header/avatar.svg";
+import defaultProfile from "@/app/images/icon/default_profile.svg";
 import change from "@/app/images/icon/mypage/change.svg";
 import edit from "@/app/images/icon/mypage/edit.svg";
 import vector from "@/app/images/icon/mypage/vector.svg";
 import RoleToken from "@/app/components/token/roleToken";
 import UserMenu from "@/app/components/menu/userMenu";
-import { useRole } from "@/app/context/roleContextProvider";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/app/store/userStore";
-
-interface RoleTokenProps {
-  role: "GENERAL" | "REPRESENTATIVE" | "ASSOCIATE" | "EXPERT" | "NONE";
-}
+import { Role } from "@/app/types/role";
 
 const ProfileSection = () => {
-  const { role, setRole } = useRole();
-  const { user } = useUserStore();
   const router = useRouter();
+
+  const { user } = useUserStore();
+  const role = user?.lastLoginType;
+
+  const [roleType, setRoleType] = useState<
+    "GENERAL" | "REPRESENTATIVE" | "ASSOCIATE" | "EXPERT"
+  >(role ?? "GENERAL");
 
   const [name, setName] = useState<string>(user?.nickname || "");
   const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(
-    user?.profileUrl || avatar
+    user?.profileUrl || defaultProfile
   );
 
   const roleDescMap: Partial<Record<string, string>> = {
@@ -43,8 +44,8 @@ const ProfileSection = () => {
 
     // 두 개의 role을 가진 경우 (전환 대상 role만 찾아서 출력)
     if (roles.length === 2) {
-      const target = roles.find((r) => r !== role);
-      console.log("현재 role", role);
+      const target = roles.find((r) => r !== roleType);
+      console.log("현재 role", roleType);
       console.log("전환 대상 role", target);
       return switchTextMap[target || ""] || "";
     }
@@ -60,8 +61,8 @@ const ProfileSection = () => {
     const roles = user?.roleName || [];
 
     if (roles.length === 2) {
-      const next = roles.find((r) => r !== role);
-      if (next) setRole(next as RoleTokenProps["role"]);
+      const next = roles.find((r) => r !== roleType);
+      if (next) setRoleType(next as Role["role"]);
     } else {
       router.push("/signup");
     }
@@ -106,7 +107,7 @@ const ProfileSection = () => {
           </label>
         </div>
         <p className="text-text-primary text-24m mb-[6px] mt-5">{name}</p>
-        <RoleToken role={role} />
+        <RoleToken role={roleType} />
         <button
           className="flex w-full flex-row items-center justify-center py-2.5 gap-1.5 rounded-md bg-main mt-[60px]"
           onClick={handleRoleChange}

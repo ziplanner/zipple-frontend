@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Image, { StaticImageData } from "next/image";
-import avatar from "@/app/images/icon/header/avatar.svg";
+import defaultProfile from "@/app/images/icon/default_profile.svg";
 import change from "@/app/images/icon/mypage/change.svg";
 import edit from "@/app/images/icon/mypage/edit.svg";
 import vector from "@/app/images/icon/mypage/vector.svg";
@@ -8,21 +8,24 @@ import RoleToken from "@/app/components/token/roleToken";
 import MobileUserMenu from "@/app/components/menu/mobileUserMenu";
 import vector_black from "@/app/images/icon/vector.svg";
 import { motion, AnimatePresence } from "framer-motion";
-import { useRole } from "@/app/context/roleContextProvider";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/app/store/userStore";
-
-interface RoleTokenProps {
-  role: "GENERAL" | "REPRESENTATIVE" | "ASSOCIATE" | "EXPERT" | "NONE";
-}
+import { Role } from "@/app/types/role";
 
 const MobileProfileSection = () => {
   const router = useRouter();
-  const { role, setRole } = useRole();
-  const { user } = useUserStore();
 
-  const [name, setName] = useState<string>("권수연");
-  const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(avatar);
+  const { user } = useUserStore();
+  const role = user?.lastLoginType;
+
+  const [roleType, setRoleType] = useState<
+    "GENERAL" | "REPRESENTATIVE" | "ASSOCIATE" | "EXPERT"
+  >(role ?? "GENERAL");
+
+  const [name, setName] = useState<string>("");
+  const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(
+    defaultProfile
+  );
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleOpen = () => {
@@ -41,7 +44,7 @@ const MobileProfileSection = () => {
 
     // 두 개의 role을 가진 경우 (전환 대상 role만 찾아서 출력)
     if (roles.length === 2) {
-      const target = roles.find((r) => r !== role);
+      const target = roles.find((r) => r !== roleType);
       console.log("현재 role", role);
       console.log("전환 대상 role", target);
       return switchTextMap[target || ""] || "";
@@ -58,8 +61,8 @@ const MobileProfileSection = () => {
     const roles = user?.roleName || [];
 
     if (roles.length === 2) {
-      const next = roles.find((r) => r !== role);
-      if (next) setRole(next as RoleTokenProps["role"]);
+      const next = roles.find((r) => r !== roleType);
+      if (next) setRoleType(next as Role["role"]);
     } else {
       router.push("/signup");
     }
@@ -153,7 +156,7 @@ const MobileProfileSection = () => {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <RoleToken role={role} />
+              <RoleToken role={roleType} />
             </motion.div>
           </AnimatePresence>
 
@@ -195,7 +198,7 @@ const MobileProfileSection = () => {
             className="rounded-full w-10 h-10 object-cover"
           />
           <p className="text-text-primary text-18m ml-1">{name}</p>
-          <RoleToken role={role} />
+          <RoleToken role={roleType} />
         </div>
       )}
 

@@ -14,6 +14,7 @@ export interface UserRoleResponse {
   roleName: string[];
   nickname: string;
   profileUrl: string;
+  lastLoginType: "GENERAL" | "REPRESENTATIVE" | "ASSOCIATE" | "EXPERT";
 }
 
 // kakao 로그인

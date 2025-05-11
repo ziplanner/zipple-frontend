@@ -1,13 +1,14 @@
 "use client";
 
-import { useRole } from "@/app/context/roleContextProvider";
 import GeneralSection from "./contents/generalSection";
 import ExpertSection from "./contents/expertSection";
 import RepresentationSection from "./contents/representationSection";
 import AssociateSection from "./contents/associateSection";
+import { useUserStore } from "@/app/store/userStore";
 
 const UserPage = () => {
-  const { role } = useRole();
+  const { user } = useUserStore();
+  const role = user?.lastLoginType;
 
   const renderSection = () => {
     switch (role) {
