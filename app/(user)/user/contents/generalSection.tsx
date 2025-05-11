@@ -14,9 +14,11 @@ import { useUserStore } from "@/app/store/userStore";
 import Alert from "@/app/components/alert/alert";
 import { CATEGORY } from "@/app/data/category";
 import { getGeneralUserRole, updateGeneralUserRole } from "@/app/api/user/api";
+import ErrorAlertMessage from "@/app/components/alert/errorAlertMessage";
 
 const GeneralSection = () => {
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertErrorText, setAlertErrorText] = useState<string | null>(null);
   const [showWithdrawAlert, setShowWithdrawAlert] = useState<boolean>(false);
 
   const [nickname, setNickname] = useState<string>("");
@@ -90,7 +92,7 @@ const GeneralSection = () => {
       useUserStore.getState().clearUser();
       window.location.href = "/";
     } catch (error) {
-      alert("회원 탈퇴에 실패했습니다.");
+      setAlertErrorText("회원 탈퇴에 실패했습니다.");
       console.error(error);
     }
   };
@@ -192,6 +194,12 @@ const GeneralSection = () => {
           rightBtnText="확인"
           onClose={() => setShowWithdrawAlert(false)}
           onConfirm={handleWithdrawAll}
+        />
+      )}
+      {alertErrorText && (
+        <ErrorAlertMessage
+          text={alertErrorText}
+          onClose={() => setAlertErrorText(null)}
         />
       )}
     </div>

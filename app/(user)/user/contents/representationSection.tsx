@@ -20,6 +20,7 @@ import { useUserStore } from "@/app/store/userStore";
 import { initUserInfo } from "@/app/utils/initUser";
 import { CATEGORY } from "@/app/data/category";
 import { getRepUserRole, updateRepUserRole } from "@/app/api/user/api";
+import ErrorAlertMessage from "@/app/components/alert/errorAlertMessage";
 
 interface Region {
   city: string;
@@ -29,6 +30,7 @@ interface Region {
 const RepresentationSection = () => {
   const router = useRouter();
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertErrorText, setAlertErrorText] = useState<string | null>(null);
   const [showWithdrawAlert, setShowWithdrawAlert] = useState<boolean>(false);
   const [showPartialWithdrawAlert, setShowPartialWithdrawAlert] =
     useState<boolean>(false);
@@ -114,7 +116,7 @@ const RepresentationSection = () => {
       useUserStore.getState().clearUser();
       router.push("/");
     } catch (error) {
-      alert("회원 탈퇴에 실패했습니다.");
+      setAlertErrorText("회원 탈퇴에 실패했습니다.");
       console.error(error);
     }
   };
@@ -125,7 +127,7 @@ const RepresentationSection = () => {
       initUserInfo();
       router.push("/user");
     } catch (error) {
-      alert("부분 탈퇴에 실패했습니다.");
+      setAlertErrorText("부분 탈퇴에 실패했습니다.");
       console.error(error);
     }
   };
@@ -319,6 +321,12 @@ const RepresentationSection = () => {
           rightBtnText="확인"
           onClose={() => setShowWithdrawAlert(false)}
           onConfirm={handleWithdrawAll}
+        />
+      )}
+      {alertErrorText && (
+        <ErrorAlertMessage
+          text={alertErrorText}
+          onClose={() => setAlertErrorText(null)}
         />
       )}
     </div>

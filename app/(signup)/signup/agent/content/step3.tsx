@@ -12,6 +12,7 @@ import {
 import { useRouter } from "next/navigation";
 import { CATEGORY } from "@/app/data/category";
 import { refreshUserInfo } from "@/app/utils/initUser";
+import ErrorAlertMessage from "@/app/components/alert/errorAlertMessage";
 
 const Step3 = () => {
   const {
@@ -43,6 +44,7 @@ const Step3 = () => {
 
   const router = useRouter();
   const [alertText, setAlertText] = useState<string | null>(null);
+  const [alertErrorText, setAlertErrorText] = useState<string | null>(null);
 
   const isValid =
     brokerageLicenseFile &&
@@ -155,7 +157,7 @@ const Step3 = () => {
       }, 2000);
     } catch (err) {
       console.error("등록 실패", err);
-      setAlertText("등록 중 오류가 발생했습니다.");
+      setAlertErrorText("등록 중 오류가 발생했습니다.");
     }
   };
 
@@ -223,6 +225,12 @@ const Step3 = () => {
 
       {alertText && (
         <AlertMessage text={alertText} onClose={() => setAlertText(null)} />
+      )}
+      {alertErrorText && (
+        <ErrorAlertMessage
+          text={alertErrorText}
+          onClose={() => setAlertErrorText(null)}
+        />
       )}
     </div>
   );

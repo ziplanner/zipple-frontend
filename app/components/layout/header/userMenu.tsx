@@ -8,19 +8,21 @@ import logoutIcon from "@/app/images/icon/header/logout.svg";
 import heart from "@/app/images/icon/header/heart.svg";
 import { logout } from "@/app/api/login/api";
 import { useUserStore } from "@/app/store/userStore";
+import ErrorAlertMessage from "../../alert/errorAlertMessage";
 
 const UserMenu = () => {
   const menuRef = useRef<HTMLDivElement>(null);
   const user = useUserStore((state) => state.user);
 
   const [open, setOpen] = useState<boolean>(false);
+  const [alertErrorText, setAlertErrorText] = useState<string | null>(null);
 
   const handleLogout = async () => {
     try {
       await logout();
     } catch (err) {
       console.log(err);
-      alert("로그아웃에 실패했습니다.");
+      setAlertErrorText("로그아웃에 실패했습니다.");
     }
   };
 
@@ -98,6 +100,12 @@ const UserMenu = () => {
             </div>
           </div>
         </div>
+      )}
+      {alertErrorText && (
+        <ErrorAlertMessage
+          text={alertErrorText}
+          onClose={() => setAlertErrorText(null)}
+        />
       )}
     </div>
   );

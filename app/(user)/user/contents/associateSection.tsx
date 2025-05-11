@@ -21,12 +21,14 @@ import {
   getAssociateUserRole,
   updateAssociateUserRole,
 } from "@/app/api/user/api";
+import ErrorAlertMessage from "@/app/components/alert/errorAlertMessage";
 
 const AssociateSection = () => {
   const router = useRouter();
 
-  const [showAlert, setShowAlert] = useState(false);
-  const [showWithdrawAlert, setShowWithdrawAlert] = useState(false);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertErrorText, setAlertErrorText] = useState<string | null>(null);
+  const [showWithdrawAlert, setShowWithdrawAlert] = useState<boolean>(false);
   const [showPartialWithdrawAlert, setShowPartialWithdrawAlert] =
     useState(false);
 
@@ -100,7 +102,7 @@ const AssociateSection = () => {
       useUserStore.getState().clearUser();
       router.push("/");
     } catch (error) {
-      alert("회원 탈퇴에 실패했습니다.");
+      setAlertErrorText("회원 탈퇴에 실패했습니다.");
       console.error(error);
     }
   };
@@ -111,7 +113,7 @@ const AssociateSection = () => {
       initUserInfo();
       router.push("/user");
     } catch (error) {
-      alert("부분 탈퇴에 실패했습니다.");
+      setAlertErrorText("부분 탈퇴에 실패했습니다.");
       console.error(error);
     }
   };
@@ -259,6 +261,12 @@ const AssociateSection = () => {
           rightBtnText="확인"
           onClose={() => setShowWithdrawAlert(false)}
           onConfirm={handleWithdrawAll}
+        />
+      )}
+      {alertErrorText && (
+        <ErrorAlertMessage
+          text={alertErrorText}
+          onClose={() => setAlertErrorText(null)}
         />
       )}
     </div>

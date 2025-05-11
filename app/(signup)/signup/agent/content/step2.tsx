@@ -10,6 +10,8 @@ import { useAgentSignup } from "@/app/context/agentSignupProvider";
 import { DateInput } from "@/app/components/input/dateInput";
 import AlertMessage from "@/app/components/alert/alertMessage";
 import { sendVerificationMessage, verifyPhoneCode } from "@/app/api/verify/api";
+import defaultProfile from "@/app/images/icon/default_profile.svg";
+import ErrorAlertMessage from "@/app/components/alert/errorAlertMessage";
 
 const Step2 = () => {
   const {
@@ -31,9 +33,10 @@ const Step2 = () => {
   } = useAgentSignup();
 
   const [alertText, setAlertText] = useState<string | null>(null);
-  const [verificationCode, setVerificationCode] = useState("");
-  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
-  const [verificationSent, setVerificationSent] = useState(false);
+  const [alertErrorText, setAlertErrorText] = useState<string | null>(null);
+  const [verificationCode, setVerificationCode] = useState<string>("");
+  const [isPhoneVerified, setIsPhoneVerified] = useState<boolean>(false);
+  const [verificationSent, setVerificationSent] = useState<boolean>(false);
   const [verificationError, setVerificationError] = useState<string | null>(
     null
   );
@@ -41,16 +44,17 @@ const Step2 = () => {
     null
   );
 
-  const [repPhoneNumber, setRepPhoneNumber] = useState("");
-  const [repVerificationCode, setRepVerificationCode] = useState("");
-  const [repVerificationSent, setRepVerificationSent] = useState(false);
+  const [repPhoneNumber, setRepPhoneNumber] = useState<string>("");
+  const [repVerificationCode, setRepVerificationCode] = useState<string>("");
+  const [repVerificationSent, setRepVerificationSent] =
+    useState<boolean>(false);
   const [repVerificationError, setRepVerificationError] = useState<
     string | null
   >(null);
   const [repVerificationSuccess, setRepVerificationSuccess] = useState<
     string | null
   >(null);
-  const [isRepPhoneVerified, setIsRepPhoneVerified] = useState(false);
+  const [isRepPhoneVerified, setIsRepPhoneVerified] = useState<boolean>(false);
 
   const isValid = !!(
     name &&
@@ -80,7 +84,7 @@ const Step2 = () => {
         setAlertText("대표자 인증번호가 전송되었습니다.");
       }
     } catch (error: any) {
-      setAlertText(error.message);
+      setAlertErrorText(error.message);
     }
   };
 
@@ -137,7 +141,7 @@ const Step2 = () => {
         </h3>
         <div className="flex flex-col items-center">
           <Image
-            src={profileImage}
+            src={profileImage || defaultProfile}
             alt="프로필 이미지"
             width={180}
             height={180}
@@ -303,6 +307,12 @@ const Step2 = () => {
 
       {alertText && (
         <AlertMessage text={alertText} onClose={() => setAlertText(null)} />
+      )}
+      {alertErrorText && (
+        <ErrorAlertMessage
+          text={alertErrorText}
+          onClose={() => setAlertErrorText(null)}
+        />
       )}
     </div>
   );

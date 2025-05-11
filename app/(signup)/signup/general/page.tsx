@@ -17,16 +17,17 @@ import { sendVerificationMessage, verifyPhoneCode } from "@/app/api/verify/api";
 import { CATEGORY } from "@/app/data/category";
 import { useRouter } from "next/navigation";
 import { refreshUserInfo } from "@/app/utils/initUser";
+import ErrorAlertMessage from "@/app/components/alert/errorAlertMessage";
 
 const GeneralSignupPage = () => {
   const isDaumLoaded = useDaumPostcode();
   const router = useRouter();
 
-  const [name, setName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
-  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
-  const [verificationSent, setVerificationSent] = useState(false);
+  const [name, setName] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [verificationCode, setVerificationCode] = useState<string>("");
+  const [isPhoneVerified, setIsPhoneVerified] = useState<boolean>(false);
+  const [verificationSent, setVerificationSent] = useState<boolean>(false);
   const [verificationError, setVerificationError] = useState<string | null>(
     null
   );
@@ -34,12 +35,13 @@ const GeneralSignupPage = () => {
     null
   );
 
-  const [detailedAddress, setDetailedAddress] = useState("");
-  const [email, setEmail] = useState("");
-  const [searchValue, setSearchValue] = useState("");
-  const [housingType, setHousingType] = useState("");
-  const [marketingConsent, setMarketingConsent] = useState(false);
+  const [detailedAddress, setDetailedAddress] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [housingType, setHousingType] = useState<string>("");
+  const [marketingConsent, setMarketingConsent] = useState<boolean>(false);
   const [alertText, setAlertText] = useState<string | null>(null);
+  const [alertErrorText, setAlertErrorText] = useState<string | null>(null);
 
   const handlePhoneChange = (value: string) => {
     setPhoneNumber(value);
@@ -74,7 +76,7 @@ const GeneralSignupPage = () => {
       setVerificationSent(true);
       setAlertText("인증번호가 전송되었습니다.");
     } catch (error: any) {
-      setAlertText(error.message);
+      setAlertErrorText(error.message);
     }
   };
 
@@ -202,7 +204,7 @@ const GeneralSignupPage = () => {
               }, 2000);
             } catch (error) {
               console.error("회원가입 실패", error);
-              setAlertText("회원 등록 중 오류가 발생했습니다.");
+              setAlertErrorText("회원 등록 중 오류가 발생했습니다.");
             }
           }}
           text="완료"
@@ -219,6 +221,12 @@ const GeneralSignupPage = () => {
       </div>
       {alertText && (
         <AlertMessage text={alertText} onClose={() => setAlertText(null)} />
+      )}
+      {alertErrorText && (
+        <ErrorAlertMessage
+          text={alertErrorText}
+          onClose={() => setAlertErrorText(null)}
+        />
       )}
     </div>
   );
