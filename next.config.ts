@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
   },
   output: "standalone",
   images: {
-    domains: ["k.kakaocdn.net"],
+    domains: ["k.kakaocdn.net", "api.zipple.co.kr"],
   },
   webpack: (config) => {
     config.resolve.fallback = { fs: false };
