@@ -55,3 +55,29 @@ export interface FetchExpertListParams {
   specializedType?: string;
   sortBy?: "RECENT" | "PORTFOLIO_COUNT" | "POPULAR";
 }
+
+export interface BrokerDetailResponse {
+  name: string;
+  introduceUrl: string;
+  specializedType: string;
+  representativeArea: string[];
+  additionalArea: string[];
+  businessName: string;
+  representativeName: string;
+  phoneNumber: string;
+  introduceContent: string;
+  portfolios: any[]; // 포트폴리오 타입 정의 시 교체
+  totalElements: number;
+  totalPages: number;
+  currentPage: number;
+  isLast: boolean;
+}
+
+export interface BrokerMenuDetailResponse {
+  userId: number;
+  roleName: "GENERAL" | "REPRESENTATIVE" | "ASSOCIATE" | "EXPERT";
+  nickname: string;
+  profileUrl: string;
+  phoneNumber: string;
+  likesCount: number;
+}

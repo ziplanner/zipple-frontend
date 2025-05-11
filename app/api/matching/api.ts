@@ -1,10 +1,12 @@
 import {
+  BrokerDetailResponse,
   BrokerListResponse,
+  BrokerMenuDetailResponse,
   ExpertListResponse,
   FetchBrokerListParams,
   FetchExpertListParams,
 } from "@/app/types/api";
-import { AGENT_MATCHING, EXPERT_MATCHING } from "../apiUrl";
+import { AGENT_DETAIL, AGENT_MATCHING, EXPERT_MATCHING } from "../apiUrl";
 import axiosInstance from "../axiosInstance";
 
 // 중개사 매칭 목록
@@ -52,5 +54,25 @@ export const fetchExpertList = async ({
     params,
   });
 
+  return res.data;
+};
+
+// 중개사 상세 조회
+export const fetchBrokerDetail = async (
+  brokerId: number
+): Promise<BrokerDetailResponse> => {
+  const res = await axiosInstance.get<BrokerDetailResponse>(
+    `${AGENT_DETAIL}/${brokerId}`
+  );
+  return res.data;
+};
+
+// 중개사 상세 메뉴 조회
+export const fetchBrokerMenuDetail = async (
+  brokerId: number
+): Promise<BrokerMenuDetailResponse> => {
+  const res = await axiosInstance.get<BrokerMenuDetailResponse>(
+    `${AGENT_DETAIL}/${brokerId}/lnb`
+  );
   return res.data;
 };
