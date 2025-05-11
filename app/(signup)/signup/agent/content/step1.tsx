@@ -16,12 +16,11 @@ export interface RealtorSearchResult {
   jurirno: string; // 등록번호
   bsnmCmpnm: string; // 사업자상호
   brkrNm: string; // 중개업자명
-  crqfcNo: string; // 자격증번호
+  crqfcNo: string; // 전화번호
   crqfcAcqdt: string; // 자격증취득일
   ofcpsSeCode: string; // 직위구분코드
   ofcpsSeCodeNm: string; // 직위구분명
   lastUpdtDt: string; // 데이터기준일자
-  telNo?: string; // 전화번호
 }
 
 const Step1 = () => {
@@ -238,7 +237,7 @@ const Step1 = () => {
                   {item.ldCodeNm} {item.jurirno}
                 </p> */}
                 <p className="text-text-light text-14m md:text-16m">
-                  ☎ {item?.telNo || "전화번호 없음"}
+                  ☎ {item?.crqfcNo || "전화번호 없음"}
                 </p>
               </div>
             ))}
@@ -279,7 +278,7 @@ const Step1 = () => {
           <p>
             전화번호:
             <span className="text-14r md:text-16r">
-              &nbsp; {selectedRealtor.telNo || "전화번호 없음"}
+              &nbsp; {selectedRealtor.crqfcNo || "전화번호 없음"}
             </span>
           </p>
           <p>
