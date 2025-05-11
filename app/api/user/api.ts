@@ -1,3 +1,4 @@
+import { Region } from "@/app/components/selector/regionSelector";
 import {
   MYPAGE_ASSOCIATE,
   MYPAGE_EXPERT,
@@ -26,8 +27,8 @@ interface RepresentativeUserResponse {
   phoneNumber: string;
   mainEmail: string;
   introduceUrl: string;
-  representativeArea: string;
-  additionalArea: string;
+  representativeArea: Region[];
+  additionalArea: Region[];
   introduceTitle: string;
   introduceContent: string;
   specializedType: string;

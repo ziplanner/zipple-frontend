@@ -60,12 +60,8 @@ const RepresentationSection = () => {
         setTitle(data.introduceTitle || "");
         setDescription(data.introduceContent || "");
         setSelectedSpecialty(data.specializedType || "");
-        setPrimaryRegions(
-          data.representativeArea ? JSON.parse(data.representativeArea) : []
-        );
-        setAdditionalRegions(
-          data.additionalArea ? JSON.parse(data.additionalArea) : []
-        );
+        setPrimaryRegions(data.representativeArea || []);
+        setAdditionalRegions(data.additionalArea || []);
       } catch (error) {
         console.error("대표 중개사 정보 조회 실패", error);
       }
