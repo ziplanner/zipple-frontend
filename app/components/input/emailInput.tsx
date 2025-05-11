@@ -20,10 +20,13 @@ export const EmailInput = ({ value, onChange, disabled }: EmailInputProps) => {
   }, [value]);
 
   const handleChange = (type: "emailId" | "domain", value: string) => {
+    const nextEmailId = type === "emailId" ? value : emailId;
+    const nextDomain = type === "domain" ? value : domain;
+
     if (type === "emailId") setEmailId(value);
     if (type === "domain") setDomain(value);
 
-    const fullEmail = `${emailId}@${domain}`;
+    const fullEmail = `${nextEmailId}@${nextDomain}`;
     onChange?.(fullEmail);
   };
 
