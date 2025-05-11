@@ -43,6 +43,13 @@ const GeneralSignupPage = () => {
   const [alertText, setAlertText] = useState<string | null>(null);
   const [alertErrorText, setAlertErrorText] = useState<string | null>(null);
 
+  const isValid =
+    !name.trim() ||
+    !phoneNumber.trim() ||
+    !searchValue.trim() ||
+    !housingType ||
+    !isPhoneVerified;
+
   const handlePhoneChange = (value: string) => {
     setPhoneNumber(value);
   };
@@ -187,6 +194,9 @@ const GeneralSignupPage = () => {
 
         <LargeBtn
           onClick={async () => {
+            if (isValid) {
+              return;
+            }
             try {
               await registerGeneralUser({
                 name,
@@ -210,13 +220,7 @@ const GeneralSignupPage = () => {
           text="완료"
           color="blue"
           className="mt-[60px]"
-          disabled={
-            !name.trim() ||
-            !phoneNumber.trim() ||
-            !searchValue.trim() ||
-            !housingType ||
-            !isPhoneVerified
-          }
+          disabled={isValid}
         />
       </div>
       {alertText && (
