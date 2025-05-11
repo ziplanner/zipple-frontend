@@ -17,6 +17,7 @@ const MobileProfileSection = () => {
 
   const { user } = useUserStore();
   const role = user?.lastLoginType;
+  const roles = user?.roleName;
 
   const [roleType, setRoleType] = useState<
     "GENERAL" | "REPRESENTATIVE" | "ASSOCIATE" | "EXPERT"
@@ -42,26 +43,36 @@ const MobileProfileSection = () => {
   const renderRoleText = () => {
     const roles = user?.roleName || [];
 
-    // 두 개의 role을 가진 경우 (전환 대상 role만 찾아서 출력)
+    if (!role) return "";
+
+    // 두 개의 role을 가진 경우
     if (roles.length === 2) {
-      const target = roles.find((r) => r !== roleType);
-      console.log("현재 role", role);
-      console.log("전환 대상 role", target);
+      const target = roles.find((r) => r !== role);
       return switchTextMap[target || ""] || "";
     }
 
-    // 단일 role인 경우: 등록 가능한 다른 role 안내
-    const registerable = Object.keys(switchTextMap).find(
-      (r) => !roles.includes(r)
-    );
-    return switchTextMap[registerable || ""] || "";
+    // 단일 role인 경우
+    if (roles.length === 1) {
+      // 현재 role이 GENERAL이면 → 전문가 중 하나 추천
+      if (role === "GENERAL") {
+        const target = ["REPRESENTATIVE", "ASSOCIATE", "EXPERT"].find(
+          (r) => !roles.includes(r)
+        );
+        return switchTextMap[target || ""] || "";
+      }
+
+      // 현재 role이 그 외(전문가 계열)면 → GENERAL로 전환
+      return switchTextMap["GENERAL"];
+    }
+
+    return "";
   };
 
   const handleRoleChange = () => {
     const roles = user?.roleName || [];
 
     if (roles.length === 2) {
-      const next = roles.find((r) => r !== roleType);
+      const next = roles.find((r) => r !== role);
       if (next) setRoleType(next as Role["role"]);
     } else {
       router.push("/signup");

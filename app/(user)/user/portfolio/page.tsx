@@ -7,6 +7,7 @@ import PortfolioBtn from "@/app/components/button/portfolioBtn";
 import PortfolioModal from "@/app/components/modal/portfolioModal";
 import AlertMessage from "@/app/components/alert/alertMessage";
 import { getPortfolios, deletePortfolio } from "@/app/api/portfolio/api";
+import ErrorAlertMessage from "@/app/components/alert/errorAlertMessage";
 
 interface PortfolioData {
   portfolioId: number;
@@ -24,6 +25,7 @@ const UserPortfolioPage = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [editTarget, setEditTarget] = useState<PortfolioData | null>(null);
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertErrorText, setAlertErrorText] = useState<string | null>(null);
   const [alertText, setAlertText] = useState<string>("");
   const [totalPages, setTotalPages] = useState<number>(1);
 
@@ -46,6 +48,7 @@ const UserPortfolioPage = () => {
       await deletePortfolio(id);
       setPortfolios((prev) => prev.filter((p) => p.portfolioId !== id));
     } catch (err) {
+      setAlertErrorText("포토폴리오 삭제 실패");
       console.error("삭제 실패:", err);
     }
   };
@@ -121,6 +124,12 @@ const UserPortfolioPage = () => {
           onClose={() => {
             setShowAlert(false);
           }}
+        />
+      )}
+      {alertErrorText && (
+        <ErrorAlertMessage
+          text={alertErrorText}
+          onClose={() => setAlertErrorText(null)}
         />
       )}
     </div>

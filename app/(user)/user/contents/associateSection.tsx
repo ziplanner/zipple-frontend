@@ -80,7 +80,7 @@ const AssociateSection = () => {
         });
         setShowAlert(true);
       } catch (error) {
-        alert("정보 저장 실패");
+        setAlertErrorText("정보 저장 실패");
         console.error(error);
         return;
       }
