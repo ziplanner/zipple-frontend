@@ -3,35 +3,47 @@ import axiosInstance from "../axiosInstance";
 
 // 포트폴리오 생성
 export const createPortfolio = async (
-  images: File[],
+  images: File,
   title: string,
   url: string
 ) => {
   const formData = new FormData();
-  images.forEach((file) => formData.append("portfolioImages", file));
-  formData.append("portfolioTitle", title);
-  formData.append("portfolioUrl", url);
 
-  const res = await axiosInstance.post(MYPAGE_PORTFOLIO, formData);
+  formData.append("portfolioImages", images);
+  formData.append("portfolioTitle", JSON.stringify(title));
+  formData.append("portfolioUrl", JSON.stringify(url));
+
+  const res = await axiosInstance.post(MYPAGE_PORTFOLIO, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
   return res.data;
 };
 
 // 포트폴리오 수정
 export const updatePortfolio = async (
   portfolioId: number,
-  images: File[],
+  images: File,
   title: string,
   url: string
 ) => {
   const formData = new FormData();
-  images.forEach((file) => formData.append("portfolioImages", file));
-  formData.append("portfolioTitle", title);
-  formData.append("portfolioUrl", url);
+  formData.append("portfolioImages", images);
+  formData.append("portfolioTitle", JSON.stringify(title));
+  formData.append("portfolioUrl", JSON.stringify(url));
 
   const res = await axiosInstance.put(
     `${MYPAGE_PORTFOLIO}/${portfolioId}`,
-    formData
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
   );
+
   return res.data;
 };
 

@@ -56,15 +56,11 @@ const PortfolioModal = ({
   const handleSubmit = async () => {
     try {
       if (editData) {
-        await updatePortfolio(
-          editData.portfolioId,
-          imageFile ? [imageFile] : [],
-          title,
-          url
-        );
+        if (!imageFile) return;
+        await updatePortfolio(editData.portfolioId, imageFile, title, url);
       } else {
         if (!imageFile) return;
-        await createPortfolio([imageFile], title, url);
+        await createPortfolio(imageFile, title, url);
       }
       onSubmit();
     } catch (err) {
@@ -75,14 +71,16 @@ const PortfolioModal = ({
 
   const isValid = title.trim() && url.trim() && (imageFile || editData);
 
+  console.log("imageFile:", imageFile);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
-      <div className="relative bg-white rounded-[20px] p-5 max-w-[480px] mx-5 flex flex-col items-center shadow-lg h-4/5">
+      <div className="relative bg-white rounded-[20px] p-5 max-w-[480px] mx-5 flex flex-col shadow-lg h-4/5">
         <button onClick={onClose} className="absolute top-4 right-4 p-1">
           <Image src={close} alt="close" width={20} height={20} />
         </button>
 
-        <h1 className="text-text-primary text-18s md:text-20s mb-5">
+        <h1 className="text-text-primary text-18s md:text-20s mb-5 md:pt-5 md:pl-5">
           {editData ? "포트폴리오 수정" : "포트폴리오 등록"}
         </h1>
 
@@ -132,6 +130,7 @@ const PortfolioModal = ({
                 </div>
               </label>
               <input
+                key={previewUrl}
                 id="file"
                 type="file"
                 accept="image/*"
