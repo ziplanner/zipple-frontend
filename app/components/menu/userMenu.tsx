@@ -1,35 +1,29 @@
 "use client";
 
 import { useMemo } from "react";
-import { useRole } from "@/app/context/roleContextProvider";
 import { usePathname, useRouter } from "next/navigation";
 import { MENU_BY_ROLE } from "@/app/data/menu";
+import { useUserStore } from "@/app/store/userStore";
 
 const UserMenu = () => {
-  const { role } = useRole();
   const router = useRouter();
   const pathname = usePathname();
 
+  const { user } = useUserStore();
+  const role = user?.lastLoginType;
+
   // 역할별 메뉴 목록 가져오기
   const menuList = useMemo(() => {
-    return MENU_BY_ROLE[role] ?? [];
+    if (role) {
+      return MENU_BY_ROLE[role] ?? [];
+    }
+    return [];
   }, [role]);
 
   // 현재 URL과 가장 잘 맞는 메뉴 path 찾기
   const currentMenuPath = useMemo(() => {
     return menuList.find((item) => pathname === item.path)?.path ?? "";
   }, [pathname, menuList]);
-
-  // const currentMenuPath = useMemo(() => {
-  //   const exactMatch = menuList.find((item) => pathname === item.path);
-  //   if (exactMatch) return exactMatch.path;
-
-  //   const partialMatch = menuList
-  //     .sort((a, b) => b.path.length - a.path.length)
-  //     .find((item) => pathname.startsWith(item.path));
-
-  //   return partialMatch?.path ?? "";
-  // }, [pathname, menuList]);
 
   const handleMenuClick = (path: string) => {
     router.push(path);

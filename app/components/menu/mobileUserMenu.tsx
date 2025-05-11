@@ -1,17 +1,22 @@
 "use client";
 
 import { useMemo } from "react";
-import { useRole } from "@/app/context/roleContextProvider";
 import { usePathname, useRouter } from "next/navigation";
 import { MENU_BY_ROLE } from "@/app/data/menu";
+import { useUserStore } from "@/app/store/userStore";
 
 const MobileUserMenu = () => {
-  const { role } = useRole();
   const pathname = usePathname();
   const router = useRouter();
 
+  const { user } = useUserStore();
+  const role = user?.lastLoginType;
+
   const menuList = useMemo(() => {
-    return MENU_BY_ROLE[role] ?? [];
+    if (role) {
+      return MENU_BY_ROLE[role] ?? [];
+    }
+    return [];
   }, [role]);
 
   // 현재 URL에 가장 잘 맞는 path 선택 (정확 일치 > 포함 > fallback)

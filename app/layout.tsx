@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import Layout from "./components/layout/layout";
-import { RoleProvider } from "./context/roleContextProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -39,9 +38,7 @@ export default function RootLayout({
           strategy="beforeInteractive"
           src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
         />
-        <RoleProvider>
-          <Layout>{children}</Layout>
-        </RoleProvider>
+        <Layout>{children}</Layout>
       </body>
     </html>
   );
