@@ -1,16 +1,18 @@
 import { useState } from "react";
 import Image, { StaticImageData } from "next/image";
-import avatar from "@/app/images/icon/header/avatar.svg";
 import phone from "@/app/images/icon/phone.svg";
 import RoleToken from "@/app/components/token/roleToken";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import defaultProfile from "@/app/images/icon/default_profile.svg";
 
 const MobileProfileSection = () => {
   const router = useRouter();
 
-  const [name, setName] = useState<string>("권수연");
-  const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(avatar);
+  const [name, setName] = useState<string>("");
+  const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(
+    defaultProfile
+  );
   const [liked, setLiked] = useState<boolean>(true);
   const [likeCount, setLikeCount] = useState<number>(12);
 

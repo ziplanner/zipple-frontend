@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import avatar from "@/app/images/icon/header/avatar.svg";
+import defaultProfile from "@/app/images/icon/default_profile.svg";
 import vector from "@/app/images/icon/header/vector.svg";
 import userIcon from "@/app/images/icon/header/user.svg";
 import logoutIcon from "@/app/images/icon/header/logout.svg";
@@ -45,9 +45,9 @@ const UserMenu = () => {
       >
         <div className="w-8 h-8 lg:w-8 lg:h-8 rounded-full overflow-hidden">
           <Image
-            src={user?.profileUrl || avatar}
-            alt="User avatar"
-            width={28} // 실제 사이즈는 Tailwind로 제어
+            src={user?.profileUrl || defaultProfile}
+            alt="profile"
+            width={28}
             height={28}
             className="object-cover w-full h-full"
           />
