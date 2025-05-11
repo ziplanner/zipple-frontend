@@ -84,8 +84,8 @@ const TermsBox = ({ terms, onChange }: TermsBoxProps) => {
           onClick={handleAllChange}
         />
         <p
-          className={`$${
-            internalTerms.all ? "text-main" : "text-text-light"
+          className={`${
+            internalTerms.all ? "text-main" : "text-text-secondary"
           } text-16s md:text-18s`}
         >
           전체 약관에 동의합니다.
@@ -105,10 +105,10 @@ const TermsBox = ({ terms, onChange }: TermsBoxProps) => {
                 onClick={() => handleSingleChange(key as keyof Terms)}
               />
               <p
-                className={`text-14r md:text-16r $${
+                className={`text-14r md:text-16r ${
                   key === "marketing"
-                    ? "text-text-light"
-                    : "text-text-secondary"
+                    ? "text-text-secondary"
+                    : "text-text-primary"
                 }`}
               >
                 {(() => {

@@ -106,7 +106,7 @@ export const AgentSignupProvider: React.FC<SignupProviderProps> = ({
   const [email, setEmail] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [foreigner, setForeigner] = useState<string>("L");
-  const [profileImage, setProfileImage] = useState<string>(defaultProfile);
+  const [profileImage, setProfileImage] = useState<string>("");
 
   const [terms, setTerms] = useState<TermsState>({
     all: false,

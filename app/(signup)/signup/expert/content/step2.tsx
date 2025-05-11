@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useExpertSignup } from "@/app/context/expertSignupProvider";
 import { DateInput } from "@/app/components/input/dateInput";
 import AlertMessage from "@/app/components/alert/alertMessage";
+import defaultProfile from "@/app/images/icon/default_profile.svg";
 
 const Step2 = () => {
   const {
@@ -95,7 +96,7 @@ const Step2 = () => {
         </h3>
         <div className="flex flex-col items-center">
           <Image
-            src={profileImage}
+                     src={profileImage || defaultProfile}
             alt="프로필 이미지"
             width={180}
             height={180}
