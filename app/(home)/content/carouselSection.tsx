@@ -7,25 +7,23 @@ import vector from "@/app/images/icon/round_vector.svg";
 const CarouselSection = () => {
   const [current, setCurrent] = useState(0);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+
   const [wrapperWidth, setWrapperWidth] = useState(0);
+  const [cardWidth, setCardWidth] = useState(780); // 초기값은 최대 사이즈
 
   const cards = [0, 1, 2, 3, 4];
-  const CARD_WIDTH = 780;
   const GAP = 16;
 
   useEffect(() => {
-    if (wrapperRef.current) {
-      setWrapperWidth(wrapperRef.current.clientWidth);
-    }
-
-    // 반응형 대응
-    const handleResize = () => {
-      if (wrapperRef.current) {
-        setWrapperWidth(wrapperRef.current.clientWidth);
-      }
+    const updateSizes = () => {
+      if (wrapperRef.current) setWrapperWidth(wrapperRef.current.clientWidth);
+      if (cardRef.current) setCardWidth(cardRef.current.clientWidth);
     };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+
+    updateSizes();
+    window.addEventListener("resize", updateSizes);
+    return () => window.removeEventListener("resize", updateSizes);
   }, []);
 
   const handlePrev = () => {
@@ -36,20 +34,20 @@ const CarouselSection = () => {
     setCurrent((prev) => (prev === cards.length - 1 ? 0 : prev + 1));
   };
 
-  // 슬라이더 이동 계산
-  const offset = (CARD_WIDTH + GAP) * current - (wrapperWidth - CARD_WIDTH) / 2;
+  // offset: 현재 카드가 중앙에 오게 이동
+  const offset = (cardWidth + GAP) * current - (wrapperWidth - cardWidth) / 2;
 
   return (
     <div
       className="w-full py-20 md:py-[120px] relative overflow-hidden"
       ref={wrapperRef}
     >
-      {/* 버튼 */}
+      {/* 왼쪽 버튼 */}
       <button
         onClick={handlePrev}
         className="absolute top-1/2 -translate-y-1/2 z-10"
         style={{
-          left: `${(wrapperWidth - CARD_WIDTH) / 2 - GAP / 2}px`,
+          left: `${(wrapperWidth - cardWidth) / 2 - GAP / 2}px`,
         }}
       >
         <Image
@@ -61,11 +59,12 @@ const CarouselSection = () => {
         />
       </button>
 
+      {/* 오른쪽 버튼 */}
       <button
         onClick={handleNext}
         className="absolute top-1/2 -translate-y-1/2 z-10"
         style={{
-          right: `${(wrapperWidth - CARD_WIDTH) / 2 - GAP / 2}px`,
+          right: `${(wrapperWidth - cardWidth) / 2 - GAP / 2}px`,
         }}
       >
         <Image
@@ -85,10 +84,15 @@ const CarouselSection = () => {
             transform: `translateX(-${offset}px)`,
           }}
         >
-          {cards.map((item) => (
+          {cards.map((item, index) => (
             <div
               key={item}
-              className="w-[780px] h-[320px] bg-main_bg rounded-xl flex-shrink-0"
+              ref={index === 0 ? cardRef : null} // 첫 번째 카드 기준으로 width 측정
+              className="
+                w-[260px] h-[180px]
+                sm:w-[320px] sm:h-[200px]
+                md:w-[780px] md:h-[320px]
+                bg-main_bg rounded-xl flex-shrink-0"
             />
           ))}
         </div>
