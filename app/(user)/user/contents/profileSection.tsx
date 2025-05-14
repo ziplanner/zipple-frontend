@@ -92,13 +92,13 @@ const ProfileSection = () => {
   return (
     <div className="md:w-[220px] lx:w-[260px] md:pt-10 md:px-10 lx:pt-20 lx:px-20 border-r border-r-border box-content">
       <div className="flex flex-col w-full items-center">
-        <div className="relative md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px]">
+        <div className="md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px] rounded-full overflow-hidden">
           <Image
             src={avatarSrc}
             alt="User"
             width={180}
             height={180}
-            className="rounded-full md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px]"
+            className="object-cover w-full h-full md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px]"
           />
           <label className="absolute bottom-0 right-0 cursor-pointer">
             <input
