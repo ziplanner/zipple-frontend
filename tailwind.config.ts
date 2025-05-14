@@ -58,6 +58,7 @@ export default {
         "36eb": ["36px", { fontWeight: "800" }],
         "22eb": ["36px", { fontWeight: "800" }],
 
+        "30b": ["30px", { fontWeight: "700" }],
         "24b": ["24px", { fontWeight: "700" }],
         "14b": ["14px", { fontWeight: "700" }],
         "12b": ["12px", { fontWeight: "700" }],
@@ -81,6 +82,8 @@ export default {
         "14m": ["14px", { fontWeight: "500" }],
         "12m": ["12px", { fontWeight: "500" }],
 
+        "36r": ["36px", { fontWeight: "400" }],
+        "24r": ["24px", { fontWeight: "400" }],
         "20r": ["20px", { fontWeight: "400" }],
         "18r": ["18px", { fontWeight: "400" }],
         "16r": ["16px", { fontWeight: "400" }],
