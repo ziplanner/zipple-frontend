@@ -21,7 +21,9 @@ export const SegmentedTab = ({
   };
 
   return (
-    <div className={`${className} flex bg-background-extraSoft rounded-full`}>
+    <div
+      className={`${className} w-full flex bg-background-extraSoft rounded-full`}
+    >
       {tabs.map((tab) => {
         const isActive = tab === activeTab;
         return (
@@ -29,8 +31,8 @@ export const SegmentedTab = ({
             key={tab}
             onClick={() => handleClick(tab)}
             className={`
-              flex-1 w-[120px] md:w-[160px] py-3 text-nowrap text-14r md:text-16r rounded-full 
-              transition-all duration-300 ease-in-out
+              flex-1 w-[120px] md:w-[160px] py-3 text-nowrap text-14r md:text-16r
+              rounded-full transition-all duration-300 ease-in-out
               ${
                 isActive
                   ? "bg-main text-white shadow-md text-14s md:text-16s"
