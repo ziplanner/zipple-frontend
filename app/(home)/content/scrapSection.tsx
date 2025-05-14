@@ -14,7 +14,7 @@ const ScrapSection = () => {
       justify-between items-center mb-5 md:mb-[60px]"
       >
         <h2 className="text-24m md:text-36m text-text-primary text-center">
-          내가 찜한 <span className="text-main">중개사/전문가를</span>
+          내가 찜한 <span className="text-main">중개사/전문가를</span> {""}
           만나보세요!
         </h2>
         <div
