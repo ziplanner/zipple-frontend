@@ -9,6 +9,7 @@ import { SegmentedTab } from "./components/tab/segemtedTab";
 import useResponsive from "./hook/useResponsive";
 import CarouselSection from "./(home)/content/carouselSection";
 import RegionSelectSection from "./(home)/content/regionSelectSection";
+import ScrapSection from "./(home)/content/scrapSection";
 
 export default function Home() {
   const isMd = useResponsive("md");
@@ -31,25 +32,25 @@ export default function Home() {
     <>
       {/* 내부 컨텐츠: 중앙 정렬 + padding 적용 */}
       <div
-        className="bg-white w-full flex flex-col items-center pt-[120px]
-        md:max-w-screen-xl2 md:px-4 lx:px-20 mx-auto"
+        className="bg-white w-full flex flex-col items-center pt-10 md:pt-20 xl:pt-[120px]
+        md:max-w-screen-xl2 lx:px-20 mx-auto"
       >
-        <h1 className="text-text-primary md:text-48s text-36s">
+        <h1 className="text-text-primary md:text-48s text-24s">
           어떤 서비스를 찾으시나요?
         </h1>
-        <p className="text-text-secondary text-center md:text-20r text-18r mt-5 mb-16 md:mb-20">
-          매물 찾기부터 이사 후 정착까지,
+        <p className="text-text-secondary text-center md:text-20r text-16r mt-5 mb-10 md:mb-20">
+          매물 찾기부터 이사 후 정착까지, {""}
           {!isMd && <br />}
           집에 관한 모든 전문가를 한 곳에서
         </p>
-
-        <SegmentedTab
-          tabs={["중개사매칭", "주요 서비스", "생활서비스"]}
-          defaultTab="주요 서비스"
-          onChange={(tab) => setSelectedTab(tab)}
-          className="md:mb-[60px] mb-12"
-        />
-
+        <div>
+          <SegmentedTab
+            tabs={["중개사매칭", "주요 서비스", "생활서비스"]}
+            defaultTab="주요 서비스"
+            onChange={(tab) => setSelectedTab(tab)}
+            className="md:mb-[60px] mb-12 max-w-[480px]"
+          />
+        </div>
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedTab}
@@ -62,12 +63,16 @@ export default function Home() {
             {renderSection()}
           </motion.div>
         </AnimatePresence>
-
-        <CarouselSection />
       </div>
-
-      {/* RegionSelectSection은 별도 padding 없이 */}
+      {/* padding 없이 */}
+      <CarouselSection />
       <RegionSelectSection />
+      <div
+        className="bg-white w-full flex flex-col items-center pt-10 md:pt-20 xl:pt-[120px]
+        md:max-w-screen-xl2 lx:px-20 mx-auto"
+      >
+        <ScrapSection />
+      </div>
     </>
   );
 }
