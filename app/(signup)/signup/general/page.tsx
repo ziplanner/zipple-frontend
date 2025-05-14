@@ -101,7 +101,10 @@ const GeneralSignupPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-20 mt-10 md:mt-20 mb-[60px] md:mb-[120px]">
+    <div
+      className="flex flex-col items-center gap-20 mt-10 md:mt-20 mb-[60px] md:mb-[120px]
+    px-[15px] md:px-0"
+    >
       <h1 className="text-text-primary text-22s md:text-36s">일반 회원 인증</h1>
       <div className="flex flex-col gap-5 px-5 py-[30px] md:p-10 border border-border md:w-[600px] rounded-[20px]">
         <h2 className="text-text-primary text-18s md:text-24s mb-5">
