@@ -10,6 +10,7 @@ import {
   mockRequestList,
 } from "@/app/data/mock/mockEstimate";
 import RequestCard from "@/app/components/card/requestCard";
+import { AnimatePresence, motion } from "framer-motion";
 
 const filters = ["3개월", "6개월", "12개월", "전체보기"];
 
@@ -75,15 +76,24 @@ const EstimatePage = () => {
       {(selectedTab === "견적"
         ? mockEstimateList.length
         : mockRequestList.length) > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {selectedTab === "견적"
-            ? mockEstimateList.map((item, idx) => (
-                <EstimateCard key={idx} {...item} />
-              ))
-            : mockRequestList.map((item, idx) => (
-                <RequestCard key={idx} {...item} />
-              ))}
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={selectedTab}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.25 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {selectedTab === "견적"
+              ? mockEstimateList.map((item, idx) => (
+                  <EstimateCard key={idx} {...item} />
+                ))
+              : mockRequestList.map((item, idx) => (
+                  <RequestCard key={idx} {...item} />
+                ))}
+          </motion.div>
+        </AnimatePresence>
       ) : (
         <div className="min-h-[60vh]" />
       )}
