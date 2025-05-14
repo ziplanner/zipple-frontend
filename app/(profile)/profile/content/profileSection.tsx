@@ -18,13 +18,13 @@ const ProfileSection = () => {
     border border-border rounded-[20px] md:ml-8 lg:ml-20 md:mt-10 lg:mt-20"
     >
       <div className="flex flex-col w-full items-center">
-        <div className="md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px]">
+        <div className="md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px] rounded-full overflow-hidden">
           <Image
             src={data?.profileUrl || defaultProfile}
             alt="User"
             width={180}
             height={180}
-            className="rounded-full md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px]"
+            className="object-cover w-full h-full md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px]"
           />
         </div>
         <p className="text-text-primary text-24m mb-[6px] mt-5">

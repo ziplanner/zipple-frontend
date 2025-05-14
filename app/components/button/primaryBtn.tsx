@@ -5,6 +5,7 @@ export interface ButtonProps
   onClick: () => void;
   text: string;
   className?: string;
+  dimmed?: boolean;
 }
 
 export const PrimaryBtn = ({ text, className = "", onClick }: ButtonProps) => (

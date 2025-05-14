@@ -28,7 +28,7 @@ const Header = () => {
   const displayCount = count > 99 ? "99+" : count.toString();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 py-4 md:py-4 px-4 lx:px-20 shadow-sm bg-white">
+    <header className="fixed top-0 left-0 right-0 z-50 py-4 md:py-4 px-[15px] lx:px-20 shadow-sm bg-white">
       <div className="md:max-w-screen-xl2 md:mx-auto flex items-center justify-between px-0 md:px-4">
         {/* Left */}
         <div className="flex items-center lg:space-x-[60px] md:space-x-8">
@@ -53,7 +53,12 @@ const Header = () => {
           />
         ) : (
           <div className="flex items-center md:space-x-6">
-            <div className="text-text-primary flex items-center space-x-1 md:space-x-2">
+            <div
+              className="text-text-primary flex items-center space-x-1 md:space-x-2 cursor-pointer"
+              onClick={() => {
+                router.push("/estimate");
+              }}
+            >
               <span className="text-12m md:text-14m lg:text-16m">
                 받은 견적
               </span>

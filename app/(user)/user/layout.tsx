@@ -47,7 +47,10 @@ export default function UserLayout({
   }, []);
 
   return (
-    <div className="flex w-full gap-10 md:gap-0 flex-col md:flex-row max-w-screen-xl2 justify-self-center">
+    <div
+      className="flex w-full gap-10 md:gap-0 flex-col md:flex-row px-[15px] md:px-0
+    max-w-screen-xl2 justify-self-center"
+    >
       {/* 왼쪽 : 프로필 영역 */}
       {isMd ? <ProfileSection /> : <MobileProfileSection />}
 
