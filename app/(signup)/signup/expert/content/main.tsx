@@ -20,7 +20,7 @@ const ExpertSignupMainContent = () => {
 
   return (
     <div className="flex flex-col items-center mt-10 md:mt-20 mb-[60px] md:mb-[120px]">
-      <h1 className="text-text-primary text-22s md:text-36s">
+      <h1 className="text-text-primary text-22s md:text-36s px-[15px] md:px-0">
         생활전문가 회원 인증
       </h1>
 
