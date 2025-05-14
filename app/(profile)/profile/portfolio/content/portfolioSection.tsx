@@ -30,7 +30,10 @@ const PortfolioSection = () => {
   const totalPages = Math.ceil(DUMMY_DATA.length / ITEMS_PER_PAGE);
 
   return (
-    <div className="flex w-full flex-col md:px-8 md:py-10 lg:px-[60px] lg:py-20">
+    <div
+      className="flex w-full flex-col md:px-8 md:py-10 lg:px-[60px] lg:py-20
+    px-[15px]"
+    >
       <div className="flex justify-between w-full mb-10">
         <h2 className="text-text-primary text-18s md:text-24s">포토폴리오</h2>
         <BasicBtn

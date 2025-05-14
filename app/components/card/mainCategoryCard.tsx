@@ -15,7 +15,7 @@ const MainCategoryCard = ({
 
   return (
     <div
-      className={`flex justify-between items-start border rounded-[10px] h-[120px] 
+      className={`flex flex-col justify-between items-start border rounded-[10px] h-[120px] 
         text-16r md:text-18r hover:text-16s hover:md:text-18s text-text-primary
         transition-transform transform duration-300 ease-in-out hover:scale-[1.02]
         border-background-light p-4 md:p-5 cursor-pointer

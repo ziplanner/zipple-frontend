@@ -10,7 +10,10 @@ export default function UserLayout({
 }) {
   return (
     <Suspense>
-      <div className="flex w-full gap-10 md:gap-0 flex-col md:flex-row max-w-screen-xl2 justify-self-center">
+      <div
+        className="flex w-full gap-10 md:gap-0 flex-col px-[15px] md:px-0
+      md:flex-row max-w-screen-xl2 justify-self-center"
+      >
         <LayoutSection />
         {children}
       </div>

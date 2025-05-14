@@ -16,13 +16,16 @@ const MobileProfileSection = () => {
     <div className="w-full p-[30px] pb-5 border border-border rounded-[20px] mt-5">
       <div className="flex flex-col w-full items-center">
         <div className="flex gap-4 items-center justify-center">
-          <Image
-            src={data?.profileUrl || defaultProfile}
-            alt="User"
-            width={80}
-            height={80}
-            className="rounded-full"
-          />
+          <div className="w-20 h-20 rounded-full overflow-hidden">
+            <Image
+              src={data?.profileUrl || defaultProfile}
+              alt="User"
+              width={80}
+              height={80}
+              className="object-cover w-full h-full"
+            />
+          </div>
+
           <div>
             <div className="flex gap-2">
               <p className="text-text-primary text-18m">{data?.nickname}</p>

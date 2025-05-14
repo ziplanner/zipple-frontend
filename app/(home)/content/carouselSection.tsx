@@ -89,8 +89,7 @@ const CarouselSection = () => {
               key={item}
               ref={index === 0 ? cardRef : null} // 첫 번째 카드 기준으로 width 측정
               className="
-                w-[260px] h-[180px]
-                sm:w-[320px] sm:h-[200px]
+                w-[240px] h-[360px]
                 md:w-[780px] md:h-[320px]
                 bg-main_bg rounded-xl flex-shrink-0"
             />

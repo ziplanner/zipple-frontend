@@ -13,7 +13,10 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="flex flex-col justify-self-center items-center mt-10 md:mt-20 mb-[60px] md:mb-[124px] gap-[70px]">
+    <div
+      className="flex flex-col justify-self-center items-center px-[15px] md:px-0
+    mt-10 md:mt-20 mb-[60px] md:mb-[124px] gap-[70px]"
+    >
       {/* 상단 텍스트 영역 */}
       <div className="flex flex-col gap-5 text-center">
         <h1 className="text-text-primary text-22m md:text-36m">
