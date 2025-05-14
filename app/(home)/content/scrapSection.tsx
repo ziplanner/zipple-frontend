@@ -14,7 +14,7 @@ const ScrapSection = () => {
       justify-between items-center mb-5 md:mb-[60px]"
       >
         <h2 className="text-24m md:text-36m text-text-primary text-center">
-          내가 찜한 <span className="text-main">중개사/전문가를</span>
+          내가 찜한 <span className="text-main">중개사/전문가를</span> {""}
           만나보세요!
         </h2>
         <div
@@ -30,23 +30,27 @@ const ScrapSection = () => {
       <h2 className="text-text-primary text-18s md:text-24s mb-5">
         공인중개사
       </h2>
-      <div className="flex flex-wrap gap-5 md:gap-10 w-max px-1 overflow-visible">
-        {agentMockData.map((expert) => (
-          <div key={expert.brokerId} className="shrink-0">
-            <ScrapProfileCard {...expert} />
-          </div>
-        ))}
+      <div className="w-full overflow-x-auto no-scrollbar">
+        <div className="flex gap-5 md:gap-10 w-max px-1">
+          {agentMockData.map((expert) => (
+            <div key={expert.brokerId} className="shrink-0">
+              <ScrapProfileCard {...expert} />
+            </div>
+          ))}
+        </div>
       </div>
 
       <h2 className="text-text-primary text-18s md:text-24s mb-5 mt-10">
         생활 서비스 전문가
       </h2>
-      <div className="flex flex-wrap gap-5 md:gap-10 w-max px-1 overflow-visible">
-        {expertMockData.map((expert) => (
-          <div key={expert.brokerId} className="shrink-0">
-            <ScrapProfileCard {...expert} />
-          </div>
-        ))}
+      <div className="w-full overflow-x-auto no-scrollbar">
+        <div className="flex gap-5 md:gap-10 w-max px-1">
+          {expertMockData.map((expert) => (
+            <div key={expert.brokerId} className="shrink-0">
+              <ScrapProfileCard {...expert} />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
