@@ -20,8 +20,7 @@ export async function verifyBusinessLicense(
   try {
     const response = await axiosInstance.post<LicenseResponse>(
       VERIFY_LICENSE,
-      null,
-      { params: payload }
+      payload
     );
     return response.data;
   } catch (error: any) {
