@@ -92,15 +92,20 @@ const ProfileSection = () => {
   return (
     <div className="md:w-[220px] lx:w-[260px] md:pt-10 md:px-10 lx:pt-20 lx:px-20 border-r border-r-border box-content">
       <div className="flex flex-col w-full items-center">
-        <div className="md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px] rounded-full overflow-hidden">
-          <Image
-            src={avatarSrc}
-            alt="User"
-            width={180}
-            height={180}
-            className="object-cover w-full h-full md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px]"
-          />
-          <label className="absolute bottom-0 right-0 cursor-pointer">
+        <div className="relative md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px]">
+          {/* 이미지 라운드 처리 + overflow-hidden은 이 div에만 적용 */}
+          <div className="rounded-full overflow-hidden w-full h-full">
+            <Image
+              src={avatarSrc}
+              alt="User"
+              width={180}
+              height={180}
+              className="object-cover w-full h-full md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px]"
+            />
+          </div>
+
+          {/* edit 아이콘은 절대 위치로 띄우기 */}
+          <label className="absolute bottom-0 right-0 z-10 cursor-pointer">
             <input
               type="file"
               accept="image/*"
@@ -116,6 +121,7 @@ const ProfileSection = () => {
             />
           </label>
         </div>
+
         <p className="text-text-primary text-24m mb-[6px] mt-5">{name}</p>
         <RoleToken role={roleType} />
         <button
