@@ -30,7 +30,7 @@ const ScrapSection = () => {
       <h2 className="text-text-primary text-18s md:text-24s mb-5">
         공인중개사
       </h2>
-      <div className="w-full overflow-x-auto no-scrollbar">
+      <div className="w-full overflow-x-auto no-scrollbar pt-[22px]">
         <div className="flex gap-5 md:gap-10 w-max px-1">
           {agentMockData.map((expert) => (
             <div key={expert.brokerId} className="shrink-0">
@@ -40,10 +40,10 @@ const ScrapSection = () => {
         </div>
       </div>
 
-      <h2 className="text-text-primary text-18s md:text-24s mb-5 mt-10">
+      <h2 className="text-text-primary text-18s md:text-24s mb-5 mt-12">
         생활 서비스 전문가
       </h2>
-      <div className="w-full overflow-x-auto no-scrollbar">
+      <div className="w-full overflow-x-auto no-scrollbar pt-[22px]">
         <div className="flex gap-5 md:gap-10 w-max px-1">
           {expertMockData.map((expert) => (
             <div key={expert.brokerId} className="shrink-0">

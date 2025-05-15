@@ -67,10 +67,7 @@ export default function Home() {
       {/* padding 없이 */}
       <CarouselSection />
       <RegionSelectSection />
-      <div
-        className="bg-white w-full flex flex-col items-center pt-10 md:pt-20 xl:pt-[120px]
-        md:max-w-screen-xl2 lx:px-20 mx-auto"
-      >
+      <div className="bg-white w-full flex flex-col items-center md:max-w-screen-xl2 lx:px-20 mx-auto">
         <ScrapSection />
       </div>
     </>
