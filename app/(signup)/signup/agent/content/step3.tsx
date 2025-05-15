@@ -24,6 +24,7 @@ const Step3 = () => {
     email,
     foreigner,
     phoneNumber,
+    repPhoneNumber,
     businessLicenseNumber,
     openingDate,
     searchValue,
@@ -142,7 +143,7 @@ const Step3 = () => {
         await registerRepresentativeUser(
           {
             ...commonData,
-            representativePhoneNumber: phoneNumber,
+            representativePhoneNumber: repPhoneNumber,
           },
           businessRegistrationFile!,
           brokerageLicenseFile!,

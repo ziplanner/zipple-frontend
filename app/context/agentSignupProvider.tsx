@@ -6,7 +6,6 @@ import {
   Dispatch,
   SetStateAction,
 } from "react";
-import defaultProfile from "@/app/images/icon/default_profile.svg";
 
 interface TermsState {
   all: boolean;
@@ -47,6 +46,9 @@ interface SignupContextType {
 
   phoneNumber: string;
   setPhoneNumber: (value: string) => void;
+
+  repPhoneNumber: string;
+  setRepPhoneNumber: (value: string) => void;
 
   foreigner: string;
   setForeigner: (value: string) => void;
@@ -105,6 +107,7 @@ export const AgentSignupProvider: React.FC<SignupProviderProps> = ({
   const [birthday, setBirthday] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [repPhoneNumber, setRepPhoneNumber] = useState<string>("");
   const [foreigner, setForeigner] = useState<string>("L");
   const [profileImage, setProfileImage] = useState<string>("");
 
@@ -152,6 +155,8 @@ export const AgentSignupProvider: React.FC<SignupProviderProps> = ({
         setEmail,
         phoneNumber,
         setPhoneNumber,
+        repPhoneNumber,
+        setRepPhoneNumber,
         foreigner,
         setForeigner,
         profileImage,

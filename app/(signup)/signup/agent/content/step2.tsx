@@ -26,6 +26,8 @@ const Step2 = () => {
     setEmail,
     phoneNumber,
     setPhoneNumber,
+    repPhoneNumber,
+    setRepPhoneNumber,
     foreigner,
     setForeigner,
     profileImage,
@@ -44,7 +46,6 @@ const Step2 = () => {
     null
   );
 
-  const [repPhoneNumber, setRepPhoneNumber] = useState<string>("");
   const [repVerificationCode, setRepVerificationCode] = useState<string>("");
   const [repVerificationSent, setRepVerificationSent] =
     useState<boolean>(false);
