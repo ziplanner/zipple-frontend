@@ -15,6 +15,7 @@ interface MultiSelectBoxProps {
   value: string[];
   onChange: (value: string[]) => void;
   disabled?: boolean;
+  maxSelectable?: number;
 }
 
 export const MultiSelectBox = ({
@@ -22,15 +23,20 @@ export const MultiSelectBox = ({
   value,
   onChange,
   disabled = false,
+  maxSelectable,
 }: MultiSelectBoxProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const boxRef = useRef<HTMLDivElement>(null);
 
   const handleSelect = (optionValue: string) => {
     if (value.includes(optionValue)) {
+      // 선택 해제
       onChange(value.filter((item) => item !== optionValue));
     } else {
-      onChange([...value, optionValue]);
+      // 선택 추가 (제한 체크)
+      if (!maxSelectable || value.length < maxSelectable) {
+        onChange([...value, optionValue]);
+      }
     }
   };
 
