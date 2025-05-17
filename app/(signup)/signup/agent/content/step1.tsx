@@ -2,13 +2,14 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Chips } from "@/app/components/chips/chips";
-import { DateInput } from "@/app/components/input/dateInput";
 import { InputWithBtn } from "@/app/components/input/inputWithBtn";
 import { LargeBtn } from "@/app/components/button/largeBtn";
 import { useAgentSignup } from "@/app/context/agentSignupProvider";
 import AlertMessage from "@/app/components/alert/alertMessage";
 import axios from "axios";
 import { verifyBusinessLicense } from "@/app/api/verify/api";
+import Input from "@/app/components/input/input";
+import { PhoneInput } from "@/app/components/input/phoneInput";
 
 export interface RealtorSearchResult {
   ldCode: string; // 시군구코드
@@ -29,12 +30,16 @@ const Step1 = () => {
     setCurrentStep,
     type,
     setType,
-    openingDate,
-    setOpeningDate,
+    landlineNumber,
+    setLandlineNumber,
+    // openingDate,
+    // setOpeningDate,
     businessLicenseNumber,
     setBusinessLicenseNumber,
     searchValue,
     setSearchValue,
+    setBrokerAddress,
+    setBrokerLicenseNumber,
   } = useAgentSignup();
   const dropdownWrapperRef = useRef<HTMLDivElement>(null);
 
@@ -49,11 +54,14 @@ const Step1 = () => {
     useState<RealtorSearchResult | null>(null);
 
   const isValid = !!(
-    type &&
-    searchValue &&
-    openingDate &&
-    businessLicenseNumber &&
-    isVerified
+    (
+      type &&
+      searchValue &&
+      landlineNumber &&
+      // openingDate &&
+      businessLicenseNumber
+    )
+    // isVerified
   );
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -111,44 +119,44 @@ const Step1 = () => {
     };
   }, [page, hasMore, loading]);
 
-  const handleVerify = async () => {
-    if (!selectedRealtor) {
-      setAlertText("중개사무소를 선택해주세요.");
-      return;
-    }
-    if (
-      !openingDate ||
-      openingDate === "Invalid Date" ||
-      openingDate === "" ||
-      !/^\d{4}-\d{2}-\d{2}$/.test(openingDate)
-    ) {
-      setAlertText("개업일자를 입력해주세요.");
-      return;
-    }
-    if (!businessLicenseNumber) {
-      setAlertText("사업자 등록번호를 입력해주세요.");
-      return;
-    }
+  // const handleVerify = async () => {
+  //   if (!selectedRealtor) {
+  //     setAlertText("중개사무소를 선택해주세요.");
+  //     return;
+  //   }
+  //   if (
+  //     !openingDate ||
+  //     openingDate === "Invalid Date" ||
+  //     openingDate === "" ||
+  //     !/^\d{4}-\d{2}-\d{2}$/.test(openingDate)
+  //   ) {
+  //     setAlertText("개업일자를 입력해주세요.");
+  //     return;
+  //   }
+  //   if (!businessLicenseNumber) {
+  //     setAlertText("사업자 등록번호를 입력해주세요.");
+  //     return;
+  //   }
 
-    try {
-      const result = await verifyBusinessLicense({
-        businessNumber: businessLicenseNumber,
-        startDate: openingDate.replace(/-/g, ""),
-        ownerName: selectedRealtor.brkrNm,
-      });
+  //   try {
+  //     const result = await verifyBusinessLicense({
+  //       businessNumber: businessLicenseNumber,
+  //       startDate: openingDate.replace(/-/g, ""),
+  //       ownerName: selectedRealtor.brkrNm,
+  //     });
 
-      if (result.isReal) {
-        setAlertText("인증되었습니다!");
-        setIsVerified(true);
-      } else {
-        setAlertText("유효하지 않은 사업자 등록번호입니다.");
-        setIsVerified(false);
-      }
-    } catch (err) {
-      setAlertText("인증 요청 실패: " + (err as any)?.message || "");
-      setIsVerified(false);
-    }
-  };
+  //     if (result.isReal) {
+  //       setAlertText("인증되었습니다!");
+  //       setIsVerified(true);
+  //     } else {
+  //       setAlertText("유효하지 않은 사업자 등록번호입니다.");
+  //       setIsVerified(false);
+  //     }
+  //   } catch (err) {
+  //     setAlertText("인증 요청 실패: " + (err as any)?.message || "");
+  //     setIsVerified(false);
+  //   }
+  // };
 
   const handleNext = () => {
     if (!isValid) {
@@ -192,7 +200,6 @@ const Step1 = () => {
           onChange={setType}
         />
       </div>
-
       {/* 검색 및 드롭다운 */}
       <div className="flex flex-col gap-2.5 relative" ref={dropdownWrapperRef}>
         <h3 className="text-text-primary text-14m md:text-16m">
@@ -225,6 +232,13 @@ const Step1 = () => {
                   setRealtors([]); // 드롭다운 닫기
                   setSelectedRealtor(item);
                   // setBusinessLicenseNumber(item.jurirno.replace(/-/g, ""));
+
+                  if (item.crqfcNo) {
+                    const onlyDigits = item.crqfcNo.replace(/\D/g, "");
+                    setLandlineNumber(onlyDigits);
+                  }
+                  setBrokerAddress(item.ldCodeNm);
+                  setBrokerLicenseNumber(item.jurirno);
                 }}
               >
                 <p className="text-text-primary text-16m md:text-18m group-hover:text-main">
@@ -290,28 +304,42 @@ const Step1 = () => {
         </div>
       )}
       {/* 개업일자 */}
-      <div className="flex flex-col gap-2.5">
+      {/* <div className="flex flex-col gap-2.5">
         <h3 className="text-text-primary text-14m md:text-16m">
           개업일자 <span className="text-error">*</span>
         </h3>
         <DateInput onChange={setOpeningDate} />
-      </div>
-
+      </div> */}
       {/* 사업자등록번호 */}
       <div className="flex flex-col gap-2.5">
         <h3 className="text-text-primary text-14m md:text-16m">
           사업자등록번호 <span className="text-error">*</span>
         </h3>
-        <InputWithBtn
+        <Input
+          value={businessLicenseNumber}
+          onChange={(e) => setBusinessLicenseNumber(e.target.value)}
+          placeholder="사업자등록번호를 입력해주세요. (‘-’ 제외)"
+        />
+        {/* <InputWithBtn
           type="text"
           searchValue={businessLicenseNumber}
           onSearchChange={setBusinessLicenseNumber}
           onBtnClick={handleVerify}
           placeholder="사업자등록번호를 입력해주세요. (‘-’ 제외)"
           label="인증"
+        /> */}
+      </div>
+      {/* 유선 전화번호 */}
+      <div className="flex flex-col gap-2.5">
+        <h3 className="text-text-primary text-14m md:text-16m">
+          유선 전화번호 <span className="text-error">*</span>
+        </h3>
+        <PhoneInput
+          isLandline={true}
+          value={landlineNumber}
+          onChange={setLandlineNumber}
         />
       </div>
-
       <LargeBtn
         onClick={handleNext}
         text={"다음"}
@@ -319,7 +347,6 @@ const Step1 = () => {
         className="mt-[60px]"
         disabled={!isValid}
       />
-
       {alertText && (
         <AlertMessage text={alertText} onClose={() => setAlertText(null)} />
       )}

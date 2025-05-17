@@ -32,8 +32,15 @@ interface SignupContextType {
   businessLicenseNumber: string;
   setBusinessLicenseNumber: (value: string) => void;
 
-  openingDate: string;
-  setOpeningDate: (value: string) => void;
+  brokerLicenseNumber: string;
+  setBrokerLicenseNumber: (value: string) => void;
+
+  brokerAddress: string;
+  setBrokerAddress: (value: string) => void;
+
+  // 개업일자
+  // openingDate: string;
+  // setOpeningDate: (value: string) => void;
 
   name: string;
   setName: (value: string) => void;
@@ -49,6 +56,9 @@ interface SignupContextType {
 
   repPhoneNumber: string;
   setRepPhoneNumber: (value: string) => void;
+
+  landlineNumber: string;
+  setLandlineNumber: (value: string) => void;
 
   foreigner: string;
   setForeigner: (value: string) => void;
@@ -101,13 +111,16 @@ export const AgentSignupProvider: React.FC<SignupProviderProps> = ({
   const [checkedValues, setCheckedValues] = useState<string[]>([]);
   const [businessLicenseNumber, setBusinessLicenseNumber] =
     useState<string>("");
-  const [openingDate, setOpeningDate] = useState<string>("");
+  const [brokerLicenseNumber, setBrokerLicenseNumber] = useState<string>("");
+  // const [openingDate, setOpeningDate] = useState<string>("");
+  const [brokerAddress, setBrokerAddress] = useState<string>("");
 
   const [name, setName] = useState<string>("");
   const [birthday, setBirthday] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [repPhoneNumber, setRepPhoneNumber] = useState<string>("");
+  const [landlineNumber, setLandlineNumber] = useState<string>("");
   const [foreigner, setForeigner] = useState<string>("L");
   const [profileImage, setProfileImage] = useState<string>("");
 
@@ -145,8 +158,12 @@ export const AgentSignupProvider: React.FC<SignupProviderProps> = ({
         setCheckedValues,
         businessLicenseNumber,
         setBusinessLicenseNumber,
-        openingDate,
-        setOpeningDate,
+        brokerLicenseNumber,
+        setBrokerLicenseNumber,
+        brokerAddress,
+        setBrokerAddress,
+        // openingDate,
+        // setOpeningDate,
         name,
         setName,
         birthday,
@@ -157,6 +174,8 @@ export const AgentSignupProvider: React.FC<SignupProviderProps> = ({
         setPhoneNumber,
         repPhoneNumber,
         setRepPhoneNumber,
+        landlineNumber,
+        setLandlineNumber,
         foreigner,
         setForeigner,
         profileImage,

@@ -64,7 +64,8 @@ const Step2 = () => {
     foreigner &&
     profileImage &&
     isPhoneVerified &&
-    (type !== "ASSOCIATE" || isRepPhoneVerified)
+    (type !== "ASSOCIATE" || isRepPhoneVerified) &&
+    (type !== "ASSOCIATE" || repPhoneNumber)
   );
 
   const handlePhoneChange = (value: string) => setPhoneNumber(value);
