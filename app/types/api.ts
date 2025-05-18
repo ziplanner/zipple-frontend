@@ -25,6 +25,7 @@ export interface FetchBrokerListParams {
   size?: number;
   specializedType?: string;
   sortBy?: string;
+  area?: string[];
 }
 
 export interface ExpertResponse {
