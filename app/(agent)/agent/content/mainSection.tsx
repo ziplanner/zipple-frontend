@@ -27,6 +27,7 @@ export default function MainSection() {
           page: currentPage,
           size: 10,
           specializedType: selectedType,
+          area: selectedRegions,
         });
 
         setBrokers(res.portfolios);
@@ -37,7 +38,7 @@ export default function MainSection() {
     };
 
     loadData();
-  }, [currentPage, selectedType]);
+  }, [currentPage, selectedType, selectedRegions]);
 
   const handleTypeSelect = (val: string) => {
     setSelectedType(val);
