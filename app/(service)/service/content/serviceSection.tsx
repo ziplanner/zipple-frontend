@@ -8,13 +8,16 @@ import CategoryModal from "@/app/components/modal/categoryModal";
 
 interface ServiceSectionProps {
   onSelect: (value: string) => void;
+  initialValue?: string;
 }
 
-const ServiceSection = ({ onSelect }: ServiceSectionProps) => {
+const ServiceSection = ({ onSelect, initialValue }: ServiceSectionProps) => {
   const isMd = useResponsive("md");
 
   const [selected, setSelected] = useState<string>("");
-  const [selectedValue, setSelectedValue] = useState<string>("");
+  const [selectedValue, setSelectedValue] = useState<string>(
+    initialValue || ""
+  );
   const [open, setOpen] = useState<boolean>(false);
 
   const handleSelect = (value: string, label: string) => {
@@ -23,6 +26,12 @@ const ServiceSection = ({ onSelect }: ServiceSectionProps) => {
     onSelect(value);
     setOpen(false);
   };
+
+  useEffect(() => {
+    if (initialValue) {
+      onSelect(initialValue);
+    }
+  }, [initialValue]);
 
   useEffect(() => {
     if (open) {
