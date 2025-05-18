@@ -23,6 +23,7 @@ export interface RegisterExpertRequest {
   foreigner: string;
   phoneNumber: string;
   businessName: string;
+  businessAddress: string;
   businessLicenseNumber: string;
   openingDate: string;
   expertType: string;

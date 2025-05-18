@@ -19,6 +19,8 @@ const Step1 = () => {
     setCurrentStep,
     businessName,
     setBusinessName,
+    businessAddress,
+    setBusinessAddress,
     expertDetailType,
     setExpertDetailType,
     expertType,
@@ -35,8 +37,6 @@ const Step1 = () => {
   const [isNextEnabled, setIsNextEnabled] = useState(false);
   const [isVerified, setIsVerified] = useState<boolean>(false);
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const allFieldsFilled =
@@ -60,7 +60,6 @@ const Step1 = () => {
 
   const handleSearch = async () => {
     if (!businessName.trim()) return;
-    setLoading(true);
     try {
       const res = await fetch(
         "https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=" +
@@ -81,8 +80,6 @@ const Step1 = () => {
       setSearchResults(data.data || []);
     } catch (err) {
       setAlertText("상호명 검색 실패: " + (err as any)?.message);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -211,6 +208,16 @@ const Step1 = () => {
           개업일자 <span className="text-error">*</span>
         </h3>
         <DateInput onChange={handleOpeningDateChange} />
+      </div>
+      <div className="flex flex-col gap-2.5">
+        <h3 className="text-text-primary text-14m md:text-16m">
+          사업장 주소 <span className="text-error">*</span>
+        </h3>
+        <Input
+          value={businessAddress}
+          onChange={(e) => setBusinessAddress(e.target.value)}
+          placeholder="사업장 주소를 입력해주세요."
+        />
       </div>
       <div className="flex flex-col gap-2.5">
         <h3 className="text-text-primary text-14m md:text-16m">
