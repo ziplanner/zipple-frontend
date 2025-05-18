@@ -11,6 +11,8 @@ const MainSection = () => {
             key={item.label}
             label={item.label}
             image={item.image}
+            value={item.value}
+            url={item.url}
             isExpert={false}
           />
         ))}
@@ -23,6 +25,8 @@ const MainSection = () => {
             key={item.label}
             label={item.label}
             image={item.image}
+            value={item.value}
+            url={item.url}
             isExpert={true}
           />
         ))}

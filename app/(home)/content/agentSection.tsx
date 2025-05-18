@@ -10,6 +10,8 @@ const AgentSection = () => {
             key={item.label}
             label={item.label}
             image={item.image}
+            value={item.value}
+            url={item.url}
             isExpert={false}
           />
         ))}
@@ -21,6 +23,8 @@ const AgentSection = () => {
             key={item.label}
             label={item.label}
             image={item.image}
+            value={item.value}
+            url={item.url}
             isExpert={false}
           />
         ))}

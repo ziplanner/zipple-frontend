@@ -24,9 +24,7 @@ const Step3 = () => {
     email,
     foreigner,
     phoneNumber,
-    repPhoneNumber,
     businessLicenseNumber,
-    openingDate,
     searchValue,
     terms,
     setTerms,
@@ -41,6 +39,10 @@ const Step3 = () => {
     brokerageLicenseFileName,
     setBrokerageLicenseFileName,
     profileImage,
+    landlineNumber,
+    brokerLicenseNumber,
+    brokerAddress,
+    repPhoneNumber,
   } = useAgentSignup();
 
   const router = useRouter();
@@ -120,10 +122,12 @@ const Step3 = () => {
         birthday,
         email,
         foreigner,
+        landlineNumber,
+        brokerLicenseNumber,
+        brokerAddress,
         phoneNumber,
         businessName: searchValue,
         businessLicenseNumber,
-        openingDate,
         specializedType,
         requiredConsent: true,
         marketing: terms.marketing,
@@ -135,16 +139,16 @@ const Step3 = () => {
 
       if (type === "ASSOCIATE") {
         await registerAssociateUser(
-          commonData,
+          {
+            ...commonData,
+            representativePhoneNumber: repPhoneNumber,
+          },
           brokerageLicenseFile!,
           profileImageFile
         );
       } else {
         await registerRepresentativeUser(
-          {
-            ...commonData,
-            representativePhoneNumber: repPhoneNumber,
-          },
+          commonData,
           businessRegistrationFile!,
           brokerageLicenseFile!,
           profileImageFile

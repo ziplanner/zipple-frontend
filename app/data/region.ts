@@ -99,6 +99,7 @@ export const CITIES = [
 
 export const districtMap: Record<string, { label: string; value: string }[]> = {
   SEOUL: [
+    { label: "전체", value: "ALL" },
     { label: "강남구", value: "GANGNAM" },
     { label: "강동구", value: "GANGDONG" },
     { label: "강북구", value: "GANGBUK" },
@@ -126,6 +127,7 @@ export const districtMap: Record<string, { label: string; value: string }[]> = {
     { label: "중랑구", value: "JUNGNANG" },
   ],
   GYEONGGI: [
+    { label: "전체", value: "ALL" },
     { label: "가평군", value: "GAPYEONG" },
     { label: "고양시 덕양구", value: "DEOGYANG" },
     { label: "고양시 일산동구", value: "ILSANDONG" },
@@ -169,6 +171,7 @@ export const districtMap: Record<string, { label: string; value: string }[]> = {
     { label: "화성시", value: "HWASEONG" },
   ],
   INCHEON: [
+    { label: "전체", value: "ALL" },
     { label: "강화군", value: "GANGHWA" },
     { label: "계양구", value: "GYEYANG" },
     { label: "남동구", value: "NAMDONG" },
@@ -181,6 +184,7 @@ export const districtMap: Record<string, { label: string; value: string }[]> = {
     { label: "중구", value: "JUNG" },
   ],
   GANGWON: [
+    { label: "전체", value: "ALL" },
     { label: "강릉시", value: "GANGNEUNG" },
     { label: "고성군", value: "GOSEONG" },
     { label: "동해시", value: "DONGHAE" },
@@ -200,14 +204,16 @@ export const districtMap: Record<string, { label: string; value: string }[]> = {
     { label: "횡성군", value: "HOENGSEONG" },
   ],
   DAEJEON: [
+    { label: "전체", value: "ALL" },
     { label: "대덕구", value: "DAEDEOK" },
     { label: "동구", value: "DONG" },
     { label: "서구", value: "SEO" },
     { label: "유성구", value: "YUSEONG" },
     { label: "중구", value: "JUNG" },
   ],
-  SEJONG: [{ label: "세종 전체", value: "ALL" }],
+  SEJONG: [{ label: "전체", value: "ALL" }],
   CHUNGNAM: [
+    { label: "전체", value: "ALL" },
     { label: "계룡시", value: "GYERYONG" },
     { label: "공주시", value: "GONGJU" },
     { label: "금산군", value: "GEUMSAN" },
@@ -226,6 +232,7 @@ export const districtMap: Record<string, { label: string; value: string }[]> = {
     { label: "홍성군", value: "HONGSEONG" },
   ],
   CHUNGBUK: [
+    { label: "전체", value: "ALL" },
     { label: "괴산군", value: "GOESAN" },
     { label: "단양군", value: "DANYANG" },
     { label: "보은군", value: "BOEUN" },
@@ -241,6 +248,7 @@ export const districtMap: Record<string, { label: string; value: string }[]> = {
     { label: "충주시", value: "CHUNGJU" },
   ],
   BUSAN: [
+    { label: "전체", value: "ALL" },
     { label: "강서구", value: "GANGSEO" },
     { label: "금정구", value: "GEUMJEONG" },
     { label: "기장군", value: "GIJANG" },
@@ -259,6 +267,7 @@ export const districtMap: Record<string, { label: string; value: string }[]> = {
     { label: "해운대구", value: "HAEUNDAE" },
   ],
   ULSAN: [
+    { label: "전체", value: "ALL" },
     { label: "남구", value: "NAM" },
     { label: "동구", value: "DONG" },
     { label: "북구", value: "BUK" },
@@ -266,6 +275,7 @@ export const districtMap: Record<string, { label: string; value: string }[]> = {
     { label: "중구", value: "JUNG" },
   ],
   GYEONGNAM: [
+    { label: "전체", value: "ALL" },
     { label: "거제시", value: "GEOJE" },
     { label: "거창군", value: "GEOCHANG" },
     { label: "고성군", value: "GOSEONG" },
@@ -290,6 +300,7 @@ export const districtMap: Record<string, { label: string; value: string }[]> = {
     { label: "합천군", value: "HAPCHEON" },
   ],
   GYEONGBUK: [
+    { label: "전체", value: "ALL" },
     { label: "경산시", value: "GYEONGSAN" },
     { label: "경주시", value: "GYEONGJU" },
     { label: "고령군", value: "GORYEONG" },
@@ -315,6 +326,7 @@ export const districtMap: Record<string, { label: string; value: string }[]> = {
     { label: "포항시 북구", value: "POHANG_BUK" },
   ],
   DAEGU: [
+    { label: "전체", value: "ALL" },
     { label: "군위군", value: "GUNWI" },
     { label: "남구", value: "NAM" },
     { label: "달서구", value: "DALSEO" },
@@ -326,6 +338,7 @@ export const districtMap: Record<string, { label: string; value: string }[]> = {
     { label: "중구", value: "JUNG" },
   ],
   GWANGJU: [
+    { label: "전체", value: "ALL" },
     { label: "광산구", value: "GWANGSAN" },
     { label: "남구", value: "NAM" },
     { label: "동구", value: "DONG" },
@@ -333,6 +346,7 @@ export const districtMap: Record<string, { label: string; value: string }[]> = {
     { label: "서구", value: "SEO" },
   ],
   JEONNAM: [
+    { label: "전체", value: "ALL" },
     { label: "강진군", value: "GANGJIN" },
     { label: "고흥군", value: "GOHEUNG" },
     { label: "곡성군", value: "GOKSEONG" },
@@ -356,6 +370,7 @@ export const districtMap: Record<string, { label: string; value: string }[]> = {
     { label: "화순군", value: "HWASUN" },
   ],
   JEONBUK: [
+    { label: "전체", value: "ALL" },
     { label: "고창군", value: "GOCHANG" },
     { label: "군산시", value: "GUNSAN" },
     { label: "김제시", value: "GIMJE" },
@@ -373,6 +388,7 @@ export const districtMap: Record<string, { label: string; value: string }[]> = {
     { label: "진안군", value: "JINAN" },
   ],
   JEJU: [
+    { label: "전체", value: "ALL" },
     { label: "서귀포시", value: "SEOGWIPO" },
     { label: "제주시", value: "JEJU" },
   ],

@@ -96,7 +96,7 @@ const Step2 = () => {
         </h3>
         <div className="flex flex-col items-center">
           <Image
-                     src={profileImage || defaultProfile}
+            src={profileImage || defaultProfile}
             alt="프로필 이미지"
             width={180}
             height={180}
