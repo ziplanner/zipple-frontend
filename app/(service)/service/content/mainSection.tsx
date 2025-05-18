@@ -11,7 +11,7 @@ export default function MainSection() {
   const router = useRouter();
   const param = useSearchParams();
   const typeFromUrl = param.get("type") || "";
-  const regionFromUrl = param.get("region")?.split(",") ?? [];
+  const regionFromUrl = param.getAll("region");
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [experts, setExperts] = useState<ExpertResponse[]>([]);

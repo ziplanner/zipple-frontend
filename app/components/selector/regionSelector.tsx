@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useCallback } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import close_blue from "@/app/images/icon/close_blue.svg";
 import vector_black from "@/app/images/icon/vector.svg";
 import gt from "@/app/images/icon/gt.svg";
@@ -29,7 +29,17 @@ export const RegionSelector = ({
   maxSelectable,
 }: RegionSelectorProps) => {
   const router = useRouter();
-  const [selectedCity, setSelectedCity] = useState<string>(CITIES[1].value);
+  const param = useSearchParams();
+  const regionFromUrl = param.getAll("region");
+
+  const initialCityFromUrl = useMemo(() => {
+    const firstRegion = regionFromUrl[0];
+    const cityCode = firstRegion?.split("-")[0];
+    const isValidCity = CITIES.some((c) => c.value === cityCode);
+    return isValidCity ? cityCode : CITIES[1].value; // 유효하지 않으면 SEOUL
+  }, [regionFromUrl]);
+
+  const [selectedCity, setSelectedCity] = useState<string>(initialCityFromUrl);
 
   const getDistricts = useCallback(
     (cityCode: string) => districtMap[cityCode] || [],
