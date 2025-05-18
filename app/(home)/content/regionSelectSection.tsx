@@ -1,30 +1,14 @@
 "use client";
 
 import { SegmentedTab } from "@/app/components/tab/segemtedTab";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-const regions = [
-  "서울",
-  "경기",
-  "인천",
-  "강원",
-  "대전",
-  "세종",
-  "충남",
-  "충북",
-  "부산",
-  "울산",
-  "경남",
-  "대구",
-  "광주",
-  "전남",
-  "전북",
-  "제주",
-];
+import { CITIES } from "@/app/data/region";
 
 const RegionSelectSection = () => {
+  const router = useRouter();
+
   const [selectedTab, setSelectedTab] = useState<string>("공인중개사");
-  const [selectedRegion, setSelectedRegion] = useState<string>("경기");
 
   return (
     <section
@@ -50,23 +34,24 @@ const RegionSelectSection = () => {
 
         {/* 지역 버튼들 */}
         <div className="grid grid-cols-3 md:grid-cols-4 xl:grid-cols-8 gap-4 md:gap-[18px]">
-          {regions.map((region) => (
-            <button
-              key={region}
-              onClick={() => setSelectedRegion(region)}
-              className={`flex items-center justify-center 
-        h-[60px] md:h-20 bg-white w-full
-        text-16r md:text-18r rounded-xl border transition-all
-        hover:bg-main_bg2 hover:border-main
-        ${
-          selectedRegion === region
-            ? "border-main text-main font-semibold"
-            : "text-text-secondary border-transparent"
-        }`}
-            >
-              {region}
-            </button>
-          ))}
+          {CITIES.filter((city) => city.value !== "ALL").map(
+            ({ label, value }) => (
+              <button
+                key={value}
+                onClick={() => {
+                  const basePath =
+                    selectedTab === "공인중개사" ? "/agent" : "/service";
+                  router.push(`${basePath}?region=${value}-ALL`);
+                }}
+                className="flex items-center justify-center 
+                h-[60px] md:h-20 bg-white w-full
+                text-16r md:text-18r rounded-xl border transition-all
+                hover:bg-main_bg2 hover:border-main text-text-secondary border-transparent"
+              >
+                {label}
+              </button>
+            )
+          )}
         </div>
       </div>
     </section>
