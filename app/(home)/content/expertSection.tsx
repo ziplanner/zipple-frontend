@@ -11,6 +11,8 @@ const ExpertSection = () => {
             key={item.label}
             label={item.label}
             image={item.image}
+            value={item.value}
+            url={item.url}
             isExpert={true}
           />
         ))}
@@ -23,6 +25,8 @@ const ExpertSection = () => {
             key={item.label}
             label={item.label}
             image={item.image}
+            value={item.value}
+            url={item.url}
             isExpert={true}
           />
         ))}
