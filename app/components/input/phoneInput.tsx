@@ -1,34 +1,51 @@
 import { useState, useEffect } from "react";
 
 interface PhoneInputProps {
-  value?: string; // "01012345678"
+  value?: string; // "0212345678" 또는 "01012345678"
   onChange?: (fullPhone: string) => void;
   disabled?: boolean;
+  isLandline?: boolean; // 유선 전화 여부
 }
 
 export const PhoneInput = ({
   value = "",
   onChange,
   disabled,
+  isLandline = false, // 기본값 false
 }: PhoneInputProps) => {
-  const [first, setFirst] = useState<string>("010");
+  const [first, setFirst] = useState<string>(isLandline ? "02" : "010");
   const [middle, setMiddle] = useState<string>("");
   const [last, setLast] = useState<string>("");
 
-  // ✅ 최초 마운트 또는 외부 값이 바뀔 때만 내부 상태 초기화
   useEffect(() => {
     const digits = value.replace(/\D/g, "");
-    if (digits.length >= 10 && digits.length <= 11) {
-      const firstPart = digits.slice(0, 3);
-      const middlePart = digits.slice(3, 7);
-      const lastPart = digits.slice(7, 11);
+    if (digits.length >= 9 && digits.length <= 11) {
+      let firstPart = "";
+      let middlePart = "";
+      let lastPart = "";
+
+      // 유선: 지역번호 길이 다양함 (02는 2자리, 그 외는 3자리)
+      if (isLandline) {
+        if (digits.startsWith("02")) {
+          firstPart = "02";
+          middlePart = digits.slice(2, digits.length - 4);
+          lastPart = digits.slice(-4);
+        } else {
+          firstPart = digits.slice(0, 3);
+          middlePart = digits.slice(3, digits.length - 4);
+          lastPart = digits.slice(-4);
+        }
+      } else {
+        firstPart = digits.slice(0, 3);
+        middlePart = digits.slice(3, 7);
+        lastPart = digits.slice(7, 11);
+      }
 
       setFirst(firstPart);
       setMiddle(middlePart);
       setLast(lastPart);
     }
-    // else: 입력 중에는 상태를 유지 (리셋 방지)
-  }, [value]);
+  }, [value, isLandline]);
 
   const handleChange = (type: "first" | "middle" | "last", input: string) => {
     const onlyNumber = input.replace(/\D/g, "");
@@ -54,9 +71,30 @@ export const PhoneInput = ({
     onChange?.(fullPhone);
   };
 
+  const phonePrefixOptions = isLandline
+    ? [
+        "02", // 서울
+        "031",
+        "032",
+        "033", // 경기, 인천, 강원
+        "041",
+        "042",
+        "043", // 충청
+        "051",
+        "052",
+        "053",
+        "054",
+        "055", // 영남
+        "061",
+        "062",
+        "063",
+        "064", // 호남, 제주
+      ]
+    : ["010", "011", "016", "017", "018", "019"];
+
   return (
     <div className="flex items-center gap-2.5 w-full text-text-secondary">
-      {/* 앞 번호 선택 */}
+      {/* 앞 번호 */}
       <select
         className={`flex-1 w-full h-[60px] border border-background-light rounded-[10px] px-2 md:px-4
           focus:outline-none focus:border-main ${
@@ -67,12 +105,11 @@ export const PhoneInput = ({
         onChange={(e) => handleChange("first", e.target.value)}
         disabled={disabled}
       >
-        <option value="010">010</option>
-        <option value="011">011</option>
-        <option value="016">016</option>
-        <option value="017">017</option>
-        <option value="018">018</option>
-        <option value="019">019</option>
+        {phonePrefixOptions.map((opt) => (
+          <option key={opt} value={opt}>
+            {opt}
+          </option>
+        ))}
       </select>
 
       <span>-</span>

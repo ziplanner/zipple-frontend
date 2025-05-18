@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import ping from "@/app/images/icon/ping.svg";
 import vector from "@/app/images/icon/vector_gray.svg";
@@ -10,13 +10,24 @@ import {
 } from "@/app/components/selector/regionSelector";
 import useResponsive from "@/app/hook/useResponsive";
 import { motion, AnimatePresence } from "framer-motion";
+import { getRegionFromCode } from "@/app/utils/getRegionLabel";
 
-const RegionSection = () => {
+interface RegionSectionProps {
+  selectedCodes: string[]; // 지역 코드 배열
+  onChange: (codes: string[]) => void;
+}
+
+const RegionSection = ({ selectedCodes, onChange }: RegionSectionProps) => {
   const isMd = useResponsive("md");
 
   const [open, setOpen] = useState<boolean>(false);
   const [regions, setRegions] = useState<Region[]>([]);
   const [showSelector, setShowSelector] = useState<boolean>(true);
+
+  useEffect(() => {
+    const regionList: Region[] = selectedCodes.map(getRegionFromCode);
+    setRegions(regionList);
+  }, [selectedCodes]);
 
   return (
     <div className="flex flex-col w-full">
@@ -63,7 +74,11 @@ const RegionSection = () => {
             >
               <RegionSelector
                 selectedRegions={regions}
-                setSelectedRegions={setRegions}
+                setSelectedRegions={(newRegions) => {
+                  const regionArray = newRegions as Region[];
+                  setRegions(regionArray);
+                  onChange(regionArray.map((r) => r.district));
+                }}
               />
             </motion.div>
           )}
@@ -76,6 +91,7 @@ const RegionSection = () => {
           onClose={() => setOpen(false)}
           onSave={(regions) => {
             setRegions(regions);
+            onChange(regions.map((r) => r.district));
             setOpen(false);
           }}
           initialRegions={regions}

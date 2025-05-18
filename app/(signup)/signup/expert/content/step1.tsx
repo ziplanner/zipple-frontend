@@ -8,6 +8,7 @@ import { useExpertSignup } from "@/app/context/expertSignupProvider";
 import AlertMessage from "@/app/components/alert/alertMessage";
 import { EXPERT_CATEGORY, EXPERT_DETAIL_CATEGORY } from "@/app/data/category";
 import { verifyBusinessLicense } from "@/app/api/verify/api";
+import Input from "@/app/components/input/input";
 
 const Step1 = () => {
   const {
@@ -25,6 +26,7 @@ const Step1 = () => {
     setOpeningDate,
   } = useExpertSignup();
 
+  const [name, setName] = useState<string>("");
   const [alertText, setAlertText] = useState<string | null>(null);
   const [isNextEnabled, setIsNextEnabled] = useState(false);
   const [isVerified, setIsVerified] = useState<boolean>(false);
@@ -39,6 +41,7 @@ const Step1 = () => {
       expertDetailType.length > 0 &&
       openingDate.trim() !== "" &&
       businessLicenseNumber.trim() !== "" &&
+      name.trim() !== "" &&
       isVerified;
 
     setIsNextEnabled(allFieldsFilled);
@@ -108,7 +111,7 @@ const Step1 = () => {
       const result = await verifyBusinessLicense({
         businessNumber: businessLicenseNumber,
         startDate: openingDate.replace(/-/g, ""),
-        ownerName: businessName,
+        ownerName: name,
       });
 
       if (result.isReal) {
@@ -136,17 +139,15 @@ const Step1 = () => {
   return (
     <div className="flex flex-col gap-5 px-5 py-[30px] md:p-10 border border-border w-full md:w-[600px] rounded-[20px]">
       <div className="flex flex-col gap-2.5 relative">
-        <h3 className="text-text-primary text-14m md:text-16m">
+        {/* <h3 className="text-text-primary text-14m md:text-16m">
           사업자 상호 <span className="text-error">*</span>
         </h3>
-        <InputWithBtn
-          type="search"
-          searchValue={businessName}
-          onSearchChange={setBusinessName}
-          onSearchClick={handleSearch}
-          placeholder="사업자 상호명을 검색해주세요."
-        />
-        {searchResults.length > 0 && (
+        <Input
+          value={businessName}
+          onChange={(e) => setBusinessName(e.target.value)}
+          placeholder="사업자 상호명을 입력해주세요."
+        /> */}
+        {/* {searchResults.length > 0 && (
           <div className="absolute w-full top-full mt-2 max-h-[358px] custom-scrollbar overflow-y-auto border border-background-light rounded-[10px] shadow bg-white z-10">
             {searchResults.map((item, idx) => (
               <div
@@ -173,26 +174,16 @@ const Step1 = () => {
               </div>
             ))}
           </div>
-        )}
+        )} */}
       </div>
       <div className="flex flex-col gap-2.5">
         <h3 className="text-text-primary text-14m md:text-16m">
-          전문분야 <span className="text-error">*</span>
+          이름 <span className="text-error">*</span>
         </h3>
-        <CustomSelectBox
-          options={EXPERT_CATEGORY}
-          value={expertType}
-          onChange={setExpertType}
-        />
-      </div>
-      <div className="flex flex-col gap-2.5">
-        <h3 className="text-text-primary text-14m md:text-16m">
-          상세분야 <span className="text-error">*</span>
-        </h3>
-        <MultiSelectBox
-          options={EXPERT_DETAIL_CATEGORY}
-          value={expertDetailType}
-          onChange={setExpertDetailType}
+        <Input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="대표자명을 입력해주세요."
         />
       </div>
       <div className="flex flex-col gap-2.5">
@@ -214,6 +205,31 @@ const Step1 = () => {
           label="인증"
         />
       </div>
+      <div className="flex flex-col gap-2.5">
+        <h3 className="text-text-primary text-14m md:text-16m">
+          전문분야 <span className="text-error">*</span>
+        </h3>
+        <CustomSelectBox
+          options={EXPERT_CATEGORY}
+          value={expertType}
+          onChange={setExpertType}
+        />
+      </div>
+      <div className="flex flex-col gap-2.5">
+        <h3 className="text-text-primary text-14m md:text-16m">
+          상세분야 <span className="text-error">*</span> &nbsp;
+          <span className="text-14m md:text-16m text-text-secondary">
+            (최대 2개 복수선택 가능)
+          </span>
+        </h3>
+        <MultiSelectBox
+          options={EXPERT_DETAIL_CATEGORY}
+          value={expertDetailType}
+          onChange={setExpertDetailType}
+          maxSelectable={2}
+        />
+      </div>
+
       <LargeBtn
         onClick={handleNext}
         text={"다음"}

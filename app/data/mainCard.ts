@@ -14,42 +14,112 @@ import church from "@/app/images/icon/main/church.svg";
 import maru from "@/app/images/icon/main/maru.svg";
 
 export const AGENT_CATEGORY = [
-  { label: "아파트", image: apart, url: "/" },
-  { label: "원룸/투룸", image: ontowroom, url: "/" },
-  { label: "오피스텔", image: officetel, url: "/" },
+  { label: "아파트", image: apart, url: "/agent", value: "APARTMENT" },
+  {
+    label: "원룸/투룸",
+    image: ontowroom,
+    url: "/agent",
+    value: "ONE_ROOM_TWO_ROOM",
+  },
+  { label: "오피스텔", image: officetel, url: "/agent", value: "OFFICE_HOTEL" },
 ];
 
 export const EXPERT_CATEGORY = [
-  { label: "이사", image: move, url: "/" },
-  { label: "청소", image: cleaing, url: "/" },
-  { label: "부분 인테리어", image: part, url: "/" },
-  { label: "원룸/소형 이사", image: oneroom, url: "/" },
-  { label: "입주 청소", image: cleaing2, url: "/" },
-  { label: "공간 인테리어", image: space, url: "/" },
+  { label: "이사", image: move, url: "/service", value: "MOVING_ALL" },
+  { label: "청소", image: cleaing, url: "/service", value: "CLEANING_ALL" },
+  {
+    label: "부분 인테리어",
+    image: part,
+    url: "/service",
+    value: "PARTIAL_INTERIOR_ALL",
+  },
+  {
+    label: "원룸/소형 이사",
+    image: oneroom,
+    url: "/service",
+    value: "MOVE_SMALL",
+  },
+  {
+    label: "입주 청소",
+    image: cleaing2,
+    url: "/service",
+    value: "MOVE_IN_CLEAN",
+  },
+  {
+    label: "공간 인테리어",
+    image: space,
+    url: "/service",
+    value: "SPACE_INTERIOR_ALL",
+  },
 ];
 
 export const AGENT_CATEGORY_MAIN = [
-  { label: "아파트", image: apart, url: "/" },
-  { label: "원룸/투룸", image: ontowroom, url: "/" },
-  { label: "오피스텔", image: officetel, url: "/" },
-  { label: "사무실", image: office, url: "/" },
+  { label: "아파트", image: apart, url: "/agent", value: "APARTMENT" },
+  {
+    label: "원룸/투룸",
+    image: ontowroom,
+    url: "/agent",
+    value: "ONE_ROOM_TWO_ROOM",
+  },
+  { label: "오피스텔", image: officetel, url: "/agent", value: "OFFICE_HOTEL" },
+  { label: "사무실", image: office, url: "/agent", value: "OFFICE" },
 ];
 
 export const AGENT_CATEGORY_SUB = [
-  { label: "상업/업무 부동산", image: job, url: "/" },
-  { label: "기타/투자 부동산", image: etc, url: "/" },
-  { label: "특수 목적 부동산", image: church, url: "/" },
+  {
+    label: "상업/업무 부동산",
+    image: job,
+    url: "/agent",
+    value: "COMMERCIAL_SHOP",
+  },
+  {
+    label: "기타/투자 부동산",
+    image: etc,
+    url: "/agent",
+    value: "RECONSTRUCTION",
+  },
+  {
+    label: "특수 목적 부동산",
+    image: church,
+    url: "/agent",
+    value: "RELIGIOUS_FACILITY",
+  },
 ];
 
 export const EXPERT_CATEGORY_MAIN = [
-  { label: "이사", image: move, url: "/" },
-  { label: "청소", image: cleaing, url: "/" },
-  { label: "부분 인테리어", image: part, url: "/" },
-  { label: "공간 인테리어", image: space, url: "/" },
+  { label: "이사", image: move, url: "/service", value: "MOVING_ALL" },
+  { label: "청소", image: cleaing, url: "/service", value: "CLEANING_ALL" },
+  {
+    label: "부분 인테리어",
+    image: part,
+    url: "/service",
+    value: "PARTIAL_INTERIOR_ALL",
+  },
+  {
+    label: "공간 인테리어",
+    image: space,
+    url: "/service",
+    value: "SPACE_INTERIOR_ALL",
+  },
 ];
 
 export const EXPERT_CATEGORY_SUB = [
-  { label: "원룸/소형 이사", image: oneroom, url: "/" },
-  { label: "입주 청소", image: cleaing2, url: "/" },
-  { label: "도배/장판/마루", image: maru, url: "/" },
+  {
+    label: "원룸/소형 이사",
+    image: oneroom,
+    url: "/service",
+    value: "MOVE_SMALL",
+  },
+  {
+    label: "입주 청소",
+    image: cleaing2,
+    url: "/service",
+    value: "MOVE_IN_CLEAN",
+  },
+  {
+    label: "도배/장판/마루",
+    image: maru,
+    url: "/service",
+    value: "WALLPAPER_FLOORINGs",
+  },
 ];
