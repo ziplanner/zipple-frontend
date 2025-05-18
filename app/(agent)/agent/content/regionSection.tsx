@@ -75,9 +75,14 @@ const RegionSection = ({ selectedCodes, onChange }: RegionSectionProps) => {
               <RegionSelector
                 selectedRegions={regions}
                 setSelectedRegions={(newRegions) => {
-                  const regionArray = newRegions as Region[];
+                  const regionArray =
+                    typeof newRegions === "function"
+                      ? newRegions(regions)
+                      : newRegions;
+
                   setRegions(regionArray);
-                  onChange(regionArray.map((r) => r.district));
+                  onChange(regionArray.map((r) => `${r.city}-${r.district}`));
+                  return regionArray;
                 }}
               />
             </motion.div>
