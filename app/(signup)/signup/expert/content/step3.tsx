@@ -5,8 +5,8 @@ import { InputWithBtn } from "@/app/components/input/inputWithBtn";
 import { useExpertSignup } from "@/app/context/expertSignupProvider";
 import { registerExpertUser } from "@/app/api/signup/api";
 import AlertMessage from "@/app/components/alert/alertMessage";
-import { useRouter } from "next/router";
 import ErrorAlertMessage from "@/app/components/alert/errorAlertMessage";
+import { useRouter } from "next/navigation";
 
 const Step3 = () => {
   const {
@@ -29,6 +29,8 @@ const Step3 = () => {
     profileImage,
   } = useExpertSignup();
 
+  const router = useRouter();
+
   const base64ToFile = (base64: string, filename: string): File => {
     const arr = base64.split(",");
     const mime = arr[0].match(/:(.*?);/)?.[1] || "image/jpeg";
@@ -40,8 +42,6 @@ const Step3 = () => {
     }
     return new File([u8arr], filename, { type: mime });
   };
-
-  const router = useRouter();
 
   const [fileName, setFileName] = useState<string>("");
   const [alertText, setAlertText] = useState<string | null>(null);
