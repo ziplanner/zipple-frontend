@@ -18,6 +18,8 @@ export interface Region {
 interface RegionSelectorProps {
   selectedRegions: Region[];
   setSelectedRegions: React.Dispatch<React.SetStateAction<Region[]>>;
+  onApply?: (regions: Region[]) => void;
+  onReset?: () => void;
   disabledRegions?: Region[];
   maxSelectable?: number;
 }
@@ -25,6 +27,8 @@ interface RegionSelectorProps {
 export const RegionSelector = ({
   selectedRegions,
   setSelectedRegions,
+  onApply,
+  onReset,
   disabledRegions = [],
   maxSelectable,
 }: RegionSelectorProps) => {
@@ -71,6 +75,24 @@ export const RegionSelector = ({
     [getDistricts, selectedRegions, isRegionDisabled]
   );
 
+  const handleApply = () => {
+    const query = new URLSearchParams(location.search);
+    query.delete("region");
+
+    selectedRegions.forEach((r) => {
+      query.append("region", `${r.city}-${r.district}`);
+    });
+
+    router.push(`?${query.toString()}`, { scroll: false });
+  };
+
+  const handleReset = () => {
+    setSelectedRegions([]); // UI 초기화
+    const query = new URLSearchParams(location.search);
+    query.delete("region");
+    router.push(`?${query.toString()}`, { scroll: false });
+  };
+
   const updateURL = (regions: Region[]) => {
     const query = new URLSearchParams();
     regions.forEach((r) => query.append("region", `${r.city}-${r.district}`));
@@ -110,7 +132,7 @@ export const RegionSelector = ({
         }
       }
 
-      updateURL(next);
+      // updateURL(next);
       return next;
     });
   };
@@ -120,7 +142,7 @@ export const RegionSelector = ({
       const next = prev.filter(
         (r) => !(r.city === city && r.district === district)
       );
-      updateURL(next);
+      // updateURL(next);
       return next;
     });
   };
@@ -223,11 +245,18 @@ export const RegionSelector = ({
           <BasicBtn
             onClick={() => {
               setSelectedRegions([]);
-              updateURL([]);
+              onReset?.(); // UI + 부모에게 알림
             }}
             text="초기화"
           />
-          <BasicBtn onClick={() => {}} text="적용" color="black" />
+
+          <BasicBtn
+            onClick={() => {
+              onApply?.(selectedRegions); // 부모가 URL 업데이트
+            }}
+            text="적용"
+            color="black"
+          />
         </div>
       </div>
 
