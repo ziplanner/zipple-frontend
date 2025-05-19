@@ -11,6 +11,7 @@ import {
 import useResponsive from "@/app/hook/useResponsive";
 import { motion, AnimatePresence } from "framer-motion";
 import { getRegionFromCode } from "@/app/utils/getRegionLabel";
+import { useRouter } from "next/navigation";
 
 interface RegionSectionProps {
   selectedCodes: string[]; // 지역 코드 배열
@@ -18,6 +19,7 @@ interface RegionSectionProps {
 }
 
 const RegionSection = ({ selectedCodes, onChange }: RegionSectionProps) => {
+  const router = useRouter();
   const isMd = useResponsive("md");
 
   const [open, setOpen] = useState<boolean>(false);
@@ -79,10 +81,28 @@ const RegionSection = ({ selectedCodes, onChange }: RegionSectionProps) => {
                     typeof newRegions === "function"
                       ? newRegions(regions)
                       : newRegions;
-
                   setRegions(regionArray);
-                  onChange(regionArray.map((r) => `${r.city}-${r.district}`));
                   return regionArray;
+                }}
+                onApply={(appliedRegions) => {
+                  setRegions(appliedRegions);
+                  onChange(
+                    appliedRegions.map((r) => `${r.city}-${r.district}`)
+                  ); // 부모에게 알림
+
+                  const query = new URLSearchParams(location.search);
+                  query.delete("region");
+                  appliedRegions.forEach((r) =>
+                    query.append("region", `${r.city}-${r.district}`)
+                  );
+                  router.push(`?${query.toString()}`, { scroll: false });
+                }}
+                onReset={() => {
+                  setRegions([]);
+                  onChange([]);
+                  const query = new URLSearchParams(location.search);
+                  query.delete("region");
+                  router.push(`?${query.toString()}`, { scroll: false });
                 }}
               />
             </motion.div>
@@ -100,7 +120,6 @@ const RegionSection = ({ selectedCodes, onChange }: RegionSectionProps) => {
             setOpen(false);
           }}
           initialRegions={regions}
-          maxSelectable={10}
           btnType={"double"}
         />
       )}
