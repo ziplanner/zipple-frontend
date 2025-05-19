@@ -66,6 +66,9 @@ export interface BrokerDetailResponse {
   businessName: string;
   representativeName: string;
   phoneNumber: string;
+  landlineNumber: string;
+  brokerLicenseNumber: string;
+  brokerAddress: string;
   introduceContent: string;
   portfolios: any[]; // 포트폴리오 타입 정의 시 교체
   totalElements: number;
