@@ -12,7 +12,7 @@ import { CustomSelectBox } from "@/app/components/selectBox/customSelectBox";
 import { MultiSelectBox } from "@/app/components/selectBox/multiSelectBox";
 import AlertMessage from "@/app/components/alert/alertMessage";
 import Alert from "@/app/components/alert/alert";
-import { initUserInfo } from "@/app/utils/initUser";
+import { refreshUserInfo } from "@/app/utils/initUser";
 import { withdrawAll, withdrawPartial } from "@/app/api/login/api";
 import { useAuthStore } from "@/app/store/authStore";
 import { useUserStore } from "@/app/store/userStore";
@@ -108,9 +108,9 @@ const ExpertSection = () => {
 
   const handleWithdrawPartial = async () => {
     try {
-      await withdrawPartial();
-      initUserInfo();
-      router.push("/user");
+      await withdrawPartial("EXPERT");
+      refreshUserInfo();
+      router.push("/");
     } catch (error) {
       setAlertErrorText("부분 탈퇴에 실패했습니다.");
       console.error(error);

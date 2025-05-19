@@ -85,6 +85,10 @@ export const withdrawAll = async (): Promise<void> => {
 };
 
 // 부분 회원 탈퇴
-export const withdrawPartial = async (): Promise<void> => {
-  await axiosInstance.delete(WITHDRAW_USERTYPE);
+export const withdrawPartial = async (userType: string): Promise<void> => {
+  await axiosInstance.delete(WITHDRAW_USERTYPE, {
+    params: {
+      userType,
+    },
+  });
 };

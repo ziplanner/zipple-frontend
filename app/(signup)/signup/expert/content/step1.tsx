@@ -9,13 +9,18 @@ import AlertMessage from "@/app/components/alert/alertMessage";
 import { EXPERT_CATEGORY, EXPERT_DETAIL_CATEGORY } from "@/app/data/category";
 import { verifyBusinessLicense } from "@/app/api/verify/api";
 import Input from "@/app/components/input/input";
+import ErrorAlertMessage from "@/app/components/alert/errorAlertMessage";
 
 const Step1 = () => {
   const {
+    name,
+    setName,
     currentStep,
     setCurrentStep,
     businessName,
     setBusinessName,
+    businessAddress,
+    setBusinessAddress,
     expertDetailType,
     setExpertDetailType,
     expertType,
@@ -26,13 +31,12 @@ const Step1 = () => {
     setOpeningDate,
   } = useExpertSignup();
 
-  const [name, setName] = useState<string>("");
   const [alertText, setAlertText] = useState<string | null>(null);
+  const [alertErrorText, setAlertErrorText] = useState<string | null>(null);
+
   const [isNextEnabled, setIsNextEnabled] = useState(false);
   const [isVerified, setIsVerified] = useState<boolean>(false);
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const allFieldsFilled =
@@ -56,7 +60,6 @@ const Step1 = () => {
 
   const handleSearch = async () => {
     if (!businessName.trim()) return;
-    setLoading(true);
     try {
       const res = await fetch(
         "https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=" +
@@ -77,8 +80,6 @@ const Step1 = () => {
       setSearchResults(data.data || []);
     } catch (err) {
       setAlertText("상호명 검색 실패: " + (err as any)?.message);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -88,7 +89,12 @@ const Step1 = () => {
 
   const handleVerify = async () => {
     if (!businessName.trim()) {
-      setAlertText("상호명을 선택해주세요.");
+      setAlertErrorText("상호명을 입력해주세요.");
+      return;
+    }
+
+    if (!name.trim()) {
+      setAlertErrorText("이름을 입력해주세요.");
       return;
     }
 
@@ -98,12 +104,12 @@ const Step1 = () => {
       openingDate === "" ||
       !/^\d{4}-\d{2}-\d{2}$/.test(openingDate)
     ) {
-      setAlertText("개업일자를 입력해주세요.");
+      setAlertErrorText("개업일자를 입력해주세요.");
       return;
     }
 
     if (!businessLicenseNumber.trim()) {
-      setAlertText("사업자 등록번호를 입력해주세요.");
+      setAlertErrorText("사업자 등록번호를 입력해주세요.");
       return;
     }
 
@@ -112,6 +118,7 @@ const Step1 = () => {
         businessNumber: businessLicenseNumber,
         startDate: openingDate.replace(/-/g, ""),
         ownerName: name,
+        businessName: businessName,
       });
 
       if (result.isReal) {
@@ -139,14 +146,14 @@ const Step1 = () => {
   return (
     <div className="flex flex-col gap-5 px-5 py-[30px] md:p-10 border border-border w-full md:w-[600px] rounded-[20px]">
       <div className="flex flex-col gap-2.5 relative">
-        {/* <h3 className="text-text-primary text-14m md:text-16m">
+        <h3 className="text-text-primary text-14m md:text-16m">
           사업자 상호 <span className="text-error">*</span>
         </h3>
         <Input
           value={businessName}
           onChange={(e) => setBusinessName(e.target.value)}
           placeholder="사업자 상호명을 입력해주세요."
-        /> */}
+        />
         {/* {searchResults.length > 0 && (
           <div className="absolute w-full top-full mt-2 max-h-[358px] custom-scrollbar overflow-y-auto border border-background-light rounded-[10px] shadow bg-white z-10">
             {searchResults.map((item, idx) => (
@@ -176,6 +183,16 @@ const Step1 = () => {
           </div>
         )} */}
       </div>
+      {/* <div className="flex flex-col gap-2.5">
+        <h3 className="text-text-primary text-14m md:text-16m">
+          주소 <span className="text-error">*</span>
+        </h3>
+        <Input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="대표자명을 입력해주세요."
+        />
+      </div> */}
       <div className="flex flex-col gap-2.5">
         <h3 className="text-text-primary text-14m md:text-16m">
           이름 <span className="text-error">*</span>
@@ -191,6 +208,16 @@ const Step1 = () => {
           개업일자 <span className="text-error">*</span>
         </h3>
         <DateInput onChange={handleOpeningDateChange} />
+      </div>
+      <div className="flex flex-col gap-2.5">
+        <h3 className="text-text-primary text-14m md:text-16m">
+          사업장 주소 <span className="text-error">*</span>
+        </h3>
+        <Input
+          value={businessAddress}
+          onChange={(e) => setBusinessAddress(e.target.value)}
+          placeholder="사업장 주소를 입력해주세요."
+        />
       </div>
       <div className="flex flex-col gap-2.5">
         <h3 className="text-text-primary text-14m md:text-16m">
@@ -240,6 +267,12 @@ const Step1 = () => {
 
       {alertText && (
         <AlertMessage text={alertText} onClose={() => setAlertText(null)} />
+      )}
+      {alertErrorText && (
+        <ErrorAlertMessage
+          text={alertErrorText}
+          onClose={() => setAlertErrorText(null)}
+        />
       )}
     </div>
   );

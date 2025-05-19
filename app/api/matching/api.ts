@@ -15,8 +15,9 @@ export const fetchBrokerList = async ({
   size = 10,
   specializedType = "",
   sortBy = "RECENT",
+  area = [],
 }: FetchBrokerListParams): Promise<BrokerListResponse> => {
-  const params: Record<string, string | number> = {
+  const params: Record<string, string | number | string[]> = {
     page,
     size,
     sortBy,
@@ -24,6 +25,10 @@ export const fetchBrokerList = async ({
 
   if (specializedType) {
     params.specializedType = specializedType;
+  }
+
+  if (area.length > 0) {
+    params.area = area;
   }
 
   const res = await axiosInstance.get<BrokerListResponse>(AGENT_MATCHING, {

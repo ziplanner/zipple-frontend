@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useUserStore } from "@/app/store/userStore";
 import { useEffect, useState } from "react";
 import AlertMessage from "@/app/components/alert/alertMessage";
-import { initUserInfo } from "@/app/utils/initUser";
+import { initUserInfo, refreshUserInfo } from "@/app/utils/initUser";
 
 export default function UserLayout({
   children,
@@ -17,13 +17,11 @@ export default function UserLayout({
   const router = useRouter();
   const isMd = useResponsive("md");
 
-  const { user, hasHydrated } = useUserStore();
-
   const [showAlert, setShowAlert] = useState<boolean>(false);
 
   useEffect(() => {
     const initialize = async () => {
-      await initUserInfo(); // initUserInfo가 내부적으로 user 상태 갱신함
+      await refreshUserInfo(); // 항상 최신 사용자 정보로 갱신
 
       const { user, hasHydrated } = useUserStore.getState(); // 최신 상태 가져오기
 

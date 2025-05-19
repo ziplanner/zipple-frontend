@@ -18,7 +18,7 @@ const ProfileSection = () => {
 
   const [roleType, setRoleType] = useState<
     "GENERAL" | "REPRESENTATIVE" | "ASSOCIATE" | "EXPERT"
-  >(role ?? "GENERAL");
+  >(role as Role["role"]);
 
   const [name, setName] = useState<string>(user?.nickname || "");
   const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(
