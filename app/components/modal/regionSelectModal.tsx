@@ -9,6 +9,7 @@ import close_blue from "@/app/images/icon/close_blue.svg";
 import vector_black from "@/app/images/icon/vector.svg";
 import { LargeBtn } from "../button/largeBtn";
 import { CITIES, districtMap } from "@/app/data/region";
+import { useRouter } from "next/navigation";
 
 interface Region {
   city: string;
@@ -31,9 +32,11 @@ const RegionModal = ({
   initialRegions = [],
   disabledRegions = [],
   modalTitle = "활동지역",
-  maxSelectable = 3,
+  maxSelectable,
   btnType = "basic",
 }: RegionModalProps) => {
+  const router = useRouter();
+
   const [selectedCity, setSelectedCity] = useState<string>(CITIES[1].value);
   const [selectedRegions, setSelectedRegions] =
     useState<Region[]>(initialRegions);
@@ -51,14 +54,51 @@ const RegionModal = ({
   const toggleRegion = (city: string, district: string) => {
     if (isRegionDisabled(city, district)) return;
 
-    const alreadySelected = isRegionSelected(city, district);
-    if (alreadySelected) {
-      setSelectedRegions((prev) =>
-        prev.filter((r) => !(r.city === city && r.district === district))
-      );
-    } else if (selectedRegions.length < maxSelectable) {
-      setSelectedRegions((prev) => [...prev, { city, district }]);
+    const districtsOfCity = getDistricts(city).filter((d) => d.value !== "ALL");
+
+    const isAll = district === "ALL";
+    const alreadyAllSelected = districtsOfCity.every(
+      (d) =>
+        selectedRegions.some(
+          (r) => r.city === city && r.district === d.value
+        ) || isRegionDisabled(city, d.value)
+    );
+
+    if (isAll) {
+      if (alreadyAllSelected) {
+        // 전체 해제
+        setSelectedRegions((prev) => prev.filter((r) => r.city !== city));
+      } else {
+        // 전체 선택
+        const newDistricts = districtsOfCity
+          .filter((d) => !isRegionDisabled(city, d.value))
+          .map((d) => ({ city, district: d.value }));
+
+        setSelectedRegions((prev) => [
+          ...prev.filter((r) => r.city !== city),
+          ...newDistricts,
+        ]);
+      }
+    } else {
+      const alreadySelected = isRegionSelected(city, district);
+      if (alreadySelected) {
+        setSelectedRegions((prev) =>
+          prev.filter((r) => !(r.city === city && r.district === district))
+        );
+      } else if (!maxSelectable || selectedRegions.length < maxSelectable) {
+        setSelectedRegions((prev) => [...prev, { city, district }]);
+      }
     }
+  };
+
+  const isAllDistrictSelected = (city: string) => {
+    const districts = getDistricts(city).filter((d) => d.value !== "ALL");
+    return districts.every(
+      (d) =>
+        selectedRegions.some(
+          (r) => r.city === city && r.district === d.value
+        ) || isRegionDisabled(city, d.value)
+    );
   };
 
   const removeRegion = (city: string, district: string) => {
@@ -68,8 +108,17 @@ const RegionModal = ({
   };
 
   const handleSave = () => {
-    onSave?.(selectedRegions);
-    onClose();
+    onSave?.(selectedRegions); // 기존처럼 부모에게 선택값 전달
+
+    // ✅ URL 반영 추가
+    const query = new URLSearchParams(location.search);
+    query.delete("region");
+    selectedRegions.forEach((r) =>
+      query.append("region", `${r.city}-${r.district}`)
+    );
+    router.push(`?${query.toString()}`, { scroll: false });
+
+    onClose(); // 모달 닫기
   };
 
   const districts = getDistricts(selectedCity);
@@ -98,9 +147,11 @@ const RegionModal = ({
         <div className="mb-5 px-5 md:px-10">
           <h1 className="text-text-primary text-18s md:text-20s">
             {modalTitle}
-            <span className="text-text-secondary text-14r md:text-16r ml-2">
-              (최대 {maxSelectable}개)
-            </span>
+            {maxSelectable && (
+              <span className="text-text-secondary text-14r md:text-16r ml-2">
+                (최대 {maxSelectable}개)
+              </span>
+            )}
           </h1>
         </div>
 
@@ -108,7 +159,8 @@ const RegionModal = ({
         <div className="flex flex-nowrap no-scrollbar gap-2.5 mb-5 mx-5 overflow-x-auto overflow-y-hidden h-14">
           {selectedRegions.map((region, index) => {
             const cityLabel =
-              CITIES.find((c) => c.value === region.city)?.label || region.city;
+              CITIES.find((c) => c.value === region.city)?.label ||
+              "(알 수 없음)";
             const districtLabel =
               districtMap[region.city]?.find((d) => d.value === region.district)
                 ?.label || region.district;
@@ -165,20 +217,23 @@ const RegionModal = ({
           <div className="w-2/3 overflow-y-auto custom-scrollbar">
             {districts.map(({ label, value }, index) => {
               const disabled = isRegionDisabled(selectedCity, value);
-              const selected = isRegionSelected(selectedCity, value);
+              const selected =
+                value === "ALL"
+                  ? isAllDistrictSelected(selectedCity)
+                  : isRegionSelected(selectedCity, value);
 
               return (
                 <div
                   key={index}
                   onClick={() => !disabled && toggleRegion(selectedCity, value)}
                   className={`px-4 md:px-5 py-2.5 md:py-3 text-14r md:text-16r cursor-pointer flex justify-between items-center
-                    ${
-                      disabled
-                        ? "text-text-light bg-border cursor-not-allowed"
-                        : selected
-                        ? "text-main"
-                        : "text-text-light"
-                    }`}
+        ${
+          disabled
+            ? "text-text-light bg-border cursor-not-allowed"
+            : selected
+            ? "text-main"
+            : "text-text-light"
+        }`}
                 >
                   <span>{label}</span>
                   <Image
@@ -200,7 +255,13 @@ const RegionModal = ({
           ) : (
             <div className="flex w-full gap-2.5">
               <LargeBtn
-                onClick={() => setSelectedRegions([])}
+                onClick={() => {
+                  setSelectedRegions([]);
+
+                  const query = new URLSearchParams(location.search);
+                  query.delete("region");
+                  router.push(`?${query.toString()}`, { scroll: false });
+                }}
                 text="초기화"
                 color="gray"
               />

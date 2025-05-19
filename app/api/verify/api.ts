@@ -5,6 +5,8 @@ interface LicenseRequest {
   businessNumber: string; // '-' 없이 숫자만
   startDate: string; // YYYYMMDD 형식
   ownerName: string;
+  businessName?: string;
+  businessAddress?: string;
 }
 
 interface LicenseResponse {

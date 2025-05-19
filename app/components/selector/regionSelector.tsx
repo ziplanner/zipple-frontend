@@ -1,13 +1,14 @@
-import { useState } from "react";
+"use client";
+
+import { useMemo, useState, useCallback } from "react";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import close_blue from "@/app/images/icon/close_blue.svg";
-import checkOn from "@/app/images/icon/check_on.svg";
-import checkOff from "@/app/images/icon/check_off.svg";
-import checkNone from "@/app/images/icon/check_none.svg";
 import vector_black from "@/app/images/icon/vector.svg";
 import gt from "@/app/images/icon/gt.svg";
 import { BasicBtn } from "../button/basicBtn";
 import { CITIES, districtMap } from "@/app/data/region";
+import { DistrictItem } from "./districtItem";
 
 export interface Region {
   city: string;
@@ -17,6 +18,8 @@ export interface Region {
 interface RegionSelectorProps {
   selectedRegions: Region[];
   setSelectedRegions: React.Dispatch<React.SetStateAction<Region[]>>;
+  onApply?: (regions: Region[]) => void;
+  onReset?: () => void;
   disabledRegions?: Region[];
   maxSelectable?: number;
 }
@@ -24,48 +27,134 @@ interface RegionSelectorProps {
 export const RegionSelector = ({
   selectedRegions,
   setSelectedRegions,
+  onApply,
+  onReset,
   disabledRegions = [],
   maxSelectable,
 }: RegionSelectorProps) => {
-  const [selectedCity, setSelectedCity] = useState<string>(CITIES[1].value); // default to SEOUL
+  const router = useRouter();
+  const param = useSearchParams();
+  const regionFromUrl = param.getAll("region");
 
-  const getDistricts = (cityCode: string): { label: string; value: string }[] =>
-    districtMap[cityCode] || [];
+  const initialCityFromUrl = useMemo(() => {
+    const firstRegion = regionFromUrl[0];
+    const cityCode = firstRegion?.split("-")[0];
+    const isValidCity = CITIES.some((c) => c.value === cityCode);
+    return isValidCity ? cityCode : CITIES[1].value; // 유효하지 않으면 SEOUL
+  }, [regionFromUrl]);
 
-  const isRegionSelected = (city: string, district: string) =>
-    selectedRegions.some((r) => r.city === city && r.district === district);
+  const [selectedCity, setSelectedCity] = useState<string>(initialCityFromUrl);
 
-  const isRegionDisabled = (city: string, district: string) =>
-    disabledRegions.some((r) => r.city === city && r.district === district);
+  const getDistricts = useCallback(
+    (cityCode: string) => districtMap[cityCode] || [],
+    []
+  );
+
+  const isRegionSelected = useCallback(
+    (city: string, district: string) =>
+      selectedRegions.some((r) => r.city === city && r.district === district),
+    [selectedRegions]
+  );
+
+  const isRegionDisabled = useCallback(
+    (city: string, district: string) =>
+      disabledRegions.some((r) => r.city === city && r.district === district),
+    [disabledRegions]
+  );
+
+  const isAllDistrictSelected = useCallback(
+    (city: string) => {
+      const districts = getDistricts(city).filter((d) => d.value !== "ALL");
+      return districts.every(
+        (d) =>
+          selectedRegions.some(
+            (r) => r.city === city && r.district === d.value
+          ) || isRegionDisabled(city, d.value)
+      );
+    },
+    [getDistricts, selectedRegions, isRegionDisabled]
+  );
+
+  const handleApply = () => {
+    const query = new URLSearchParams(location.search);
+    query.delete("region");
+
+    selectedRegions.forEach((r) => {
+      query.append("region", `${r.city}-${r.district}`);
+    });
+
+    router.push(`?${query.toString()}`, { scroll: false });
+  };
+
+  const handleReset = () => {
+    setSelectedRegions([]); // UI 초기화
+    const query = new URLSearchParams(location.search);
+    query.delete("region");
+    router.push(`?${query.toString()}`, { scroll: false });
+  };
+
+  const updateURL = (regions: Region[]) => {
+    const query = new URLSearchParams();
+    regions.forEach((r) => query.append("region", `${r.city}-${r.district}`));
+    router.push(`?${query.toString()}`, { scroll: false });
+  };
 
   const toggleRegion = (city: string, district: string) => {
     if (isRegionDisabled(city, district)) return;
 
-    const exists = isRegionSelected(city, district);
-    if (exists) {
-      setSelectedRegions((prev) =>
-        prev.filter((r) => !(r.city === city && r.district === district))
-      );
-    } else {
-      setSelectedRegions((prev) => [...prev, { city, district }]);
-    }
+    const isAll = district === "ALL";
+    const districtsOfCity = getDistricts(city).filter((d) => d.value !== "ALL");
+
+    setSelectedRegions((prev) => {
+      let next: Region[] = [];
+
+      if (isAll) {
+        const alreadyAll = isAllDistrictSelected(city);
+        if (alreadyAll) {
+          next = prev.filter((r) => r.city !== city);
+        } else {
+          const newDistricts = districtsOfCity
+            .filter((d) => !isRegionDisabled(city, d.value))
+            .map((d) => ({ city, district: d.value }));
+          next = [...prev.filter((r) => r.city !== city), ...newDistricts];
+        }
+      } else {
+        const exists = prev.some(
+          (r) => r.city === city && r.district === district
+        );
+        if (exists) {
+          next = prev.filter(
+            (r) => !(r.city === city && r.district === district)
+          );
+        } else {
+          if (maxSelectable && prev.length >= maxSelectable) return prev;
+          next = [...prev, { city, district }];
+        }
+      }
+
+      // updateURL(next);
+      return next;
+    });
   };
 
   const removeRegion = (city: string, district: string) => {
-    setSelectedRegions((prev) =>
-      prev.filter((r) => !(r.city === city && r.district === district))
-    );
+    setSelectedRegions((prev) => {
+      const next = prev.filter(
+        (r) => !(r.city === city && r.district === district)
+      );
+      // updateURL(next);
+      return next;
+    });
   };
 
-  const districts = getDistricts(selectedCity);
-  const selectedCityLabel =
-    CITIES.find((c) => c.value === selectedCity)?.label || selectedCity;
+  const districts = useMemo(
+    () => getDistricts(selectedCity),
+    [getDistricts, selectedCity]
+  );
 
   return (
     <div className="w-full">
-      {/* 선택 영역 UI */}
       <div className="flex border shadow-sm h-[260px]">
-        {/* 시도 */}
         <div className="w-2/5 border-r px-2 py-2.5 bg-background-soft overflow-y-auto custom-scrollbar">
           <div className="grid grid-cols-2">
             {CITIES.map((city) => (
@@ -93,50 +182,34 @@ export const RegionSelector = ({
           </div>
         </div>
 
-        {/* 구군 */}
         <div className="w-3/5 py-2.5 pr-2 overflow-y-auto custom-scrollbar">
           <div className="flex flex-row flex-wrap">
-            {districts.map(({ label, value }) => {
-              const disabled = isRegionDisabled(selectedCity, value);
-              const selected = isRegionSelected(selectedCity, value);
-
-              return (
-                <div
-                  key={value}
-                  onClick={() => toggleRegion(selectedCity, value)}
-                  className={`flex w-[180px] h-12 gap-3 pl-5 items-center cursor-pointer
-                    px-2 py-1.5 rounded-md text-14r md:text-16r ${
-                      disabled
-                        ? "text-text-light bg-border cursor-not-allowed"
-                        : selected
-                        ? "text-main"
-                        : "text-text-light"
-                    }`}
-                >
-                  <Image
-                    src={disabled ? checkNone : selected ? checkOn : checkOff}
-                    alt="check"
-                    width={18}
-                    height={18}
-                  />
-                  <span>{label}</span>
-                </div>
-              );
-            })}
+            {districts.map(({ label, value }) => (
+              <DistrictItem
+                key={value}
+                label={label}
+                value={value}
+                selected={
+                  value === "ALL"
+                    ? isAllDistrictSelected(selectedCity)
+                    : isRegionSelected(selectedCity, value)
+                }
+                disabled={isRegionDisabled(selectedCity, value)}
+                onClick={() => toggleRegion(selectedCity, value)}
+              />
+            ))}
           </div>
         </div>
       </div>
 
-      {/* 선택된 지역 + 버튼 영역 */}
       <div className="flex justify-between gap-6 mt-5">
-        {/* 왼쪽: 선택된 지역 태그 */}
         <div className="flex-grow min-w-0 overflow-hidden">
           <div className="flex flex-wrap gap-2 min-h-[48px]">
             {selectedRegions.length > 0 ? (
               selectedRegions.map((region, index) => {
                 const cityLabel =
                   CITIES.find((c) => c.value === region.city)?.label ||
-                  region.city;
+                  "(알 수 없음)";
                 const districtLabel =
                   districtMap[region.city]?.find(
                     (d) => d.value === region.district
@@ -168,10 +241,22 @@ export const RegionSelector = ({
           </div>
         </div>
 
-        {/* 오른쪽: 버튼 */}
         <div className="flex gap-2.5 w-[160px] flex-shrink-0 items-end">
-          <BasicBtn onClick={() => setSelectedRegions([])} text="초기화" />
-          <BasicBtn onClick={() => {}} text="적용" color="black" />
+          <BasicBtn
+            onClick={() => {
+              setSelectedRegions([]);
+              onReset?.(); // UI + 부모에게 알림
+            }}
+            text="초기화"
+          />
+
+          <BasicBtn
+            onClick={() => {
+              onApply?.(selectedRegions); // 부모가 URL 업데이트
+            }}
+            text="적용"
+            color="black"
+          />
         </div>
       </div>
 

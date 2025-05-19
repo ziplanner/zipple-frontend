@@ -17,7 +17,7 @@ import Alert from "@/app/components/alert/alert";
 import { withdrawAll, withdrawPartial } from "@/app/api/login/api";
 import { useAuthStore } from "@/app/store/authStore";
 import { useUserStore } from "@/app/store/userStore";
-import { initUserInfo } from "@/app/utils/initUser";
+import { refreshUserInfo } from "@/app/utils/initUser";
 import { CATEGORY } from "@/app/data/category";
 import { getRepUserRole, updateRepUserRole } from "@/app/api/user/api";
 import ErrorAlertMessage from "@/app/components/alert/errorAlertMessage";
@@ -119,9 +119,9 @@ const RepresentationSection = () => {
 
   const handleWithdrawPartial = async () => {
     try {
-      await withdrawPartial();
-      initUserInfo();
-      router.push("/user");
+      await withdrawPartial("REPRESENTATIVE");
+      refreshUserInfo();
+      router.push("/");
     } catch (error) {
       setAlertErrorText("부분 탈퇴에 실패했습니다.");
       console.error(error);

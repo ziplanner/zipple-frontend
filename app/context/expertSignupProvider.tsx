@@ -22,6 +22,9 @@ interface SignupContextType {
   currentStep: number;
   setCurrentStep: (step: number) => void;
 
+  businessAddress: string;
+  setBusinessAddress: (value: string) => void;
+
   businessName: string;
   setBusinessName: (value: string) => void;
 
@@ -86,6 +89,7 @@ export const ExpertSignupProvider: React.FC<SignupProviderProps> = ({
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   const [businessName, setBusinessName] = useState<string>("");
+  const [businessAddress, setBusinessAddress] = useState<string>("");
   const [expertDetailType, setExpertDetailType] = useState<string[]>([]);
   const [expertType, setExpertType] = useState<string>("");
   const [businessLicenseNumber, setBusinessLicenseNumber] =
@@ -117,6 +121,8 @@ export const ExpertSignupProvider: React.FC<SignupProviderProps> = ({
         setCurrentStep,
         businessName,
         setBusinessName,
+        businessAddress,
+        setBusinessAddress,
         expertDetailType,
         setExpertDetailType,
         expertType,

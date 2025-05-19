@@ -10,13 +10,13 @@ import { useExpertSignup } from "@/app/context/expertSignupProvider";
 import { DateInput } from "@/app/components/input/dateInput";
 import AlertMessage from "@/app/components/alert/alertMessage";
 import defaultProfile from "@/app/images/icon/default_profile.svg";
+import { sendVerificationMessage, verifyPhoneCode } from "@/app/api/verify/api";
+import ErrorAlertMessage from "@/app/components/alert/errorAlertMessage";
 
 const Step2 = () => {
   const {
     currentStep,
     setCurrentStep,
-    name,
-    setName,
     birthday,
     setBirthday,
     email,
@@ -30,17 +30,28 @@ const Step2 = () => {
   } = useExpertSignup();
 
   const [alertText, setAlertText] = useState<string | null>(null);
+  const [alertErrorText, setAlertErrorText] = useState<string | null>(null);
+  const [verificationCode, setVerificationCode] = useState<string>("");
+  const [isPhoneVerified, setIsPhoneVerified] = useState<boolean>(false);
+  const [verificationSent, setVerificationSent] = useState<boolean>(false);
+  const [verificationError, setVerificationError] = useState<string | null>(
+    null
+  );
+  const [verificationSuccess, setVerificationSuccess] = useState<string | null>(
+    null
+  );
   const [isNextEnabled, setIsNextEnabled] = useState<boolean>(false);
 
   useEffect(() => {
     const required =
-      name.trim() !== "" &&
+      // name.trim() !== "" &&
       birthday.trim() !== "" &&
       phoneNumber.trim() !== "" &&
+      isPhoneVerified &&
       foreigner !== "" &&
       profileImage !== "";
     setIsNextEnabled(required);
-  }, [name, birthday, phoneNumber, foreigner, profileImage]);
+  }, [birthday, phoneNumber, foreigner, profileImage, isPhoneVerified]);
 
   const handlePhoneChange = (value: string) => {
     setPhoneNumber(value);
@@ -68,6 +79,29 @@ const Step2 = () => {
         }
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSendVerification = async () => {
+    try {
+      await sendVerificationMessage(phoneNumber);
+      setVerificationSent(true);
+      setAlertText("인증번호가 전송되었습니다.");
+    } catch (error: any) {
+      setAlertErrorText(error.message);
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    const result = await verifyPhoneCode(phoneNumber, verificationCode);
+    if (result.success) {
+      setIsPhoneVerified(true);
+      setVerificationError(null);
+      setVerificationSuccess("인증 되었습니다.");
+    } else {
+      setIsPhoneVerified(false);
+      setVerificationError(result.message || "인증번호가 올바르지 않습니다.");
+      setVerificationSuccess(null);
     }
   };
 
@@ -138,16 +172,6 @@ const Step2 = () => {
 
       <div className="flex flex-col gap-2.5">
         <h3 className="text-text-primary text-14m md:text-16m">
-          이름 <span className="text-error">*</span>
-        </h3>
-        <Input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="이름을 입력해주세요."
-        />
-      </div>
-      <div className="flex flex-col gap-2.5">
-        <h3 className="text-text-primary text-14m md:text-16m">
           생년월일 <span className="text-error">*</span>
         </h3>
         <DateInput onChange={handleBirthChange} />
@@ -176,7 +200,30 @@ const Step2 = () => {
           전화번호 <span className="text-error">*</span>
         </h3>
         <PhoneInput value={phoneNumber} onChange={handlePhoneChange} />
-        <LargeBtn onClick={() => {}} text="인증받기" color="" />
+        <LargeBtn
+          onClick={() => handleSendVerification()}
+          text="인증받기"
+          color=""
+        />
+        {verificationSent && (
+          <>
+            <Input
+              value={verificationCode}
+              onChange={(e) => setVerificationCode(e.target.value)}
+              placeholder="인증번호를 입력해주세요."
+              error={!!verificationError}
+              errorMessage={verificationError || ""}
+              success={!!verificationSuccess}
+              successMessage={verificationSuccess || ""}
+              className="mt-2.5"
+            />
+            <LargeBtn
+              onClick={() => handleVerifyCode()}
+              text="인증하기"
+              color=""
+            />
+          </>
+        )}
       </div>
 
       <div className="mt-[60px]">
@@ -196,6 +243,12 @@ const Step2 = () => {
 
       {alertText && (
         <AlertMessage text={alertText} onClose={() => setAlertText(null)} />
+      )}
+      {alertErrorText && (
+        <ErrorAlertMessage
+          text={alertErrorText}
+          onClose={() => setAlertErrorText(null)}
+        />
       )}
     </div>
   );
