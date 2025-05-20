@@ -30,9 +30,10 @@ export default {
         border: "#EEE",
         text: {
           primary: "#222222",
+          menu: "#505050",
           secondary: "#767676",
           light: "#949494",
-          menu: "#505050",
+          extralight: "#C8CEDA",
         },
         background: {
           light: "#DDDDDD",
