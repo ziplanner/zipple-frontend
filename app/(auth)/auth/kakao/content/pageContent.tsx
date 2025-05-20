@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import LoginLoading from "./loginLoading";
 import { loginWithKakao } from "@/app/api/login/api";
 import { refreshUserInfo } from "@/app/utils/initUser";
+import { useRoleStore, UserRoleType } from "@/app/store/roleStore";
 
 export default function SignInPageContent() {
   const router = useRouter();
@@ -18,16 +19,26 @@ export default function SignInPageContent() {
       try {
         const res = await loginWithKakao(kakaoCode);
 
-        if (res.isRegistered) {
-          refreshUserInfo();
-          router.replace("/"); // 이미 가입된 경우
-        } else {
-          refreshUserInfo();
-          router.replace("/signup"); // 미가입자 추가정보 등록 페이지로
+        const user = await refreshUserInfo();
+
+        if (user) {
+          // 타입 필터링
+          const validRoles = user.roleName.filter(
+            (role): role is UserRoleType =>
+              ["GENERAL", "REPRESENTATIVE", "ASSOCIATE", "EXPERT"].includes(
+                role
+              )
+          );
+
+          // 역할 스토어 설정
+          useRoleStore.getState().setAvailableRoles(validRoles);
+          useRoleStore.getState().setCurrentRole(validRoles[0]);
         }
+
+        router.replace(res.isRegistered ? "/" : "/signup");
       } catch (err) {
         alert("로그인 중 문제가 발생했습니다.");
-        router.replace("/"); // 에러 시 홈으로 리다이렉트
+        router.replace("/");
       }
     };
 
