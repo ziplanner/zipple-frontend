@@ -4,15 +4,13 @@ import GeneralSection from "./contents/generalSection";
 import ExpertSection from "./contents/expertSection";
 import RepresentationSection from "./contents/representationSection";
 import AssociateSection from "./contents/associateSection";
-import { useUserStore } from "@/app/store/userStore";
+import { useRoleStore } from "@/app/store/roleStore";
 
 const UserPage = () => {
-  const { user } = useUserStore();
-  // const role = user?.lastLoginType;
-  const role = user?.roleName[0];
+  const currentRole = useRoleStore((state) => state.currentRole);
 
   const renderSection = () => {
-    switch (role) {
+    switch (currentRole) {
       case "GENERAL":
         return <GeneralSection />;
       case "REPRESENTATIVE":

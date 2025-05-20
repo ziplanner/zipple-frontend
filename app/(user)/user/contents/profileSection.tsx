@@ -9,6 +9,7 @@ import UserMenu from "@/app/components/menu/userMenu";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/app/store/userStore";
 import { Role } from "@/app/types/role";
+import { useRoleStore } from "@/app/store/roleStore";
 
 const ProfileSection = () => {
   const router = useRouter();
@@ -16,10 +17,7 @@ const ProfileSection = () => {
   const { user } = useUserStore();
   // const role = user?.lastLoginType;
   const role = user?.roleName[0];
-
-  const [roleType, setRoleType] = useState<
-    "GENERAL" | "REPRESENTATIVE" | "ASSOCIATE" | "EXPERT"
-  >(role as Role["role"]);
+  const { currentRole, availableRoles, setCurrentRole } = useRoleStore();
 
   const [name, setName] = useState<string>(user?.nickname || "");
   const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(
@@ -41,39 +39,26 @@ const ProfileSection = () => {
   };
 
   const renderRoleText = () => {
-    const roles = user?.roleName || [];
+    if (!currentRole) return "";
 
-    if (!role) return "";
-
-    // 두 개의 role을 가진 경우
-    if (roles.length === 2) {
-      const target = roles.find((r) => r !== role);
+    if (availableRoles.length === 2) {
+      const target = availableRoles.find((r) => r !== currentRole);
       return switchTextMap[target || ""] || "";
     }
 
-    // 단일 role인 경우
-    if (roles.length === 1) {
-      // 현재 role이 GENERAL이면 → 전문가 중 하나 추천
-      if (role === "GENERAL") {
-        const target = ["REPRESENTATIVE", "ASSOCIATE", "EXPERT"].find(
-          (r) => !roles.includes(r)
-        );
-        return switchTextMap[target || ""] || "";
-      }
-
-      // 현재 role이 그 외(전문가 계열)면 → GENERAL로 전환
-      return switchTextMap["GENERAL"];
+    if (availableRoles.length === 1) {
+      return currentRole === "GENERAL"
+        ? switchTextMap["EXPERT"] // 기본 추천
+        : switchTextMap["GENERAL"];
     }
 
     return "";
   };
 
   const handleRoleChange = () => {
-    const roles = user?.roleName || [];
-
-    if (roles.length === 2) {
-      const next = roles.find((r) => r !== role);
-      if (next) setRoleType(next as Role["role"]);
+    if (availableRoles.length === 2) {
+      const next = availableRoles.find((r) => r !== currentRole);
+      if (next) setCurrentRole(next);
     } else {
       router.push("/signup");
     }
@@ -124,7 +109,8 @@ const ProfileSection = () => {
         </div>
 
         <p className="text-text-primary text-24m mb-[6px] mt-5">{name}</p>
-        <RoleToken role={roleType} />
+        <RoleToken role={currentRole || "GENERAL"} />
+
         <button
           className="flex w-full flex-row items-center justify-center py-2.5 gap-1.5 rounded-md bg-main mt-[60px]"
           onClick={handleRoleChange}
