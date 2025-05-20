@@ -2,6 +2,7 @@ import Image from "next/image";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ping from "@/app/images/icon/ping_yellow.svg";
 import useResponsive from "@/app/hook/useResponsive";
+import { getLabelFromValue } from "@/app/utils/getCategoryLabel";
 
 interface AgentCardProps {
   brokerId: number;
@@ -101,7 +102,8 @@ const ProfileCard = ({
         <div className="flex flex-col w-full">
           {isMd && (
             <div className="text-14r lg:text-16m text-text-secondary mb-4">
-              {specializedType} | 포트폴리오 {portfolioCount}개
+              {getLabelFromValue(specializedType)} | 포트폴리오 {portfolioCount}
+              개
             </div>
           )}
           {isMd && (

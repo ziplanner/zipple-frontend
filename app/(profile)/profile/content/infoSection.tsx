@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { BrokerDetailResponse } from "@/app/types/api";
 import { fetchBrokerDetail } from "@/app/api/matching/api";
+import { getLabelFromValue } from "@/app/utils/getCategoryLabel";
 
 const InfoSection = () => {
   const router = useRouter();
@@ -39,7 +40,10 @@ const InfoSection = () => {
       </h1>
       <div className="flex flex-col lg:flex-row w-full gap-2.5 lg:gap-5 justify-evenly mb-10 md:mb-[60px]">
         <InfoCard type="link" text={data?.introduceUrl || "링크 없음"} />
-        <InfoCard type="office" text={data?.specializedType || "미지정"} />
+        <InfoCard
+          type="office"
+          text={getLabelFromValue(data?.specializedType || "") || "미지정"}
+        />
         <InfoCard
           type="ping"
           text={
@@ -62,7 +66,7 @@ const InfoSection = () => {
               width={30}
               height={30}
               className={`transition-transform duration-300 ${
-                isOpen ? "rotate-180" : ""
+                isOpen ? "" : "rotate-180"
               }`}
             />
           </button>
@@ -77,15 +81,15 @@ const InfoSection = () => {
               transition={{ duration: 0.4 }}
               className="overflow-hidden"
             >
-              <div className="flex flex-col gap-[30px] lg:gap-10 lg:flex-row justify-between">
-                <div className="flex flex-col gap-[30px]">
-                  <div className="flex flex-col gap-5 md:grid md:grid-cols-2">
+              <div className="w-full flex flex-col gap-[30px] lg:gap-10 lg:flex-row justify-between">
+                <div className="w-full flex flex-col gap-[30px]">
+                  <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div className="flex flex-col gap-2.5">
                       <h3 className="text-text-primary text-14m lg:text-16m">
                         상호명
                       </h3>
                       <p className="text-text-light text-16r lg:text-18r">
-                        {data?.businessName ?? "집중이사"}
+                        {data?.businessName}
                       </p>
                     </div>
                     <div className="flex flex-col gap-2.5">
@@ -93,7 +97,7 @@ const InfoSection = () => {
                         주소
                       </h3>
                       <p className="text-text-light text-16r lg:text-18r">
-                        서울특별시 서초구 남부순환로335길 35, 3층[303호](서초동)
+                        {data?.brokerAddress || "주소 없음"}
                       </p>
                     </div>
                     <div className="flex flex-col gap-2.5">
@@ -101,7 +105,7 @@ const InfoSection = () => {
                         사업자등록번호
                       </h3>
                       <p className="text-text-light text-16r lg:text-18r">
-                        44133-2021-05361
+                        {/* {data?.brokerLicenseNumber} */}
                       </p>
                     </div>
                     <div className="flex flex-col gap-2.5">
@@ -109,7 +113,7 @@ const InfoSection = () => {
                         법인등록번호
                       </h3>
                       <p className="text-text-light text-16r lg:text-18r">
-                        041-418-3114
+                        {data?.brokerLicenseNumber}
                       </p>
                     </div>
                   </div>
@@ -148,6 +152,7 @@ const InfoSection = () => {
               portfolioId={item.portfolioId || 0}
               onEdit={() => {}}
               onDelete={() => {}}
+              btnHidden={true}
             />
           ))
         ) : (

@@ -15,7 +15,8 @@ const UserPropertyPage = () => {
   const isLg = useResponsive("lg");
 
   const { user } = useUserStore();
-  const role = user?.lastLoginType;
+  // const role = user?.lastLoginType;
+  const role = user?.roleName[0];
 
   const roleType = role === "ASSOCIATE";
 

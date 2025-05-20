@@ -10,7 +10,8 @@ const UserMenu = () => {
   const pathname = usePathname();
 
   const { user } = useUserStore();
-  const role = user?.lastLoginType;
+  // const role = user?.lastLoginType;
+  const role = user?.roleName[0];
 
   // 역할별 메뉴 목록 가져오기
   const menuList = useMemo(() => {

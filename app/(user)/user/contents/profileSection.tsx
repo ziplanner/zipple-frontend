@@ -14,7 +14,8 @@ const ProfileSection = () => {
   const router = useRouter();
 
   const { user } = useUserStore();
-  const role = user?.lastLoginType;
+  // const role = user?.lastLoginType;
+  const role = user?.roleName[0];
 
   const [roleType, setRoleType] = useState<
     "GENERAL" | "REPRESENTATIVE" | "ASSOCIATE" | "EXPERT"

@@ -15,17 +15,26 @@ const infoItems = [
 
 const Footer = () => {
   return (
-    <footer className="bg-[#43464C] text-white/70 px-6 md:px-20 h-[328px]">
-      <div className="max-w-screen-xl2 mx-auto py-[60px] flex flex-col md:flex-row justify-between gap-12 h-full">
+    <footer className="bg-[#43464C] text-white/70 px-6 md:px-20">
+      <div
+        className="max-w-screen-xl2 mx-auto py-[60px] flex flex-col md:flex-row
+      justify-between gap-12 h-full"
+      >
         {/* Left Section */}
         <div className="flex-1">
-          <Image src={footerLogo} alt="ZIPPLE Logo" width={184} height={40} />
-          <p className="mt-2 text-16m text-white/60">
+          <Image
+            src={footerLogo}
+            alt="ZIPPLE Logo"
+            width={100}
+            height={22}
+            className="md:w-[184px] md:h-10"
+          />
+          <p className="mt-2.5 text-14m md:text-16m text-text-extralight">
             바쁜 현대인들을 위한, 원스톱 케어 솔루션 ‘집플’
           </p>
 
-          <div className="flex items-center mt-4 text-16m">
-            <a href="#" className="hover:underline">
+          <div className="flex gap-2.5 md:gap-0 items-center mt-5 text-14m md:text-16m">
+            <a href="/terms" className="hover:underline">
               이용약관
             </a>
             <Image
@@ -33,17 +42,20 @@ const Footer = () => {
               alt="bar"
               width={1}
               height={10}
-              className="mx-2.5"
+              className="mx-2.5 md:block hidden"
             />
-            <a href="#" className="text-skyblue hover:underline font-medium">
+            <a
+              href="/privacy"
+              className="text-skyblue hover:underline text-14s md:text-16s"
+            >
               개인정보처리방침
             </a>
           </div>
 
-          <div className="mt-4 space-y-1 text-14r leading-relaxed text-white/60">
+          <div className="mt-4 space-y-1 text-14r md:text-16r leading-relaxed text-text-extralight">
             <div className="flex flex-wrap items-center mt-4">
               {infoItems.map((item, idx) => (
-                <span key={idx} className="flex items-center">
+                <span key={idx} className="flex items-center gap-2.5 md:gap-0">
                   {item}
                   {idx !== infoItems.length - 1 && (
                     <Image
@@ -58,15 +70,15 @@ const Footer = () => {
               ))}
             </div>
 
-            <p className="pt-2 text-white/40 text-14r">
+            <p className="pt-2 text-text-extralight text-14r md:text-16r">
               COPYRIGHT (C) zipple. All Rights Reserved
             </p>
           </div>
         </div>
 
         {/* Right Section */}
-        <div className="flex flex-col items-start border-l border-[#5A5A5A] pl-6">
-          <div className="flex items-center space-x-2 mb-2 text-16s">
+        <div className="flex flex-col items-start border-t md:border-t-0 md:border-l border-[#5A5A5A] md:pl-6">
+          <div className="flex items-center space-x-2 mb-2 text-16s mt-[30px] md:mt-0">
             <span className="flex gap-2 items-center justify-center">
               <Image
                 src={service}
@@ -78,8 +90,8 @@ const Footer = () => {
               고객센터
             </span>
           </div>
-          <p className="text-lg font-24b text-sub">02)6925-3400</p>
-          <p className="text-14r text-[#BBBBBB] mt-2 leading-relaxed">
+          <p className="text-24b text-sub">02)6925-3400</p>
+          <p className="text-14r md:text-16r text-white mt-2 leading-relaxed">
             평일 09:00 ~ 18:00 (점심시간 12:00 ~ 13:00)
             <br />※ 주말/공휴일 일부 서비스 문의 및 상담 가능
           </p>

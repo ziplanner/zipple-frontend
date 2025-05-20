@@ -9,6 +9,7 @@ interface PortfolioCardProps {
   thumbnail?: string;
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
+  btnHidden?: boolean;
 }
 
 export const PortfolioCard = ({
@@ -18,6 +19,7 @@ export const PortfolioCard = ({
   thumbnail,
   onEdit,
   onDelete,
+  btnHidden = false,
 }: PortfolioCardProps) => {
   const [showAlert, setShowAlert] = useState(false);
 
@@ -38,12 +40,14 @@ export const PortfolioCard = ({
           />
         )}
         {/* 메뉴 버튼 */}
-        <div className="absolute top-2 right-2">
-          <Menu
-            onEdit={() => onEdit(portfolioId)}
-            onDelete={() => setShowAlert(true)}
-          />
-        </div>
+        {!btnHidden && (
+          <div className="absolute top-2 right-2">
+            <Menu
+              onEdit={() => onEdit(portfolioId)}
+              onDelete={() => setShowAlert(true)}
+            />
+          </div>
+        )}
       </div>
 
       {/* 텍스트 정보 */}
