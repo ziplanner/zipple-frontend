@@ -8,7 +8,8 @@ import { useUserStore } from "@/app/store/userStore";
 
 const UserPage = () => {
   const { user } = useUserStore();
-  const role = user?.lastLoginType;
+  // const role = user?.lastLoginType;
+  const role = user?.roleName[0];
 
   const renderSection = () => {
     switch (role) {
