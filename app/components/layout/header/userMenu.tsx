@@ -61,7 +61,7 @@ const UserMenu = () => {
           width={10}
           height={10}
           className={`transition-transform duration-300 ${
-            open ? "rotate-180" : "rotate-0"
+            open ? "rotate-0" : "rotate-180"
           }`}
         />
       </button>
