@@ -83,7 +83,7 @@ interface UpdateExpertTypeRequest {
   expertDetail: string[];
 }
 
-interface UpdateAssociateTypeRequest {
+interface UpdatTypeRequest {
   specializedType: string;
 }
 
@@ -149,9 +149,14 @@ export const updateExpertType = async (
 
 // 소속 중개사 전문분야 수정
 export const updateAssociateType = async (
-  data: UpdateAssociateTypeRequest
+  data: UpdatTypeRequest
 ): Promise<void> => {
   await axiosInstance.post(MYPAGE_ASSOCIATE, data);
+};
+
+// 대표 중개사 전문분야 수정
+export const updateRepType = async (data: UpdatTypeRequest): Promise<void> => {
+  await axiosInstance.post(MYPAGE_REPRESENTATIVE, data);
 };
 
 // 프로필 이미지 업로드

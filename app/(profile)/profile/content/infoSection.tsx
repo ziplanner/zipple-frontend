@@ -8,7 +8,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { BrokerDetailResponse } from "@/app/types/api";
 import { fetchBrokerDetail } from "@/app/api/matching/api";
-import { getLabelFromValue } from "@/app/utils/getCategoryLabel";
+import {
+  getLabelFromValue,
+  getRegionDisplayLabel2,
+} from "@/app/utils/getCategoryLabel";
 
 const InfoSection = () => {
   const router = useRouter();
@@ -48,9 +51,9 @@ const InfoSection = () => {
           type="ping"
           text={
             [
-              ...(data?.representativeArea ?? []),
-              ...(data?.additionalArea ?? []),
-            ].join(", ") || "지역 정보 없음"
+              data?.representativeArea.map(getRegionDisplayLabel2).join(" | "),
+              data?.additionalArea.map(getRegionDisplayLabel2).join(" | "),
+            ].join("") || "지역 정보 없음"
           }
         />
       </div>
