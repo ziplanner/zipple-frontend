@@ -27,8 +27,8 @@ interface RepresentativeUserResponse {
   phoneNumber: string;
   mainEmail: string;
   introduceUrl: string;
-  representativeArea: Region[];
-  additionalArea: Region[];
+  representativeArea: string[];
+  additionalArea: string[];
   introduceTitle: string;
   introduceContent: string;
   specializedType: string;
