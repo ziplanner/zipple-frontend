@@ -7,6 +7,7 @@ interface PortfolioCardProps {
   title: string;
   date: string;
   thumbnail?: string;
+  portfolioUrl: string;
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
   btnHidden?: boolean;
@@ -16,32 +17,53 @@ export const PortfolioCard = ({
   portfolioId,
   title,
   date,
+  portfolioUrl,
   thumbnail,
   onEdit,
   onDelete,
   btnHidden = false,
 }: PortfolioCardProps) => {
-  const [showAlert, setShowAlert] = useState(false);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
 
   const handleDelete = async () => {
     await onDelete(portfolioId);
     setShowAlert(false);
   };
 
+  const getSafeUrl = (url: string) => {
+    if (!/^https?:\/\//i.test(url)) {
+      return `https://${url}`;
+    }
+    return url;
+  };
+
   return (
     <div className="relative bg-white">
       {/* 썸네일 영역 */}
-      <div className="relative w-full aspect-[1/1] border border-border rounded-xl bg-gradient-to-b to-gray-50 from-gray-200">
+      <div
+        className="relative  w-full aspect-[1/1] border border-border rounded-xl bg-gradient-to-b to-gray-50 from-gray-200 overflow-hidden cursor-pointer"
+        onClick={(e) => {
+          e.stopPropagation();
+          window.open(
+            getSafeUrl(portfolioUrl),
+            "_blank",
+            "noopener,noreferrer"
+          );
+        }}
+      >
         {thumbnail && (
           <img
             src={thumbnail}
             alt="portfolio"
-            className="object-cover w-full h-full rounded-xl"
+            className="absolute inset-0 w-full h-full object-cover"
           />
         )}
-        {/* 메뉴 버튼 */}
+
         {!btnHidden && (
-          <div className="absolute top-2 right-2">
+          <div
+            className="absolute top-2 right-2 z-10"
+            onClick={(e) => e.stopPropagation()} // 이벤트 버블링 방지
+          >
             <Menu
               onEdit={() => onEdit(portfolioId)}
               onDelete={() => setShowAlert(true)}

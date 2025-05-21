@@ -153,6 +153,7 @@ const InfoSection = () => {
               onEdit={() => {}}
               onDelete={() => {}}
               btnHidden={true}
+              portfolioUrl={item.portfolioUrl}
             />
           ))
         ) : (

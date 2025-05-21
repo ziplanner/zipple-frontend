@@ -12,6 +12,7 @@ const DUMMY_DATA = Array(33)
       i + 1
     }) 100평대 사무실 임대 최대 한줄까지만 들어가겠습니다! `,
     date: "2025.05.05",
+    profileLink: "",
   }));
 
 const ITEMS_PER_PAGE = 12;
@@ -56,6 +57,7 @@ const PortfolioSection = () => {
             onDelete={function (id: number): void {
               throw new Error("Function not implemented.");
             }}
+            portfolioUrl={item.profileLink}
           />
         ))}
       </div>
