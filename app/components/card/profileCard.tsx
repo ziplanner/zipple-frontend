@@ -2,7 +2,10 @@ import Image from "next/image";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ping from "@/app/images/icon/ping_yellow.svg";
 import useResponsive from "@/app/hook/useResponsive";
-import { getLabelFromValue } from "@/app/utils/getCategoryLabel";
+import {
+  getLabelFromValue,
+  getRegionDisplayLabel2,
+} from "@/app/utils/getCategoryLabel";
 
 interface AgentCardProps {
   brokerId: number;
@@ -136,7 +139,7 @@ const ProfileCard = ({
             <div className="flex items-center gap-0.5 text-14m lg:text-16m text-text-secondary">
               <Image src={ping} alt="ping" width={24} height={24} />
               {representativeArea.length > 0
-                ? representativeArea.join(", ")
+                ? representativeArea.map(getRegionDisplayLabel2).join(" | ")
                 : "지역 정보 없음"}
             </div>
 
