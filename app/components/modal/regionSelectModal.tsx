@@ -24,6 +24,7 @@ interface RegionModalProps {
   modalTitle?: string;
   maxSelectable?: number;
   btnType?: "basic" | "double";
+  shouldUpdateUrl?: boolean;
 }
 
 const RegionModal = ({
@@ -34,6 +35,7 @@ const RegionModal = ({
   modalTitle = "활동지역",
   maxSelectable,
   btnType = "basic",
+  shouldUpdateUrl = true,
 }: RegionModalProps) => {
   const router = useRouter();
 
@@ -108,17 +110,19 @@ const RegionModal = ({
   };
 
   const handleSave = () => {
-    onSave?.(selectedRegions); // 기존처럼 부모에게 선택값 전달
+    onSave?.(selectedRegions);
 
-    // ✅ URL 반영 추가
-    const query = new URLSearchParams(location.search);
-    query.delete("region");
-    selectedRegions.forEach((r) =>
-      query.append("region", `${r.city}-${r.district}`)
-    );
-    router.push(`?${query.toString()}`, { scroll: false });
+    // URL 업데이트는 선택적으로
+    if (shouldUpdateUrl) {
+      const query = new URLSearchParams(location.search);
+      query.delete("region");
+      selectedRegions.forEach((r) =>
+        query.append("region", `${r.city}-${r.district}`)
+      );
+      router.push(`?${query.toString()}`, { scroll: false });
+    }
 
-    onClose(); // 모달 닫기
+    onClose();
   };
 
   const districts = getDistricts(selectedCity);
