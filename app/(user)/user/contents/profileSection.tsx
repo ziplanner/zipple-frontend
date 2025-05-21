@@ -147,7 +147,7 @@ const ProfileSection = () => {
             />
           </button>
         )}
-        <UserMenu />
+        <UserMenu role={currentRole} />
       </div>
       {alertText && (
         <AlertMessage text={alertText} onClose={() => setAlertText(null)} />

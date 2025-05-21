@@ -10,8 +10,10 @@ import vector_black from "@/app/images/icon/vector.svg";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/app/store/userStore";
-import { Role } from "@/app/types/role";
 import { useRoleStore } from "@/app/store/roleStore";
+import AlertMessage from "@/app/components/alert/alertMessage";
+import ErrorAlertMessage from "@/app/components/alert/errorAlertMessage";
+import { uploadProfileImage } from "@/app/api/user/api";
 
 const MobileProfileSection = () => {
   const router = useRouter();
@@ -19,6 +21,9 @@ const MobileProfileSection = () => {
   const { user } = useUserStore();
   const role = user?.lastLoginType;
   const { currentRole, availableRoles, setCurrentRole } = useRoleStore();
+
+  const [alertText, setAlertText] = useState<string | null>(null);
+  const [alertErrorText, setAlertErrorText] = useState<string | null>(null);
 
   const [name, setName] = useState<string>("");
   const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(
@@ -63,14 +68,25 @@ const MobileProfileSection = () => {
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+
+      // 1. 이미지 미리보기 반영
       const reader = new FileReader();
       reader.onloadend = () => {
         setAvatarSrc(reader.result as string);
       };
       reader.readAsDataURL(file);
+
+      // 2. 실제 업로드 호출
+      try {
+        await uploadProfileImage(file);
+        setAlertText("프로필 이미지를 변경했습니다!");
+      } catch (error) {
+        console.error("프로필 이미지 업로드 실패", error);
+        setAlertErrorText("이미지 업로드에 실패했습니다.");
+      }
     }
   };
 
@@ -110,22 +126,23 @@ const MobileProfileSection = () => {
                 />
               </motion.div>
             </AnimatePresence>
-
-            <label className="absolute bottom-0 right-0 cursor-pointer">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-              />
-              <Image
-                src={edit}
-                alt="edit"
-                width={24}
-                height={24}
-                className="cursor-pointer"
-              />
-            </label>
+            {role === "GENERAL" && (
+              <label className="absolute bottom-0 right-0 cursor-pointer">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+                <Image
+                  src={edit}
+                  alt="edit"
+                  width={24}
+                  height={24}
+                  className="cursor-pointer"
+                />
+              </label>
+            )}
           </div>
 
           {/* 이름 */}
@@ -199,8 +216,17 @@ const MobileProfileSection = () => {
 
       {/* 사용자 role에 따라 변하는 좌측 menu */}
       <div className="flex w-full mt-10">
-        <MobileUserMenu />
+        <MobileUserMenu role={currentRole} />
       </div>
+      {alertText && (
+        <AlertMessage text={alertText} onClose={() => setAlertText(null)} />
+      )}
+      {alertErrorText && (
+        <ErrorAlertMessage
+          text={alertErrorText}
+          onClose={() => setAlertErrorText(null)}
+        />
+      )}
     </div>
   );
 };
