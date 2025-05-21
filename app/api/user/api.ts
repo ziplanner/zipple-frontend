@@ -3,6 +3,7 @@ import {
   MYPAGE_ASSOCIATE,
   MYPAGE_EXPERT,
   MYPAGE_GENERAL,
+  MYPAGE_PROFILE_IMAGE,
   MYPAGE_REPRESENTATIVE,
 } from "../apiUrl";
 import axiosInstance from "../axiosInstance";
@@ -77,6 +78,15 @@ interface ExpertUserResponse {
   expertDetail: string[];
 }
 
+interface UpdateExpertTypeRequest {
+  expertType: string;
+  expertDetail: string[];
+}
+
+interface UpdateAssociateTypeRequest {
+  specializedType: string;
+}
+
 // 일반 회원정보 조회
 export const getGeneralUserRole = async (): Promise<GeneralUserResponse> => {
   const response = await axiosInstance.get(MYPAGE_GENERAL);
@@ -128,4 +138,30 @@ export const updateExpertUserRole = async (
   data: ExpertUserRequest
 ): Promise<void> => {
   await axiosInstance.put(MYPAGE_EXPERT, data);
+};
+
+// 생활 전문가 정보 수정
+export const updateExpertType = async (
+  data: UpdateExpertTypeRequest
+): Promise<void> => {
+  await axiosInstance.post(MYPAGE_EXPERT, data);
+};
+
+// 소속 중개사 전문분야 수정
+export const updateAssociateType = async (
+  data: UpdateAssociateTypeRequest
+): Promise<void> => {
+  await axiosInstance.post(MYPAGE_ASSOCIATE, data);
+};
+
+// 프로필 이미지 업로드
+export const uploadProfileImage = async (file: File): Promise<void> => {
+  const formData = new FormData();
+  formData.append("profileImage", file);
+
+  await axiosInstance.post(MYPAGE_PROFILE_IMAGE, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
