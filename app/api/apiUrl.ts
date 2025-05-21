@@ -28,6 +28,7 @@ export const MYPAGE_INFO_EXPERT = "/mypage/expert";
 export const MYPAGE_EXPERT = "/mypage/expert";
 export const MYPAGE_PROFILEIMAGE = "/mypage/profileImage";
 export const MYPAGE_PORTFOLIO = "/mypage/portfolio";
+export const MYPAGE_PROFILE_IMAGE = "/mypage/profileImage";
 
 // matching
 export const AGENT_MATCHING = "/matching/broker";

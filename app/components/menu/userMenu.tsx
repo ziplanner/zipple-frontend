@@ -3,15 +3,15 @@
 import { useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { MENU_BY_ROLE } from "@/app/data/menu";
-import { useUserStore } from "@/app/store/userStore";
+import { UserRoleType } from "@/app/store/roleStore";
 
-const UserMenu = () => {
+interface UserMenuProps {
+  role: UserRoleType | null;
+}
+
+const UserMenu = ({ role }: UserMenuProps) => {
   const router = useRouter();
   const pathname = usePathname();
-
-  const { user } = useUserStore();
-  // const role = user?.lastLoginType;
-  const role = user?.roleName[0];
 
   // 역할별 메뉴 목록 가져오기
   const menuList = useMemo(() => {

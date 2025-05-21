@@ -7,7 +7,6 @@ import { LargeBtn } from "@/app/components/button/largeBtn";
 import { useAgentSignup } from "@/app/context/agentSignupProvider";
 import AlertMessage from "@/app/components/alert/alertMessage";
 import axios from "axios";
-import { verifyBusinessLicense } from "@/app/api/verify/api";
 import Input from "@/app/components/input/input";
 import { PhoneInput } from "@/app/components/input/phoneInput";
 
@@ -49,7 +48,6 @@ const Step1 = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const [isVerified, setIsVerified] = useState<boolean>(false);
   const [selectedRealtor, setSelectedRealtor] =
     useState<RealtorSearchResult | null>(null);
 

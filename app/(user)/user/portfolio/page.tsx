@@ -76,6 +76,7 @@ const UserPortfolioPage = () => {
             thumbnail={item.mainImageUrl}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            portfolioUrl={item.portfolioLink}
           />
         ))}
       </div>

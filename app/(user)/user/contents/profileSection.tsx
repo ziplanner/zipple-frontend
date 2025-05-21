@@ -8,8 +8,10 @@ import RoleToken from "@/app/components/token/roleToken";
 import UserMenu from "@/app/components/menu/userMenu";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/app/store/userStore";
-import { Role } from "@/app/types/role";
 import { useRoleStore } from "@/app/store/roleStore";
+import { uploadProfileImage } from "@/app/api/user/api";
+import AlertMessage from "@/app/components/alert/alertMessage";
+import ErrorAlertMessage from "@/app/components/alert/errorAlertMessage";
 
 const ProfileSection = () => {
   const router = useRouter();
@@ -19,17 +21,13 @@ const ProfileSection = () => {
   const role = user?.roleName[0];
   const { currentRole, availableRoles, setCurrentRole } = useRoleStore();
 
+  const [alertText, setAlertText] = useState<string | null>(null);
+  const [alertErrorText, setAlertErrorText] = useState<string | null>(null);
+
   const [name, setName] = useState<string>(user?.nickname || "");
   const [avatarSrc, setAvatarSrc] = useState<string | StaticImageData>(
     user?.profileUrl || defaultProfile
   );
-
-  const roleDescMap: Partial<Record<string, string>> = {
-    GENERAL: "생활 전문가로 전환",
-    REPRESENTATIVE: "일반 회원으로 전환",
-    ASSOCIATE: "일반 회원으로 전환",
-    EXPERT: "일반 회원으로 전환",
-  };
 
   const switchTextMap: Partial<Record<string, string>> = {
     REPRESENTATIVE: "대표 중개사로 전환",
@@ -64,14 +62,25 @@ const ProfileSection = () => {
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+
+      // 1. 이미지 미리보기 반영
       const reader = new FileReader();
       reader.onloadend = () => {
         setAvatarSrc(reader.result as string);
       };
       reader.readAsDataURL(file);
+
+      // 2. 실제 업로드 호출
+      try {
+        await uploadProfileImage(file);
+        setAlertText("프로필 이미지를 변경했습니다!");
+      } catch (error) {
+        console.error("프로필 이미지 업로드 실패", error);
+        setAlertErrorText("이미지 업로드에 실패했습니다.");
+      }
     }
   };
 
@@ -89,23 +98,24 @@ const ProfileSection = () => {
               className="object-cover w-full h-full md:w-[180px] md:h-[180px] lx:w-[220px] lx:h-[220px]"
             />
           </div>
-
           {/* edit 아이콘은 절대 위치로 띄우기 */}
-          <label className="absolute bottom-0 right-0 z-10 cursor-pointer">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-            />
-            <Image
-              src={edit}
-              alt="edit"
-              width={40}
-              height={40}
-              className="cursor-pointer md:w-[40px] md:h-[40px] lx:w-[60px] lx:h-[60px]"
-            />
-          </label>
+          {role === "GENERAL" && (
+            <label className="absolute bottom-0 right-0 z-10 cursor-pointer">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+              <Image
+                src={edit}
+                alt="edit"
+                width={40}
+                height={40}
+                className="cursor-pointer md:w-[40px] md:h-[40px] lx:w-[60px] lx:h-[60px]"
+              />
+            </label>
+          )}
         </div>
 
         <p className="text-text-primary text-24m mb-[6px] mt-5">{name}</p>
@@ -137,8 +147,17 @@ const ProfileSection = () => {
             />
           </button>
         )}
-        <UserMenu />
+        <UserMenu role={currentRole} />
       </div>
+      {alertText && (
+        <AlertMessage text={alertText} onClose={() => setAlertText(null)} />
+      )}
+      {alertErrorText && (
+        <ErrorAlertMessage
+          text={alertErrorText}
+          onClose={() => setAlertErrorText(null)}
+        />
+      )}
     </div>
   );
 };

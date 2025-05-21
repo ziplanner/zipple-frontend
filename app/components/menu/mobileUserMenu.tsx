@@ -3,15 +3,15 @@
 import { useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { MENU_BY_ROLE } from "@/app/data/menu";
-import { useUserStore } from "@/app/store/userStore";
+import { UserRoleType } from "@/app/store/roleStore";
 
-const MobileUserMenu = () => {
+interface UserMenuProps {
+  role: UserRoleType | null;
+}
+
+const MobileUserMenu = ({ role }: UserMenuProps) => {
   const pathname = usePathname();
   const router = useRouter();
-
-  const { user } = useUserStore();
-  // const role = user?.lastLoginType;
-  const role = user?.roleName[0];
 
   const menuList = useMemo(() => {
     if (role) {

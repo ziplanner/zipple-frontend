@@ -10,8 +10,8 @@ export const createPortfolio = async (
   const formData = new FormData();
 
   formData.append("portfolioImages", images);
-  formData.append("portfolioTitle", JSON.stringify(title));
-  formData.append("portfolioUrl", JSON.stringify(url));
+  formData.append("portfolioTitle", title);
+  formData.append("portfolioUrl", url);
 
   const res = await axiosInstance.post(MYPAGE_PORTFOLIO, formData, {
     headers: {
@@ -31,8 +31,8 @@ export const updatePortfolio = async (
 ) => {
   const formData = new FormData();
   formData.append("portfolioImages", images);
-  formData.append("portfolioTitle", JSON.stringify(title));
-  formData.append("portfolioUrl", JSON.stringify(url));
+  formData.append("portfolioTitle", title);
+  formData.append("portfolioUrl", url);
 
   const res = await axiosInstance.put(
     `${MYPAGE_PORTFOLIO}/${portfolioId}`,
