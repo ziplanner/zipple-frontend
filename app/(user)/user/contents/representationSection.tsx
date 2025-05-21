@@ -20,6 +20,7 @@ import { CATEGORY } from "@/app/data/category";
 import { getRepUserRole, updateRepUserRole } from "@/app/api/user/api";
 import ErrorAlertMessage from "@/app/components/alert/errorAlertMessage";
 import {
+  codeToRegion,
   getRegionDisplayLabel,
   regionArrayToCodes,
   regionToCode,
@@ -63,8 +64,13 @@ const RepresentationSection = () => {
         setTitle(data.introduceTitle || "");
         setDescription(data.introduceContent || "");
         setSelectedSpecialty(data.specializedType || "");
-        setPrimaryRegions(data.representativeArea || []);
-        setAdditionalRegions(data.additionalArea || []);
+
+        setPrimaryRegions(
+          (data.representativeArea as string[]).map(codeToRegion)
+        );
+        setAdditionalRegions(
+          (data.additionalArea as string[]).map(codeToRegion)
+        );
       } catch (error) {
         console.error("대표 중개사 정보 조회 실패", error);
       }
@@ -287,6 +293,7 @@ const RepresentationSection = () => {
           initialRegions={additionalRegions}
           disabledRegions={primaryRegions}
           maxSelectable={5}
+          shouldUpdateUrl={false}
         />
       )}
       {showAlert && (
