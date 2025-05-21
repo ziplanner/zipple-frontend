@@ -40,6 +40,20 @@ export const getRegionDisplayLabel = (code: string): string => {
   return `${city} > ${district}`;
 };
 
+/**
+ * "SEOUL-GANGNAM" 형태의 코드를 "서울 강남구"로 변환
+ */
+export const getRegionDisplayLabel2 = (code: string): string => {
+  const [cityCode, districtCode] = code.split("-");
+  const city = CITIES.find((c) => c.value === cityCode)?.label;
+  const district = districtMap[cityCode]?.find(
+    (d) => d.value === districtCode
+  )?.label;
+
+  if (!city || !district) return code; // fallback
+  return `${city} ${district}`;
+};
+
 // Region[]을 도시-구 string[]으로 변환 (서버 전송용)
 export const regionToCode = (region: Region): string => {
   if (!region.city || !region.district) return "";
@@ -55,4 +69,9 @@ export const codesToRegionArray = (codes: string[]): Region[] => {
     const [city, district] = code.split("-");
     return { city, district };
   });
+};
+
+export const codeToRegion = (code: string): Region => {
+  const [city, district] = code.split("-");
+  return { city, district };
 };
