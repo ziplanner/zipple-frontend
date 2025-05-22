@@ -7,6 +7,24 @@ import { LargeBtn } from "../button/largeBtn";
 import { createPortfolio, updatePortfolio } from "@/app/api/portfolio/api";
 import ErrorAlertMessage from "../alert/errorAlertMessage";
 
+// url 유효성 검사
+const isValidUrl = (url: string) => {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch (_) {
+    return false;
+  }
+};
+
+// URL에 스킴 붙이는 유틸 함수
+const ensureUrlHasProtocol = (url: string): string => {
+  if (!/^https?:\/\//i.test(url)) {
+    return `http://${url}`;
+  }
+  return url;
+};
+
 interface PortfolioModalProps {
   onClose: () => void;
   onSubmit: () => void;
@@ -28,6 +46,8 @@ const PortfolioModal = ({
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [isUrlTouched, setIsUrlTouched] = useState<boolean>(false);
+  const isUrlValid = isValidUrl(url);
 
   useEffect(() => {
     if (editData) {
@@ -43,6 +63,7 @@ const PortfolioModal = ({
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUrl(e.target.value);
+    if (!isUrlTouched) setIsUrlTouched(true);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,14 +75,26 @@ const PortfolioModal = ({
   };
 
   const handleSubmit = async () => {
+    const processedUrl = ensureUrlHasProtocol(url);
     try {
+      if (!isValidUrl(processedUrl)) {
+        setIsUrlTouched(true);
+        return;
+      }
+
       if (editData) {
         if (!imageFile) return;
-        await updatePortfolio(editData.portfolioId, imageFile, title, url);
+        await updatePortfolio(
+          editData.portfolioId,
+          imageFile,
+          title,
+          processedUrl
+        );
       } else {
         if (!imageFile) return;
-        await createPortfolio(imageFile, title, url);
+        await createPortfolio(imageFile, title, processedUrl);
       }
+
       onSubmit();
     } catch (err) {
       setShowAlert(true);
@@ -69,9 +102,7 @@ const PortfolioModal = ({
     }
   };
 
-  const isValid = title.trim() && url.trim() && (imageFile || editData);
-
-  console.log("imageFile:", imageFile);
+  const isValid = title.trim() && (imageFile || editData) && isValidUrl(url);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
@@ -97,7 +128,14 @@ const PortfolioModal = ({
               <h3 className="text-text-primary text-14m md:text-16m">
                 URL <span className="text-error">*</span>
               </h3>
-              <Input value={url} onChange={handleUrlChange} />
+              <Input
+                value={url}
+                onChange={handleUrlChange}
+                error={isUrlTouched && !isUrlValid}
+                errorMessage="올바른 URL 형식이 아닙니다."
+                success={isUrlTouched && isUrlValid}
+                successMessage="올바른 URL 형식입니다."
+              />
             </div>
 
             <div className="flex flex-col gap-2.5">
