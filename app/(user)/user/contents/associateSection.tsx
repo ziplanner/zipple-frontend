@@ -20,6 +20,7 @@ import { CATEGORY } from "@/app/data/category";
 import {
   getAssociateUserRole,
   updateAssociateUserRole,
+  updateAssociateType,
 } from "@/app/api/user/api";
 import ErrorAlertMessage from "@/app/components/alert/errorAlertMessage";
 
@@ -38,6 +39,7 @@ const AssociateSection = () => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>("");
+  const [showSpecialtyAlert, setShowSpecialtyAlert] = useState<boolean>(false);
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isSpecialtyEditMode, setIsSpecialtyEditMode] =
@@ -90,9 +92,12 @@ const AssociateSection = () => {
 
   const handleSpecialtyEditMode = () => {
     if (isSpecialtyEditMode) {
-      setShowAlert(true);
+      // 저장 시도 → Alert 오픈
+      setShowSpecialtyAlert(true);
+    } else {
+      // 수정 모드 진입
+      setIsSpecialtyEditMode(true);
     }
-    setIsSpecialtyEditMode(!isSpecialtyEditMode);
   };
 
   const handleWithdrawAll = async () => {
@@ -267,6 +272,27 @@ const AssociateSection = () => {
         <ErrorAlertMessage
           text={alertErrorText}
           onClose={() => setAlertErrorText(null)}
+        />
+      )}
+      {showSpecialtyAlert && (
+        <Alert
+          text="정말 전문분야를 수정하시겠습니까?"
+          subText="수정 시 7일 이후에 다시 변경할 수 있습니다."
+          leftBtnText="취소"
+          rightBtnText="확인"
+          onClose={() => setShowSpecialtyAlert(false)}
+          onConfirm={async () => {
+            try {
+              await updateAssociateType({ specializedType: selectedSpecialty });
+              setShowAlert(true); // 저장되었습니다!
+              setIsSpecialtyEditMode(false);
+            } catch (error) {
+              setAlertErrorText("전문분야 저장에 실패했습니다.");
+              console.error(error);
+            } finally {
+              setShowSpecialtyAlert(false);
+            }
+          }}
         />
       )}
     </div>

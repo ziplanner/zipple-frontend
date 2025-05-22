@@ -6,6 +6,8 @@ import {
   getLabelFromValue,
   getRegionDisplayLabel2,
 } from "@/app/utils/getCategoryLabel";
+import { useState } from "react";
+import { likeReceiver, unlikeReceiver } from "@/app/api/matching/api";
 
 interface AgentCardProps {
   brokerId: number;
@@ -36,14 +38,42 @@ const ProfileCard = ({
   profileImage,
   specializedType,
   portfolioCount,
-  likesCount,
-  isLiked,
+  likesCount: initialLikesCount,
+  isLiked: initialIsLiked,
   introduceTitle,
   introduceContent,
   representativeArea,
   onClick,
 }: AgentCardProps) => {
   const isMd = useResponsive("md");
+
+  const [isLiked, setIsLiked] = useState<boolean>(initialIsLiked);
+  const [likesCount, setLikesCount] = useState<number>(initialLikesCount);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const handleLikeClick = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ): Promise<void> => {
+    e.stopPropagation();
+    if (isLoading) return;
+    setIsLoading(true);
+
+    try {
+      if (isLiked) {
+        await unlikeReceiver(brokerId);
+        setIsLiked(false);
+        setLikesCount((prev) => Math.max(prev - 1, 0));
+      } else {
+        await likeReceiver(brokerId);
+        setIsLiked(true);
+        setLikesCount((prev) => prev + 1);
+      }
+    } catch (err) {
+      console.error("좋아요 처리 실패:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div
@@ -52,11 +82,13 @@ const ProfileCard = ({
     >
       {/* 좋아요 버튼 */}
       <div className="absolute top-4 right-5 flex flex-col items-center">
-        {isLiked ? (
-          <FaHeart className="text-error text-[26px]" />
-        ) : (
-          <FaRegHeart className="text-text-light text-[26px]" />
-        )}
+        <button onClick={handleLikeClick}>
+          {isLiked ? (
+            <FaHeart className="text-error text-[26px]" />
+          ) : (
+            <FaRegHeart className="text-text-light text-[26px]" />
+          )}
+        </button>
         <span
           className={`text-12m lg:text-14m ${
             likesCount > 0 ? "text-error" : "text-text-light"
