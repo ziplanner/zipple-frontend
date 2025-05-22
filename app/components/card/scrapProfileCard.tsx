@@ -3,6 +3,8 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ping from "@/app/images/icon/ping_yellow.svg";
 import useResponsive from "@/app/hook/useResponsive";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { likeReceiver, unlikeReceiver } from "@/app/api/matching/api";
 
 interface ScrapProfileCardProps {
   brokerId: number;
@@ -42,6 +44,33 @@ const ScrapProfileCard = ({
 }: ScrapProfileCardProps) => {
   const isMd = useResponsive("md");
   const router = useRouter();
+
+  const [isLikedState, setIsLikedState] = useState<boolean>(isLiked);
+  const [likesCountState, setLikesCountState] = useState<number>(likesCount);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const handleLikeClick = async (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    if (isLoading) return;
+
+    setIsLoading(true);
+
+    try {
+      if (isLikedState) {
+        await unlikeReceiver(brokerId);
+        setIsLikedState(false);
+        setLikesCountState((prev) => Math.max(prev - 1, 0));
+      } else {
+        await likeReceiver(brokerId);
+        setIsLikedState(true);
+        setLikesCountState((prev) => prev + 1);
+      }
+    } catch (err) {
+      console.error("좋아요 처리 실패:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div
@@ -99,12 +128,15 @@ const ScrapProfileCard = ({
           대표
         </span>
         {/* 좋아요 버튼 */}
-        <div className="md:mt-3 mt-2.5">
-          {isLiked ? (
+        <div className="md:mt-3 mt-2.5" onClick={handleLikeClick}>
+          {isLikedState ? (
             <FaHeart className="text-error text-[26px]" />
           ) : (
             <FaRegHeart className="text-text-light text-[26px]" />
           )}
+          <div className="text-center text-12r mt-1 text-text-secondary">
+            {likesCountState}
+          </div>
         </div>
       </div>
     </div>

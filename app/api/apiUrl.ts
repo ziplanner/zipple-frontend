@@ -35,3 +35,4 @@ export const AGENT_MATCHING = "/matching/broker";
 export const EXPERT_MATCHING = "/matching/expert";
 export const AGENT_DETAIL = "/matching/broker";
 export const EXPERT_DETAIL = "/matching/expert";
+export const LIKES = "likes";

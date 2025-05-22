@@ -6,7 +6,12 @@ import {
   FetchBrokerListParams,
   FetchExpertListParams,
 } from "@/app/types/api";
-import { AGENT_DETAIL, AGENT_MATCHING, EXPERT_MATCHING } from "../apiUrl";
+import {
+  AGENT_DETAIL,
+  AGENT_MATCHING,
+  EXPERT_MATCHING,
+  LIKES,
+} from "../apiUrl";
 import axiosInstance from "../axiosInstance";
 
 // 중개사 매칭 목록
@@ -80,4 +85,14 @@ export const fetchBrokerMenuDetail = async (
     `${AGENT_DETAIL}/${brokerId}/lnb`
   );
   return res.data;
+};
+
+// 좋아요 누르기
+export const likeReceiver = async (receiverId: number): Promise<void> => {
+  await axiosInstance.post(`${LIKES}/${receiverId}`);
+};
+
+// 좋아요 해제하기
+export const unlikeReceiver = async (receiverId: number): Promise<void> => {
+  await axiosInstance.delete(`${LIKES}/${receiverId}`);
 };

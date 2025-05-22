@@ -13,6 +13,7 @@ import SignupModal from "../../modal/kakao/signupModal";
 import useResponsive from "@/app/hook/useResponsive";
 import bar from "@/app/images/icon/footer/bar.svg";
 import { useAuthStore } from "@/app/store/authStore";
+import MobileDrawer from "../mobileDrawer";
 
 const Header = () => {
   const router = useRouter();
@@ -85,11 +86,7 @@ const Header = () => {
                 className="mx-2.5"
               />
             )}
-            {isMd ? (
-              <UserMenu />
-            ) : (
-              <Image src={menu} alt={"menu"} width={24} height={24} />
-            )}
+            {isMd ? <UserMenu /> : <MobileDrawer />}
           </div>
         )}
       </div>
