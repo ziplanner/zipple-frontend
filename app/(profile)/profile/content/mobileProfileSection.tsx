@@ -6,11 +6,41 @@ import RoleToken from "@/app/components/token/roleToken";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useBrokerDetail } from "@/app/context/agentDetailContext";
 import { formatPhoneNumber } from "@/app/utils/phoneNumber";
+import { unlikeReceiver, likeReceiver } from "@/app/api/matching/api";
+import { useSearchParams } from "next/navigation";
 
 const MobileProfileSection = () => {
   const data = useBrokerDetail();
+  const param = useSearchParams();
+  const brokerId = param.get("id");
 
-  const [liked, setLiked] = useState<boolean>(false);
+  const [liked, setLiked] = useState<boolean>(data?.isLiked ?? false);
+  const [likesCount, setLikesCount] = useState<number>(data?.likesCount ?? 0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const handleLikeClick = async () => {
+    if (!brokerId || isLoading) return;
+
+    const parsedBrokerId = parseInt(brokerId, 10);
+
+    setIsLoading(true);
+
+    try {
+      if (liked) {
+        await unlikeReceiver(parsedBrokerId);
+        setLiked(false);
+        setLikesCount((prev) => Math.max(prev - 1, 0));
+      } else {
+        await likeReceiver(parsedBrokerId);
+        setLiked(true);
+        setLikesCount((prev) => prev + 1);
+      }
+    } catch (err) {
+      console.error("좋아요 처리 실패:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="w-full p-[30px] pb-5 border border-border rounded-[20px] mt-5">
@@ -62,7 +92,11 @@ const MobileProfileSection = () => {
         </div>
 
         {/* Like Button */}
-        <div className="flex flex-col items-center justify-center mt-5">
+        <button
+          disabled={isLoading}
+          className="flex flex-col items-center justify-center mt-5"
+          onClick={handleLikeClick}
+        >
           {liked ? (
             <FaHeart className="text-error text-[26px]" />
           ) : (
@@ -73,9 +107,9 @@ const MobileProfileSection = () => {
               data?.likesCount || 0 > 0 ? "text-error" : "text-text-light"
             }`}
           >
-            {data?.likesCount}
+            {likesCount}
           </span>
-        </div>
+        </button>
       </div>
     </div>
   );
