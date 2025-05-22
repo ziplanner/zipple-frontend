@@ -84,4 +84,5 @@ export interface BrokerMenuDetailResponse {
   profileUrl: string;
   phoneNumber: string;
   likesCount: number;
+  isLiked?: boolean;
 }
