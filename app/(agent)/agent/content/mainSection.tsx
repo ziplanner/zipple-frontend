@@ -62,12 +62,12 @@ export default function MainSection() {
 
   return (
     <div className="w-full mt-5 md:mt-10">
-      <div
+      {/* <div
         className="flex w-full md:h-32 h-44 bg-sub_bg border border-sub text-sub_text
       text-16s md:text-18s rounded-lg items-center justify-center"
       >
         배너 자리입니다.
-      </div>
+      </div> */}
       <h1 className="text-text-primary text-22s md:text-36s mt-10 mb-9 mb md:mt-20 md:mb-[60px]">
         중개사 매칭
       </h1>
